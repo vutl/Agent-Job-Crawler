@@ -1,0 +1,1163 @@
+
+<title>AI R&amp;D Engineering Co-op</title>
+
+
+<div id="oc_1" hx-swap-oob="false"></div>
+<div>
+
+
+    
+    <div class="px-1 border-bottom">
+        <h1>
+            AI R&amp;D Engineering Co-op
+            
+        </h1>
+    </div>
+    
+    <div class="px-1 border-bottom">
+        <div class="hstack justify-content-between">
+            <div>
+                
+                United States
+                <span class="text-success">[R]</span>
+                
+            </div>
+            <div>
+                <strong>
+                    <a href="/hiring/companies/" rel="nofollow">@ N...</a>
+                </strong>
+                <small class="text-info">[H]</small>
+            </div>
+        </div>
+        <div class="hstack justify-content-between">
+            <div class="pe-1">
+            <span class="text-warning-emphasis">[Entry-level / Junior]</span>
+            <span class="text-warning-emphasis">[~1yoe]</span>
+            <br>
+            [Full Time]
+
+
+    
+        <span class="text-bg-secondary">USD 80K-95K (estimate)</span>
+    
+
+
+            </div>
+            <div>
+                <em>
+                    Found 3d ago
+                </em>
+                
+            </div>
+        </div>
+    </div>
+    <div class="px-1 border-bottom pb-2">
+        <strong>Tasks:</strong>
+        <ul class="list-unstyled mb-2">
+        <li>* Build vector search systems</li><li>* Collaborate with engineers and researchers</li><li>* Develop and deploy AI models</li><li>* Explore GenAI and autonomous agents</li><li>* Implement optimization algorithms</li><li>* Process large-scale data pipelines</li>
+        </ul>
+        <strong>Perks/Benefits:</strong>
+        <ul class="list-unstyled mb-2">
+        <li>+ Hybrid work</li>
+        </ul>
+        <strong>Skills/Tech stack required:</strong>
+        <div class="text-primary-emphasis mb-2">
+        [Apache Cassandra][Apache Kafka][Apache Spark][Deep learning][Machine Learning][Optimization Algorithms][PyTorch][Search Algorithms][TensorFlow][Vector Databases]
+        </div>
+        <strong>Educational requirements:</strong>
+        <div class="text-warning-emphasis text-wrap mb-2">
+        [Master of Science][PhD]
+        </div>
+        <strong>Role(s):</strong>
+        <div class="text-wrap">
+        [AI][AI Research Engineer][Engineer][Learning Engineer][Machine Learning Engineer][Research Engineer]
+        </div>
+    </div>
+    <div class="d-flex justify-content-between border-bottom small text-muted">
+        <div class="px-1">
+            <div>Views: <strong>4</strong></div>
+            <div>Clicks (apply): <strong>3</strong></div>
+            <div>Saved: <strong>0</strong></div>
+        </div>
+        <div class="px-1">
+            <div>Published: <strong>2026-08-06</strong></div>
+            <div>Language: <strong>en</strong></div>
+        </div>
+    </div>
+    <div class="p-1 border-bottom">
+        
+        <a class="btn btn-outline-primary btn-sm"
+            hx-get="/hiring/jobs/top/"
+            hx-target="#mc_2"
+            hx-swap="scroll:top"
+            hx-replace-url="true"
+            hx-on::before-request="event.detail.target.innerHTML = '...'">
+            Close
+        </a>
+        
+        <button class="btn btn-outline-primary btn-sm"
+            onclick="navigator.clipboard.writeText('https://foorilla.com/hiring/jobs/ai-rd-engineering-co-op-united-states-3380156/').then(() => {
+                document.body.dispatchEvent(
+                    new CustomEvent('showToasts', {detail: [{message: 'Job link copied!', tags: 'success'}]})
+                )
+            })">
+            Copy link
+        </button>
+        <button class="btn btn-outline-primary btn-sm"
+            
+            hx-target="#mc_2"
+            hx-post="/hiring/jobs/3380156/save/">
+            Save
+        </button>
+        
+        <a class="btn btn-primary btn-sm"
+            href="/hiring/jobs/pwA6g9xZT3OtLKx/apply/" target="_blank" rel="nofollow">
+            Apply
+        </a>
+        
+    </div>
+
+    
+    
+    
+<div id="dm_0">
+
+
+<div class="border-bottom">
+<div class="d-flex justify-content-start">
+    <div class="border-end px-1 text-bg-light">
+        <h3><a href="" class="text-primary"
+            hx-get="/hiring/jobs/more/3380156/1/"
+            hx-target="#dm_0"
+            hx-on::before-request="event.detail.target.innerHTML = '...'">
+            Similar jobs</a></h3>
+    </div>
+    <div class="border-end px-1">
+        <h3><a href=""
+            hx-get="/hiring/jobs/more/3380156/2/"
+            hx-target="#dm_0"
+            hx-on::before-request="event.detail.target.innerHTML = '...'">
+            Media</a></h3>
+    </div>
+    <div class="border-end px-1">
+        <h3><a href=""
+            hx-get="/hiring/jobs/more/3380156/3/"
+            hx-target="#dm_0"
+            hx-on::before-request="event.detail.target.innerHTML = '...'">
+            Event</a></h3>
+    </div>
+    <div class="border-end px-1">
+        <h3><a href=""
+            hx-get="/hiring/jobs/more/3380156/4/"
+            hx-target="#dm_0"
+            hx-on::before-request="event.detail.target.innerHTML = '...'">
+            Insight</a></h3>
+    </div>
+</div>
+</div>
+
+<ul class="list-group list-group-flush text-break">
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-sunnyvale-san-francisco-california-ca-united-states-3300976/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    11d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-success">USD 225K-300K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Sunnyvale, San Francisco, California, CA, United …
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-india-remote-bangalore-karnataka-india-3214626/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - India (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 2500K-5000K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Bangalore, Karnataka, India
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/agentic-ai-engineer-co-op-usa-remote-united-states-2972846/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    Agentic AI Engineer Co-Op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1mo ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 99K-133K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    USA - Remote, United States
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/agentic-ai-engineer-co-op-usa-remote-united-states-2972845/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    Agentic AI Engineer Co-Op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1mo ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 99K-133K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    USA - Remote, United States
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-usa-remote-san-francisco-california-united-states-3214619/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - USA (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 110K-120K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    San Francisco, California, United States
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/genai-engineering-internship-madrid-3085733/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    GenAI Engineering Internship
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1mo ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Internship]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 21K-21K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Madrid
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-singapore-remote-singapore-3214627/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Singapore (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">SGD 74K-130K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Singapore
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-germany-remote-berlin-germany-3214630/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Germany (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 54K-75K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Berlin, Germany
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/genai-machine-learning-ai-data-scientist-remote-job-2937733/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    GENAI / MACHINE LEARNING AI / DATA Scientist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1mo ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EX]</small><small class="text-body-secondary">[Contract][Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 169K-235K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote job
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-pakistan-remote-3286407/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    13d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 120K-175K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Pakistan - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-spain-remote-madrid-spain-3214623/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Spain (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 45K-65K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Madrid, Spain
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-brazil-remote-sao-paulo-state-of-sao-paulo-brazil-3214634/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Brazil (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">BRL 240K-300K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    São Paulo, State of São Paulo, …
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/senior-ai-engineer-2026-us-atlanta-ga-remote-3065835/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    Senior AI Engineer 2026 - US
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1mo ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 130K-175K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Atlanta, GA - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-bangladesh-remote-dhaka-bangladesh-3214631/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Bangladesh (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 122K-172K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Dhaka, Bangladesh
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-france-remote-paris-france-3214632/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - France (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 54K-75K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Paris, France
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/forward-deployed-ai-engineer-india-3387150/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    Forward Deployed AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 2475K-4200K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    India
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-philippines-remote-manila-philippines-3214629/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Philippines (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">PHP 150K-220K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Manila, Philippines
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-canada-remote-montreal-qc-canada-3214633/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Canada (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">CAD 152K-191K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Montreal, QC, Canada
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-uk-remote-london-united-kingdom-3214620/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - UK (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 65K-108K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    London, United Kingdom
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-australia-remote-sydney-nsw-australia-3214635/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Australia (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">AUD 78K-78K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Sydney, NSW, Australia
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-rd-engineering-co-op-united-states-3380157/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI R&amp;D Engineering Co-op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 70K-99K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    United States
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/research-engineer-los-angeles-ca-usa-3286056/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    Research Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    12d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[MI]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 147K-211K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Los Angeles, CA, USA
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineer-switzerland-remote-zurich-switzerland-3214622/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineer - Switzerland (Remote)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    23d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[SE]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">CHF 129K-192K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Zürich, Switzerland
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-engineering-manager-digital-marketing-sphere-poland-3375472/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Engineering Manager (Digital Marketing sphere)
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[MI]</small><small class="text-body-secondary">[Full Time]</small><small class="text-danger-emphasis">[A]</small>
+
+
+    
+    <small class="text-bg-secondary">PLN 217K-280K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Poland
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href=""
+    data-bs-dismiss="offcanvas"
+    data-bs-target="#oc_1"
+    hx-get="/hiring/jobs/ai-developer-based-in-usa-remote-3277444/"
+    hx-replace-url="true"
+    hx-target="#mc_2"
+    hx-swap="scroll:top"
+    >
+    
+    AI Developer Based in U.S.A
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    13d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[MI]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 99K-150K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+

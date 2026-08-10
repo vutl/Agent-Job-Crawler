@@ -1,0 +1,376 @@
+AI JOB INTELLIGENCE
+Complete Project Blueprint
+Crawl public job postings → extract skills → analyze market demand → generate learning roadmaps → deploy as a production-style web system
+Primary learning stack: Python · FastAPI · PostgreSQL · Redis · LLM routing · Next.js · Docker · Jenkins · Kubernetes · AWS · Argo CD · Prometheus/Grafana
+Version 1.0 — August 2026
+1. Project Goal
+Build a production-style AI Job Intelligence platform that continuously collects public job postings, normalizes job descriptions, extracts explicit skill requirements, aggregates market demand by role, and displays the results in a web dashboard. The system should also generate evidence-based learning roadmaps for roles such as AI Engineer, ML Engineer, MLOps Engineer, Data Scientist, and Backend/Platform Engineer.
+What makes this project valuable
+Real data pipeline: you are not building a toy chatbot; you are ingesting, processing, storing, analyzing, and serving changing external data.
+Clear AI boundary: deterministic code handles crawling, parsing, deduplication, persistence, and statistics; LLMs handle semantic extraction, classification, normalization, and summarization.
+Natural DevOps use case: crawler workers, API, frontend, scheduled jobs, queues, databases, CI/CD and observability all have legitimate reasons to exist.
+Strong portfolio story: the final product demonstrates AI engineering, backend engineering, data engineering, cloud deployment, and production operations in one coherent system.
+Non-goal for V1
+Do not attempt to become a general-purpose job board, application tracker, resume optimizer, or LinkedIn competitor. V1 focuses only on job-market intelligence and learning recommendations.
+2. Product Scope
+Area
+V1
+Later
+Job sources
+Public company career pages; selected aggregators only as discovery sources
+More ATS vendors, regional portals, user-submitted sources
+Roles
+AI Engineer, ML Engineer, MLOps Engineer, Data Scientist
+Backend, Data Engineer, Research Engineer, Platform Engineer
+Data
+Title, company, location, description, requirements, source URL, timestamps
+Salary normalization, benefits, visa sponsorship, remote policy
+AI
+Skill extraction, role classification, seniority, normalization, roadmap summary
+Trend explanations, personalized gap analysis, CV matching
+Frontend
+Dashboard, filters, trends, job explorer, roadmap
+Accounts, saved views, alerts
+Infra
+Docker, Jenkins, Kubernetes, AWS, Argo CD, monitoring
+Autoscaling, Terraform, multi-region, advanced cost controls
+3. Target Architecture
+Public Career Pages / ATS APIs / Discovery Sources                     |                     v             Source Discovery                     |                     v              Crawl Scheduler             (K8s CronJob)                     |                     v                 Redis Queue               /             \              v               v       HTTP Crawler       Browser Crawler      httpx/BS4/API        Playwright fallback              \               /               v             v             Job Normalizer                     |                     v                 PostgreSQL                     |              New/changed job                     |                     v             Analysis Queue                     |                     v            AI Analysis Worker          (LLM Provider Adapter)                     |        +------------+-------------+        |            |             |   Skill Extract  Role/Level   Summaries        |            |             |        +------------+-------------+                     |                     v            Structured Skill Data                     |          +----------+----------+          |                     |          v                     v      FastAPI              Aggregation Jobs          |                     |          +----------+----------+                     v               Next.js Web                     |                 User Browser
+Core design rule
+Use deterministic software wherever the output can be computed reliably. Use an LLM only when semantic interpretation is genuinely useful. This reduces cost, improves testability, and makes failures easier to diagnose.
+Task
+Recommended implementation
+Fetch page / call ATS endpoint
+Deterministic
+Parse HTML/JSON
+Deterministic
+Canonical URL + dedupe
+Deterministic
+Store/update job
+Deterministic
+Extract explicit technologies from messy prose
+LLM + validation
+Normalize “Amazon Web Services” → “AWS”
+Dictionary first, LLM fallback
+Role/seniority classification
+Rules + LLM fallback
+Count skill frequency
+SQL / Python
+Generate market narrative / roadmap
+LLM using aggregated evidence
+4. How to Use colophon-group/jobseek
+Use Jobseek as a reference implementation and selective crawler donor, not as the full product base. Its current repository already contains a mature Python crawler, async workers, Redis queues, Postgres, Typesense, a Next.js application, monitor/scraper abstractions, Playwright fallback, labelling workflows, and significant production operations. Forking the entire system would hide many of the infrastructure lessons this project is intended to teach.
+Reuse / study
+Monitor abstraction for ATS systems such as Greenhouse, Lever, Workday and similar career platforms.
+Scraper abstraction: structured JSON/JSON-LD first, DOM parsing second, browser fallback last.
+Async crawling patterns, retries, rescheduling and queue semantics.
+Canonicalization and deduplication strategies.
+Job-posting field normalization and crawler test patterns.
+Board/company configuration patterns.
+Do not bring into V1 unless needed
+Application tracker, watchlists and authentication.
+Full Typesense architecture, multi-language UI, SEO systems and notification products.
+Their complete ops/automation stack.
+Any component you cannot yet explain in one or two sentences.
+License note
+Jobseek states that its code is MIT licensed, while its included job-posting data is separately licensed under CC BY-NC 4.0. Treat code reuse and data reuse as separate decisions, preserve required notices, and do not assume the dataset license is identical to the source-code license.
+5. Data Model
+Minimum PostgreSQL tables
+companies- id- name- domain- careers_url- ats_type- activejob_sources- id- company_id- source_type- source_url- crawl_strategy- last_crawled_atjobs- id- external_id- canonical_url- company_id- title- location- description_raw- description_text- posted_at- first_seen_at- last_seen_at- status            # active / removed- content_hashskills- id- canonical_name- category          # language/cloud/framework/devops/etc.- aliasesjob_skills- job_id- skill_id- evidence_text- requirement_type  # required / preferred / mentioned- confidence- extractor_versionjob_analysis- job_id- role_family- seniority- years_experience_min- education_requirement- model- prompt_version- analyzed_atskill_snapshots- snapshot_date- role_family- skill_id- job_count- role_job_count- share
+Important data principles
+Keep raw evidence: save the raw/normalized description and the exact text span supporting each extracted skill.
+Version AI outputs: store model name, prompt version and extractor version so you can reproduce and compare results.
+Do not overwrite history blindly: use first_seen_at, last_seen_at, status and snapshots for trends.
+Deduplicate before analysis: avoid paying an LLM twice for the same unchanged posting.
+6. Crawler Strategy
+Source priority
+Official structured endpoints first. If a company uses a known ATS with a public JSON endpoint, prefer it.
+Static/SSR HTML second. Use httpx/requests + BeautifulSoup/lxml.
+Embedded JSON / JSON-LD third. Often cleaner than rendered DOM.
+Playwright only when necessary. Use browser crawling for JavaScript-rendered pages that cannot be accessed reliably otherwise.
+Crawler constraints
+Only access publicly available pages/endpoints you are permitted to access.
+Do not bypass CAPTCHA, login gates, authentication, paywalls or anti-bot controls.
+Respect reasonable request rates and source-specific terms/policies.
+Track source failures separately from “zero jobs found” to avoid silent data loss.
+Add timeouts, retry with backoff, and per-domain concurrency limits.
+Crawler workflow
+discover board -> enqueue source -> fetch -> parse -> validate -> canonicalize-> hash content -> upsert job -> mark changed/new -> enqueue analysis
+7. AI / Agent Layer
+The core AI component should be a structured extraction pipeline, not a free-form autonomous agent. An agent can later orchestrate analysis and answer user questions, but the ingestion path should remain predictable.
+Extraction schema
+{  "role_family": "AI Engineer",  "seniority": "mid",  "skills": [    {      "name": "Kubernetes",      "category": "devops",      "requirement_type": "required",      "evidence": "Experience deploying services on Kubernetes...",      "confidence": 0.97    }  ],  "years_experience_min": 3,  "education_requirement": "bachelor_or_equivalent"}
+LLM provider abstraction
+Do not couple the application to a single provider. Implement an OpenAI-compatible adapter with configuration for base URL, API key and model. This makes it straightforward to use a router such as 9router if its current API exposes an OpenAI-compatible interface, and it also lets you swap to OpenAI, another gateway, or a local model without rewriting business logic.
+LLM_BASE_URL=...LLM_API_KEY=...LLM_MODEL=...class LLMProvider:    async def structured_generate(self, messages, schema): ...class OpenAICompatibleProvider(LLMProvider): ...
+Model routing experiment
+Workload
+Model class
+Reason
+Simple explicit skill extraction
+Cheap/small
+High volume, structured task
+Ambiguous role classification
+Medium
+Needs semantic judgment
+Market summary / roadmap
+Strong
+Low volume, higher reasoning value
+Failed/low-confidence extraction
+Escalate
+Use strong model only when needed
+Record latency, token usage, estimated cost and extraction quality so model routing becomes a measurable engineering decision rather than intuition.
+8. Analytics and Product Logic
+Metrics to compute deterministically
+Percentage of active postings for a role mentioning each skill.
+Required vs preferred frequency.
+Skill frequency by seniority, country, company size/source, and time window.
+Fastest-growing / declining skills using weekly or monthly snapshots.
+Common skill pairs: e.g., PyTorch + CUDA, Kubernetes + Docker, AWS + Terraform.
+Role overlap: skills shared between AI Engineer, ML Engineer and MLOps Engineer.
+Roadmap generation rule
+The LLM must receive aggregated statistics and a constrained set of observed skills. It should not invent fashionable technologies that are absent from the evidence window. Every generated roadmap should state the number of jobs, selected time window and geography/filter used.
+9. API and Web Dashboard
+Suggested FastAPI endpoints
+GET  /healthGET  /rolesGET  /roles/{role}/overviewGET  /roles/{role}/skillsGET  /roles/{role}/trendsGET  /jobs?role=&skill=&location=GET  /jobs/{id}POST /roadmaps/generateGET  /system/data-freshness
+Dashboard pages
+Page
+What it shows
+Overview
+Jobs analyzed, freshness, role distribution, major market signals
+Role Detail
+Top skills, required/preferred split, seniority and location filters
+Trends
+Time-series skill demand and fastest-growing technologies
+Jobs
+Search/filter actual postings and open source link
+Skill Detail
+Where a skill appears, related skills, role distribution
+Roadmap
+Evidence-backed learning plan generated from selected role/filter
+10. Recommended Repository Structure
+ai-job-intelligence/├── apps/│   ├── api/                 # FastAPI│   ├── crawler/             # Python crawler + workers│   ├── analyzer/            # LLM extraction + aggregation workers│   └── web/                 # Next.js dashboard├── packages/│   └── schemas/             # shared JSON/schema definitions├── infra/│   ├── docker/│   ├── k8s/│   │   ├── base/│   │   └── overlays/│   ├── argocd/│   └── terraform/           # add later├── tests/│   ├── fixtures/│   └── integration/├── scripts/├── docs/│   ├── architecture.md│   ├── data-model.md│   └── runbooks/├── docker-compose.yml├── Jenkinsfile├── Makefile└── README.md
+Monorepo first
+Keep this as one repository initially. You can still build separate container images for crawler, analyzer, API and frontend. Splitting into multiple repositories early adds operational overhead without teaching much.
+11. CI/CD Learning Flow
+Pull request CI
+Developer branch      |      vPull Request      |      vJenkins  |- lint  |- unit tests  |- crawler fixture tests  |- analyzer schema tests  |- API tests  |- frontend build/test  `- Docker image build validation      |      vHuman review / approval      |      vMerge main
+Jenkins “checkout” simply means Jenkins uses repository credentials to clone/fetch the commit or PR branch into its build workspace. It does not approve or merge the PR. Human approval and branch protection remain separate controls.
+Main branch delivery
+merge main   |   vJenkins test/build   |   +--> crawler:<git-sha> ----+   +--> analyzer:<git-sha> ---+--> AWS ECR   +--> api:<git-sha> --------+   +--> web:<git-sha> --------+                                  |                                  v                         update GitOps manifests                                  |                                  v                               Argo CD                                  |                                  v                                EKS
+Recommended evolution
+First deploy manually with Docker Compose.
+Then Jenkins CI only.
+Then push images to ECR.
+Then local Kubernetes with kind or minikube.
+Then EKS.
+Then Jenkins-triggered deployment.
+Finally move deployment state to GitOps + Argo CD.
+12. Kubernetes / AWS Deployment Design
+Component
+Kubernetes object
+Notes
+FastAPI
+Deployment + Service
+2 replicas later; readiness/liveness probes
+Next.js
+Deployment + Service
+Expose through Ingress / load balancer
+Crawler scheduler
+CronJob
+Discovers/enqueues boards periodically
+HTTP crawler
+Deployment
+Scalable worker consuming Redis queue
+Browser crawler
+Deployment
+Separate resource-heavy worker
+Analyzer
+Deployment
+Consumes analysis queue; rate-limit LLM calls
+Config
+ConfigMap
+Non-secret environment/config
+Secrets
+Secret / AWS Secrets Manager integration
+DB URL, model API keys
+AWS services
+Service
+Purpose
+ECR
+Container image registry
+EKS
+Managed Kubernetes control plane
+RDS PostgreSQL
+Production relational database
+ElastiCache Redis
+Queue/cache later; can start cheaper/self-hosted
+ALB / Ingress
+Public entry point
+CloudWatch
+AWS-native logs/metrics; optional alongside Prometheus
+Secrets Manager
+Production secrets
+S3
+Optional raw snapshots/export artifacts
+Cost guardrail
+Do not start with EKS/RDS/ElastiCache on day one. Build locally and use small/free-tier-friendly components first. Move to AWS only after the local Docker and Kubernetes path is stable; otherwise cloud cost becomes a debugging tax.
+13. Observability
+Application metrics: jobs discovered, jobs changed, crawl success rate, parser failures, queue depth, analysis throughput.
+LLM metrics: requests, latency, token usage, cost estimate, validation failures, escalation rate.
+Data quality: percentage of jobs missing descriptions, duplicate rate, stale-source count, extraction confidence distribution.
+Infra metrics: CPU/memory, pod restarts, HTTP latency/error rate, DB pool saturation.
+Logs: structured JSON with source_id/job_id/request_id so a bad record can be traced across services.
+Add Prometheus + Grafana after the application runs end-to-end. Create at least one useful dashboard and one alert, for example: “crawler source failure rate > 30% for 30 minutes” or “analysis queue oldest item > 1 hour.”
+14. Testing Strategy
+Layer
+Tests
+Crawler
+Saved HTML/JSON fixtures; parser tests; canonical URL; dedupe; timeout/error handling
+DB
+Migration tests; upsert/idempotency; content-hash behavior
+Analyzer
+Schema validation; golden JD set; extraction precision/recall sample; model fallback
+API
+Endpoint tests, filtering, pagination, error responses
+Frontend
+Critical rendering / data-fetch tests
+Integration
+Fixture → crawl → DB → analysis → API end-to-end
+Deployment
+Health/readiness; smoke test after rollout
+Golden evaluation set
+Create 50–100 manually labelled job descriptions representing different roles and formats. This lets you compare prompt/model changes objectively and is especially important if experimenting with model routing through 9router or another gateway.
+15. Implementation Roadmap
+Phase
+Focus
+Deliverable
+Exit criterion
+0
+Define scope
+README, architecture sketch, 3 target roles, schema; no cloud yet
+You can explain the product and data flow clearly.
+1
+Minimal crawler
+10–20 companies; Greenhouse/Lever + one generic scraper; Postgres
+Fresh jobs are stored idempotently.
+2
+AI extraction
+Structured skills + role + seniority; evidence spans; golden set
+At least 50 labelled JDs evaluated.
+3
+Analytics API
+Role statistics, filters, skill frequency and trends
+API returns evidence-backed aggregates.
+4
+Web dashboard
+Overview, role, skill, job explorer, roadmap
+A user can understand market demand without SQL.
+5
+Docker
+Separate images + docker-compose
+Entire system starts locally from documented commands.
+6
+Jenkins CI
+PR checkout, lint/test/build
+Broken PRs fail automatically before merge.
+7
+Registry
+Push versioned images to ECR
+Each main build has immutable image tags.
+8
+Kubernetes local
+Deploy API/web/workers/CronJob to kind/minikube
+You can debug pod/service/config issues yourself.
+9
+AWS EKS
+Deploy public staging environment
+A staging URL is reachable and data updates.
+10
+GitOps
+Argo CD sync from deployment repo/manifests
+Cluster state follows Git, not manual kubectl edits.
+11
+Observability
+Prometheus/Grafana + alert + runbook
+You can detect and diagnose crawler/API failures.
+12
+Polish
+Benchmarks, screenshots, architecture docs, demo video
+Portfolio-ready README and measurable results.
+16. First Sprint — Exact Starting Tasks
+Do these before touching Jenkins, Kubernetes or AWS:
+Create the monorepo and README with the V1 scope.
+Start PostgreSQL locally with Docker Compose.
+Define SQLAlchemy/Pydantic job models and migrations.
+Implement one Greenhouse source and one Lever source.
+Save raw + normalized job descriptions and content hashes.
+Implement upsert + deduplication + “new/changed job” detection.
+Create 20 saved job fixtures for deterministic tests.
+Implement the LLM provider interface and a mock provider.
+Implement structured skill extraction with JSON-schema/Pydantic validation.
+Label the first 30–50 JDs manually for a golden evaluation set.
+Expose GET /roles/{role}/skills from FastAPI.
+Build one simple dashboard page showing top skills from real stored jobs.
+Definition of Done for Sprint 1
+docker compose up        |        +--> postgres        +--> crawler        +--> analyzer        +--> api        `--> webOpen browser -> select "AI Engineer" -> see real aggregated skillsfrom jobs your crawler actually collected.
+17. Deferred Backlog
+User accounts and personalization.
+Resume upload and skill-gap comparison.
+Email/Slack alerts for emerging skills.
+Vector search / semantic job search.
+Salary parsing and normalization.
+Terraform/IaC after manual AWS deployment is understood.
+Autoscaling based on Redis queue depth.
+Data warehouse / OLAP engine if PostgreSQL analytics becomes limiting.
+Multi-region crawling.
+Fine-tuned or local extraction model after enough labelled data exists.
+18. Portfolio / Interview Story
+A strong final explanation should sound like engineering decisions, not a list of tools:
+“I built a job-market intelligence platform that monitors public company career pages, normalizes and deduplicates postings, uses structured LLM extraction to identify required technologies, and computes time-series demand by engineering role. I separated deterministic ingestion from semantic analysis for reliability and cost control. The system runs as containerized workers and services, uses CI for PR validation, publishes images to a registry, and is deployed to Kubernetes through GitOps. I also built a golden evaluation set to compare extraction models and routing strategies.”
+Questions you should be able to answer after finishing
+Why use Redis instead of making the crawler call the analyzer directly?
+Why separate HTTP and browser workers?
+How do you prevent duplicate jobs and duplicate LLM spend?
+What happens when a source changes HTML structure?
+What is the difference between CI, CD and GitOps in your project?
+Why does Jenkins checkout code but not approve a PR?
+Why use Kubernetes Deployment vs CronJob?
+How does EKS pull a private image from ECR?
+How do you roll back a bad deployment?
+How do you know the LLM extractor actually improved?
+How do you monitor stale data or silent crawler failures?
+What would you simplify if traffic were only 10 users/day?
+19. Completion Checklist
+Category
+Minimum evidence
+Product
+Public/staging dashboard with 3+ roles and real job data
+Crawler
+3+ source strategies / ATS families, fixtures and retry handling
+AI
+Structured extraction, evidence spans, golden-set evaluation, provider abstraction
+Data
+Postgres schema, dedupe/idempotency, historical snapshots
+Backend
+Documented API, tests and health endpoint
+Frontend
+Role/skills/trends/jobs/roadmap views
+Docker
+Reproducible local environment
+CI
+Jenkins PR pipeline
+Registry
+Immutable ECR image tags
+K8s
+Deployments, Services, CronJob, ConfigMap/Secrets, probes
+AWS
+Staging environment on EKS or documented equivalent
+GitOps
+Argo CD deployment from Git manifests
+Observability
+Metrics dashboard, logs, one useful alert and runbook
+Docs
+Architecture diagram, tradeoffs, setup, screenshots, demo
+20. Recommended Principle
+Build the product first, then earn each infrastructure tool. Docker should solve reproducibility, Jenkins should solve automated validation, Kubernetes should solve multi-service scheduling and lifecycle management, AWS should solve hosting, Argo CD should solve deployment-state management, and observability should solve operational uncertainty. If a tool is present only because it looks good on a stack list, delay it until the system creates a real need for it.

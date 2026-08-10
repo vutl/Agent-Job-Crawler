@@ -1,0 +1,33 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Database & Storage
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment & Secrets
+.env
+.env.local
+
+# Node.js / Web
+node_modules/
+.next/
+out/
+
+# Custom Exclusions
+jobseek/
+graphify-out/
+
+# Logs & OS
+*.log
+.DS_Store

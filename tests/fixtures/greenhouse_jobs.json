@@ -1,0 +1,20 @@
+{
+  "jobs": [
+    {
+      "id": 40101,
+      "title": "Senior AI Engineer",
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/40101",
+      "location": { "name": "San Francisco, CA" },
+      "content": "<h1>Senior AI Engineer</h1><p>We are seeking a Senior AI Engineer to join our core AI team. Requirements include 5+ years with PyTorch, CUDA, Python, and Kubernetes. Experience deploying LLMs to AWS with FastAPI and PostgreSQL is a plus.</p>",
+      "updated_at": "2026-08-01T10:00:00Z"
+    },
+    {
+      "id": 40102,
+      "title": "MLOps Engineer",
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/40102",
+      "location": { "name": "Remote" },
+      "content": "<h1>MLOps Engineer</h1><p>Looking for an MLOps Engineer to build scalable machine learning infrastructure. Must have expertise in Kubernetes, Docker, Terraform, Prometheus, and Python.</p>",
+      "updated_at": "2026-08-02T14:30:00Z"
+    }
+  ]
+}

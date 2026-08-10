@@ -1,0 +1,3344 @@
+<html class="overflow-hidden" lang="en" data-bs-theme="dark" style="--content-height-mc0: 641px; --content-height-mc1: 621px; --content-height-mc2: 621px;"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1">
+<title>all coding - Hiring</title>
+<meta name="description" content="The career platform for coders, builders, hackers and makers.">
+<link rel="canonical" href="https://foorilla.com/hiring/">
+<link href="/s/css/style.min.css?v=1.6.9" rel="stylesheet">
+<link rel="shortcut icon" href="/s/img/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-180x180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/s/img/apple-icon-60x60.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/s/img/favicon-192x192.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/s/img/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/s/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/s/img/favicon-16x16.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="foo🦍 ~/all coding - Hiring">
+<meta property="og:description" content="The career platform for coders, builders, hackers and makers.">
+<meta property="og:url" content="https://foorilla.com/hiring/">
+<meta property="og:site_name" content="foo🦍">
+<meta property="og:image" content="https://scrn.foorilla.com/img/aHR0cHM6Ly9mb29yaWxsYS5jb20vaGlyaW5nLw.png">
+
+<script src="/s/js/chart.js?v=1.6.9"></script>
+<script>
+var currentTheme = localStorage.getItem('theme');
+if (currentTheme) { document.documentElement.dataset.bsTheme = currentTheme; }
+else { currentTheme = 'dark'; }
+function updateLayoutHeight() {
+  const header = document.getElementById('header');
+  const hh = header.offsetHeight;
+  const wh = window.innerHeight;
+  const mc0h = wh - hh - 4;
+  const mc1h = wh - hh - 24;
+  const mc2h = wh - hh - 24;
+  document.documentElement.style.setProperty('--content-height-mc0', `${mc0h}px`);
+  document.documentElement.style.setProperty('--content-height-mc1', `${mc1h}px`);
+  document.documentElement.style.setProperty('--content-height-mc2', `${mc2h}px`);
+}
+window.addEventListener('resize', updateLayoutHeight);
+window.addEventListener('orientationchange', updateLayoutHeight);
+window.addEventListener('DOMContentLoaded', updateLayoutHeight);
+function handlePrimaryListItems() {
+  items = document.querySelectorAll('.list-group-item');
+  items.forEach(item => {
+    item.addEventListener('click', function(event) {
+      items.forEach(i => i.classList.remove('bg-primary-subtle'));
+      this.classList.add('bg-primary-subtle');
+    });
+  });
+}
+function showSearchListLoading(event) {
+  const row = event.target.closest('li');
+  if (!row || !row.parentElement) {
+    event.detail.target.innerHTML = '...';
+    return;
+  }
+  let next = row.nextElementSibling;
+  while (next) {
+    const current = next;
+    next = next.nextElementSibling;
+    current.remove();
+  }
+  const loading = document.createElement('li');
+  loading.className = 'list-group-item';
+  loading.textContent = '...';
+  row.parentElement.appendChild(loading);
+}
+</script>
+<script src="/s/django_htmx/htmx-2.min.js" defer=""></script>
+<link href="/s/django_tomselect/vendor/tom-select/css/tom-select.bootstrap5.min.css" rel="stylesheet" media="all">
+<link href="/s/django_tomselect/css/django-tomselect.css" rel="stylesheet" media="all">
+<script src="/s/django_tomselect/js/django-tomselect.min.js"></script>
+<style>.htmx-indicator{opacity:0;visibility: hidden} .htmx-request .htmx-indicator, .htmx-request.htmx-indicator{opacity:1;visibility: visible;transition: opacity 200ms ease-in}</style></head>
+<body hx-headers="js:{&quot;X-CSRFToken&quot;: &quot;Jn15z8gLRAbzyDPdt2WbkcmIe53XgU390hfYnoltQiUeKhas0s5FIXdQLdE4Pw7a&quot;, &quot;X-Screen&quot;: window.innerWidth &lt; 768 ? &quot;M&quot; : &quot;D&quot;}">
+
+<div id="header">
+<div class="d-flex justify-content-between px-1 pt-1 border-bottom" id="hr_0">
+    <div>
+        <a href="/"><b>foo🦍</b></a>
+        ~/<span id="hr_0t">all coding - Hiring</span>
+    </div>
+    <div class="d-flex justify-content-end">
+        
+        <div class="form-check form-switch ms-2 mb-0">
+            <label class="form-check-label">
+                <svg class="pb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path></svg>
+                <input class="form-check-input theme-toggle" type="checkbox" role="switch">
+            </label>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container-fluid g-0">
+<div class="row g-0">
+    <div id="mc_0" class="col-3 col-md-2 d-flex flex-column border-end" style="height: var(--content-height-mc0); min-height: 0; overflow-y: auto;">
+        <div id="hr_1a" class="border-bottom">
+    <div class="px-1">
+
+
+<a class="fw-semibold" role="button" hx-get="/account/context/save/hiring/" hx-target="#mo_0" data-bs-toggle="modal" data-bs-target="#mo_0">
+    Save
+</a> ·
+<a class="fw-semibold" role="button" hx-get="/clear/hiring/">
+    Clear
+</a> &gt;
+
+<a role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/topics/hiring/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    Data, AI, and Machine Learning
+</a>
+
+
++
+<a role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/regions/hiring/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    Regions
+</a>
+
+
++
+<a role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/hiring/filter/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    Filters
+</a>
+
+
+<small class="text-success">[R]</small>
+
+
+    </div>
+</div>
+
+        <div class="d-flex flex-column justify-content-start flex-grow-1 flex-shrink-1">
+            <div id="mc_0a">
+<div class="text-body-secondary px-1 border-bottom">
+
+103 new jobs found (60d)
+
+</div>
+<div class="p-1 border-bottom position-relative">
+    <a class="fw-semibold stretched-link" role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/topics/hiring/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Topics»
+    </a>
+</div>
+<div class="p-1 border-bottom position-relative">
+    <a class="fw-semibold stretched-link" role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/regions/hiring/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Regions»
+    </a>
+</div>
+<div class="p-1 border-bottom position-relative">
+    <a class="fw-semibold stretched-link" role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/hiring/filter/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Filters»
+    </a>
+</div>
+<div class="p-1 border-bottom position-relative">
+    <a class="fw-semibold stretched-link" role="button" data-bs-toggle="offcanvas" data-bs-target="#oc_0" hx-get="/hiring/setting/" hx-target="#oc_0" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Settings»
+    </a>
+</div>
+
+<div class="text-bg-light border-bottom px-1" role="button" hx-get="/account/context/save/hiring/" hx-target="#mo_0" data-bs-toggle="modal" data-bs-target="#mo_0">
+    <small>Context: <b></b></small>
+</div>
+<div class="border-bottom px-1" role="button" hx-get="/account/context/share/hiring/" hx-target="#mo_0" data-bs-toggle="modal" data-bs-target="#mo_0">
+    <small>Share Context</small>
+</div>
+
+
+<div class="p-1 border-bottom">
+<small>
+    Export as<br class="d-lg-none">
+    <a href="/hiring/jobs/latest/export/?format=csv">CSV</a> ·
+    <a href="/hiring/jobs/latest/export/?format=json">JSON</a>
+</small>
+</div>
+
+
+</div>
+            <div id="mc_0b">
+
+<div class="d-flex flex-column">
+<div class="chart-wrapper" style="height: 80px;">
+    <small class="text-muted d-none d-lg-block ps-1">
+        New - past 7d<br>
+        <i class="text-bg-success">
+        +20.37%
+        </i>
+    </small>
+    <small class="text-muted d-lg-none ps-1">
+        New-7d<br>
+        <i class="text-bg-success">
+        +20.37%
+        </i>
+    </small>
+    <div class="border-bottom" style="height: calc(100% - 2.25rem);">
+        <canvas id="chart_sb1" style="display: block; box-sizing: border-box; height: 43px; width: 151px;" width="302" height="86"></canvas>
+    </div>
+</div>
+<div class="chart-wrapper" style="height: 80px;">
+    <small class="text-muted d-none d-lg-block ps-1">
+        New - past 4w<br>
+        <i class="text-bg-success">
+        +426.67%
+        </i>
+    </small>
+    <small class="text-muted d-lg-none ps-1">
+        New-4w<br>
+        <i class="text-bg-success">
+        +426.67%
+        </i>
+    </small>
+    <div class="border-bottom" style="height: calc(100% - 2.25rem);">
+        <canvas id="chart_sb2" style="display: block; box-sizing: border-box; height: 43px; width: 151px;" width="302" height="86"></canvas>
+    </div>
+</div>
+
+<div class="chart-wrapper" style="height: 80px;">
+    <small class="text-muted d-none d-lg-block ps-1">
+        Remote - past 7d<br>
+        <i class="text-bg-success">
+        +20.37%
+        </i>
+    </small>
+    <small class="text-muted d-lg-none ps-1">
+        Remote-7d<br>
+        <i class="text-bg-success">
+        +20.37%
+        </i>
+    </small>
+    <div class="border-bottom" style="height: calc(100% - 2.25rem);">
+        <canvas id="chart_sb3" style="display: block; box-sizing: border-box; height: 43px; width: 151px;" width="302" height="86"></canvas>
+    </div>
+</div>
+<div class="chart-wrapper" style="height: 80px;">
+    <small class="text-muted d-none d-lg-block ps-1">
+        Remote - past 4w<br>
+        <i class="text-bg-success">
+        +426.67%
+        </i>
+    </small>
+    <small class="text-muted d-lg-none ps-1">
+        Remote-4w<br>
+        <i class="text-bg-success">
+        +426.67%
+        </i>
+    </small>
+    <div class="border-bottom" style="height: calc(100% - 2.25rem);">
+        <canvas id="chart_sb4" style="display: block; box-sizing: border-box; height: 43px; width: 151px;" width="302" height="86"></canvas>
+    </div>
+</div>
+
+<script>
+createMiniChart('chart_sb1', [14, 1, 6, 19, 25, 0, 0]);
+createMiniChart('chart_sb2', [7, 0, 3, 2, 4, 0, 0, 4, 0, 4, 7, 8, 0, 0, 13, 11, 1, 26, 3, 0, 0, 14, 1, 6, 19, 25, 0, 0]);
+
+createMiniChart('chart_sb3', [14, 1, 6, 19, 25, 0, 0]);
+createMiniChart('chart_sb4', [7, 0, 3, 2, 4, 0, 0, 4, 0, 4, 7, 8, 0, 0, 13, 11, 1, 26, 3, 0, 0, 14, 1, 6, 19, 25, 0, 0]);
+
+</script>
+</div>
+
+
+
+<div class="border-bottom px-1">
+    <small class="text-muted"><span class="d-none d-sm-inline">Distribution by experience (all)</span><span class="d-inline d-sm-none">Dist. by exp. (all)</span></small>
+    <div class="chart-wrapper" style="height: 90px;">
+        <canvas id="chart_sb_jexp" data-dist-labels="[&quot;[SE]&quot;, &quot;[MI]&quot;, &quot;[EN]&quot;, &quot;[EX]&quot;, &quot;N/A&quot;]" data-dist-values="[126892, 82012, 30333, 9500, 1310]" data-dist-total="250047" data-dist-unit="job" data-dist-rendered-sig="[&quot;[SE]&quot;,&quot;[MI]&quot;,&quot;[EN]&quot;,&quot;[EX]&quot;,&quot;N/A&quot;]|[126892,82012,30333,9500,1310]|250047|job" style="display: block; box-sizing: border-box; height: 90px; width: 143px;" width="286" height="180"></canvas>
+    </div>
+    <div class="mt-1" style="font-size: .72rem; line-height: 1.25;">
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">[SE]</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">126892 (51%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">[MI]</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">82012 (33%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">[EN]</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">30333 (12%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">[EX]</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">9500 (4%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">N/A</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">1310 (1%)</small>
+        </div>
+        
+    </div>
+</div>
+
+
+<div class="border-bottom px-1">
+    <small class="text-muted"><span class="d-none d-sm-inline">Distribution by type (all)</span><span class="d-inline d-sm-none">Dist. by type (all)</span></small>
+    <div class="chart-wrapper" style="height: 122px;">
+        <canvas id="chart_sb_jtyp" data-dist-labels="[&quot;Full Time&quot;, &quot;Internship&quot;, &quot;Contract&quot;, &quot;Part Time&quot;, &quot;Temporary&quot;, &quot;Freelance&quot;, &quot;Apprenticeship&quot;]" data-dist-values="[240456, 5187, 4359, 3885, 928, 615, 359]" data-dist-total="255789" data-dist-unit="job" data-dist-rendered-sig="[&quot;Full Time&quot;,&quot;Internship&quot;,&quot;Contract&quot;,&quot;Part Time&quot;,&quot;Temporary&quot;,&quot;Freelance&quot;,&quot;Apprenticeship&quot;]|[240456,5187,4359,3885,928,615,359]|255789|job" style="display: block; box-sizing: border-box; height: 122px; width: 143px;" width="286" height="244"></canvas>
+    </div>
+    <div class="mt-1" style="font-size: .72rem; line-height: 1.25;">
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Full Time</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">240456 (94%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Internship</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">5187 (2%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Contract</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">4359 (2%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Part Time</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">3885 (2%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Temporary</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">928 (0%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Freelance</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">615 (0%)</small>
+        </div>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 py-1">
+            <small class="text-wrap" style="min-width: 0; line-height: 1.15;">Apprenticeship</small>
+            <small class="text-body-secondary text-nowrap ms-sm-auto" style="line-height: 1.15;">359 (0%)</small>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+            <div class="text-body-secondary small border-top mt-auto px-1">
+                <a href="" hx-get="/changelog/" hx-target="#mo_0" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#mo_0">Changelog</a> ·
+                
+                <a href="https://billing.stripe.com/p/login/7sYdR95my8yLelP3DQeEo00" rel="nofollow" target="_blank">Billing</a> ·
+                
+                <a href="" hx-get="/about/" hx-target="#mo_0" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#mo_0">About</a> ·
+                <a href="" hx-get="/post-job/" hx-target="#mo_0" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#mo_0">Post a job</a> ·
+                <a href="" hx-get="/terms/" hx-target="#mo_0" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#mo_0">Terms</a> ·
+                <a href="" hx-get="/privacy/" hx-target="#mo_0" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#mo_0">Privacy</a> ·
+                <a href="/api/list/">API</a> ·
+                <a href="https://foorilla.hyperping.app/" target="_blank">Status</a>
+            </div>
+            <div class="text-body-secondary small border-top px-1">
+                <a href="https://mastodon.social/@foorilla" rel="me" target="_blank" title="Follow us on Mastodon">M</a> ·
+                <a href="https://x.com/foorilla" rel="nofollow" target="_blank" title="Follow us on X">X</a> ·
+                <a href="https://www.linkedin.com/company/foorillacom/" rel="nofollow" target="_blank" title="Follow us on LinkedIn">LI</a> ·
+                <a href="https://github.com/foorilla" rel="nofollow" target="_blank" title="Follow us on GitHub">GH</a> ·
+                <a href="https://www.reddit.com/user/foorilla/" rel="nofollow" target="_blank" title="Follow us on Reddit">RDDT</a>
+            </div>
+            <div class="text-body-secondary small border-top px-1">
+                v1.6.9 · Made with ☕ + ♥️<br>
+                © 2026 <a href="/">foorilla</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-9 col-md-10">
+        <div class="row g-0">
+            <div id="hr_1b" class="col d-flex overflow-x-scroll border-bottom">
+                <div class="ms-auto border-start px-1 text-bg-light">
+                    <a class="fw-semibold text-primary" href="/hiring/">Hiring</a>
+                </div>
+                <div class="border-start px-1">
+                    <a class="fw-semibold" href="/media/">Media</a>
+                </div>
+                <div class="border-start px-1">
+                    <a class="fw-semibold" href="/event/">Event</a>
+                </div>
+                <div class="border-start px-1">
+                    <a class="fw-semibold" href="/insight/">Insight</a>
+                </div>
+                <div class="border-start px-1">
+                    <a class="fw-semibold" href="/account/">Account</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-0">
+            <div class="col overflow-y-scroll overflow-x-none border-end text-break" style="height: var(--content-height-mc1);" id="mc_1" hx-get="/hiring/jobs/" hx-trigger="load">
+
+
+
+
+
+
+
+<ul class="list-group list-group-flush text-break">
+<li class="border-bottom">
+<div class="d-flex justify-content-start" style="overflow-x: auto; white-space: nowrap;">
+
+<div class="border-end px-1 text-bg-light">
+    <h3 class="text-primary">Latest</h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/followed/" hx-replace-url="true" hx-target="#mc_1">
+        Followed</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/saved/" hx-replace-url="true" hx-target="#mc_1">
+        Saved</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/companies/" hx-replace-url="true" hx-target="#mc_1">
+        Companies</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/companies/following/" hx-replace-url="true" hx-target="#mc_1">
+        Following</a></h3>
+</div>
+
+
+<div class="border-end px-1 d-md-none">
+    <h3><a href="" hx-get="/hiring/jobs/viewed/" hx-replace-url="true" hx-target="#mc_1">
+        Viewed</a></h3>
+</div>
+
+
+<div class="border-end px-1 d-md-none">
+    <h3><a href="" hx-get="/hiring/jobs/applied/" hx-replace-url="true" hx-target="#mc_1">
+        Applied</a></h3>
+</div>
+
+
+<div class="border-end px-1 d-md-none">
+    <h3><a href="" hx-get="/hiring/jobs/top/" hx-replace-url="true" hx-target="#mc_1">
+        Top</a></h3>
+</div>
+
+</div>
+</li>
+<li class="border-bottom">
+  <div class="d-flex gap-1 align-items-center">
+    <input type="text" name="job_search" value="" class="form-control" placeholder="Quick search..." hx-get="/hiring/jobs/" hx-trigger="keyup changed delay:500ms" hx-target="#mc_1" hx-on::before-request="showSearchListLoading(event)">
+    <button class="btn btn-outline-primary btn-sm text-nowrap d-inline-flex align-items-center flex-shrink-0" type="button" title="Add to Context" hx-post="/search/hiring/" hx-include="[name='job_search']" hx-vals="{&quot;action&quot;:&quot;save&quot;,&quot;search_param&quot;:&quot;job_search&quot;}">
+      Add
+    </button>
+    <button class="btn btn-outline-secondary btn-sm text-nowrap d-inline-flex align-items-center flex-shrink-0" type="button" title="Clear" hx-post="/search/hiring/" hx-vals="{&quot;action&quot;:&quot;clear&quot;,&quot;search_param&quot;:&quot;job_search&quot;}">
+      Clear
+    </button>
+  </div>
+  
+</li>
+
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/machine-learning-engineer-new-grad-2026-dallas-tx-new-york-ny-san-francisco-ca-3388387/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Machine Learning Engineer - New Grad 2026
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 150K-175K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Dallas, TX; New York, NY; San …
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ingeniero-de-datos-junior-ciudad-de-mexico-cdmx-mexico-3383029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Ingeniero de Datos Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 180K-204K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de México, CDMX, México
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3382423/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-240K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/1008-data-engineer-airflowdbtaws-juniorjunior-adv-hibrido-arg-cordoba-cordoba-province-argentina-3390241/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    1008 - Data Engineer (Airflow/DBT/AWS)  · Junior/Junior Adv · Híbrido · ARG
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 35K-40K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Córdoba, Córdoba Province, Argentina
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/intern-or-trainee-industrialsoftware-engineering-student-mexico-city-mexico-city-mexico-3389719/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Intern or Trainee - Industrial/Software Engineering Student
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Internship]</small>
+
+
+
+</div>
+<div class="text-end">
+<small>
+    Mexico City, Mexico City, Mexico
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/analytics-engineer-singapore-3375511/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Analytics Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">SGD 120K-170K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Singapore
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-manchester-united-kingdom-3382493/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">GBP 69K-94K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Manchester, United Kingdom
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/google-cloud-data-engineer-prague-cz-3387920/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Google Cloud Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">CZK 738K-1140K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Prague, CZ
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-kosice-sk-3388199/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 42K-57K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Košice, SK
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-engineer-mid-usa-tx-san-antonio-3133-general-hudnell-dr-client-site-united-states-3388838/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Engineer, Mid
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 77K-176K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    USA, TX, San Antonio (3133 General …
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/analyst-data-science-and-analytics-lagunilla-de-heredia-costa-rica-3394022/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Analyst, Data Science and Analytics
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 58K-93K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Lagunilla de Heredia, Costa Rica
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-analytics-engineer-canada-3375518/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Analytics Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">CAD 50K-65K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Canada
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/customer-enablement-specialist-bellevue-washington-3378595/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Customer Enablement Specialist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 86K-119K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Bellevue, Washington
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3373975/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-rd-engineering-co-op-united-states-3380156/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI R&amp;D Engineering Co-op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 80K-95K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    United States
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-scientist-london-united-kingdom-3375118/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Scientist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 70K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    London, United Kingdom
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-platform-engineer-stoke-on-trent-england-united-kingdom-3372029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Platform Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 55K-75K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Stoke-on-Trent, England, United Kingdom
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/jr-mlops-engineer-mex-queretaro-business-services-mexico-3380767/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Jr. MLOps Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 108K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    MEX - Queretaro Business Services, Mexico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/jr-mlops-engineer-mex-queretaro-business-services-mexico-3380768/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Jr. MLOps Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 108K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    MEX - Queretaro Business Services, Mexico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-ml-engineer-and-data-scientist-usa-va-fort-belvoir-7900-telegraph-rd-united-states-3383141/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI &amp; ML Engineer and Data Scientist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 99K-225K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    USA, VA, Fort Belvoir (7900 Telegraph …
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-qa-engineer-enterprise-data-mexico-mexico-city-3367116/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data QA Engineer – Enterprise Data | Mexico
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 300K-300K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Mexico City
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-hibrido-pozuelo-de-alarcon-madrid-espana-3370267/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    4d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 28K-33K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Híbrido (Pozuelo de Alarcón, Madrid, España)
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-automation-specialist-philippines-remote-3371871/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Automation Specialist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    4d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">PHP 960K-1200K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Philippines - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-scientist-biomedical-signal-processing-remotely-anywhere-3351318/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Scientist - Biomedical Signal Processing
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    4d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 140K-180K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remotely, Anywhere
+    <span class="text-success">[WRA]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/llmops-engineer-remote-3338533/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    LLMOps Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 100K-140K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-engineer-remote-3338535/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 35K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-support-data-engineer-remote-3333132/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Support Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 60K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-software-engineer-hyderabadremote-india-3333458/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Software Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 480K-800K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Hyderabad/Remote, India
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-awsdatabricks-reston-va-united-states-3339131/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer - AWS/Databricks
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 122K-210K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Reston, VA, United States
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/skillbridge-us-2026-active-duty-us-military-only-atlanta-ga-remote-3337989/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    SkillBridge – US 2026 Active Duty US Military ONLY
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 110K-176K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Atlanta, GA - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-12-month-ftc-london-united-kingdom-3317737/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer 12 month FTC
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    9d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Contract][Temporary]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 30K-35K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    London, United Kingdom
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-ai-engineer-limassol-cyprus-3354495/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 31K-42K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Limassol, Cyprus
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-argentina-remote-3316120/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 44K-44K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Argentina - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-brazil-remote-3316121/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+
+</div>
+<div class="text-end">
+<small>
+    Brazil - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-france-remote-3316122/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 36K-36K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    France - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-spain-remote-3316123/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 36K-36K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Spain - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-germany-remote-3316124/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 36K-36K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Germany - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-australia-remote-3316125/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">AUD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Australia - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-florida-united-states-remote-3316126/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Florida, United States - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-united-states-remote-3316127/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    United States - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-mexico-remote-3316136/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+
+</div>
+<div class="text-end">
+<small>
+    Mexico - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-michigan-united-states-remote-3316155/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Michigan, United States - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-texas-united-states-remote-3316156/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Texas, United States - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-saudi-arabia-remote-3316157/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 44K-44K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Saudi Arabia - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-india-remote-3316158/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 324K-420K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    India - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-malaysia-remote-3316159/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 44K-44K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Malaysia - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-philippines-remote-3316160/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">PHP 306K-474K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Philippines - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-new-york-new-york-united-states-remote-3316165/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 46K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    New York, New York, United States …
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-south-africa-remote-3316169/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">ZAR 144K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    South Africa - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item" hx-get="/hiring/jobs/?page=2" hx-trigger="intersect once" hx-swap="afterend" hx-on::before-request="event.detail.target.innerHTML = '...'" hx-on::after-request="event.detail.target.innerHTML = ''">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-trainer-freelance-data-annotator-romania-remote-3316170/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Trainer - Freelance Data Annotator
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    10d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Freelance]</small>
+
+
+    
+    <small class="text-bg-secondary">RON 82K-107K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Romania - Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+
+
+</ul>
+
+
+<script>handlePrimaryListItems();</script>
+</div>
+            <div class="col overflow-y-scroll overflow-x-none d-none d-md-block text-break" style="height: var(--content-height-mc2);" id="mc_2" hx-get="/hiring/jobs/top/" hx-trigger="load">
+
+<ul class="list-group list-group-flush text-break">
+<li class="border-bottom d-none d-md-block">
+<div class="d-flex justify-content-start">
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/viewed/" hx-replace-url="true" hx-target="#mc_2" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Viewed</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/applied/" hx-replace-url="true" hx-target="#mc_2" hx-on::before-request="event.detail.target.innerHTML = '...'">
+        Applied</a></h3>
+</div>
+
+
+<div class="border-end px-1 text-bg-light">
+    <h3 class="text-primary">Top</h3>
+</div>
+
+</div>
+</li>
+
+<li class="border-bottom d-md-none">
+<div class="d-flex justify-content-start" style="overflow-x: auto; white-space: nowrap;">
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/" hx-replace-url="true" hx-target="#mc_1">
+        Latest</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/followed/" hx-replace-url="true" hx-target="#mc_1">
+        Followed</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/jobs/saved/" hx-replace-url="true" hx-target="#mc_1">
+        Saved</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/companies/" hx-replace-url="true" hx-target="#mc_1">
+        Companies</a></h3>
+</div>
+
+
+<div class="border-end px-1">
+    <h3><a href="" hx-get="/hiring/companies/following/" hx-replace-url="true" hx-target="#mc_1">
+        Following</a></h3>
+</div>
+
+
+<div class="border-end px-1 d-md-none">
+    <h3><a href="" hx-get="/hiring/jobs/viewed/" hx-replace-url="true" hx-target="#mc_1">
+        Viewed</a></h3>
+</div>
+
+
+<div class="border-end px-1 d-md-none">
+    <h3><a href="" hx-get="/hiring/jobs/applied/" hx-replace-url="true" hx-target="#mc_1">
+        Applied</a></h3>
+</div>
+
+
+<div class="border-end px-1 text-bg-light d-md-none">
+    <h3 class="text-primary">Top</h3>
+</div>
+
+</div>
+</li>
+
+<li class="border-bottom px-1">
+    <h4>Jobs by views</h4>
+</li>
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-software-engineer-hyderabadremote-india-3333458/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Software Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 480K-800K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Hyderabad/Remote, India
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3382423/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-240K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ingeniero-de-datos-junior-ciudad-de-mexico-cdmx-mexico-3383029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Ingeniero de Datos Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 180K-204K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de México, CDMX, México
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-scientist-biomedical-signal-processing-remotely-anywhere-3351318/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Scientist - Biomedical Signal Processing
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    4d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 140K-180K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remotely, Anywhere
+    <span class="text-success">[WRA]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/machine-learning-engineer-new-grad-2026-dallas-tx-new-york-ny-san-francisco-ca-3388387/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Machine Learning Engineer - New Grad 2026
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 150K-175K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Dallas, TX; New York, NY; San …
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3373975/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-analytics-engineer-canada-3375518/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Analytics Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">CAD 50K-65K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Canada
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-support-data-engineer-remote-3333132/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Support Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 60K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-platform-engineer-stoke-on-trent-england-united-kingdom-3372029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Platform Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 55K-75K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Stoke-on-Trent, England, United Kingdom
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-scientist-london-united-kingdom-3375118/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Scientist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 70K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    London, United Kingdom
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/customer-enablement-specialist-bellevue-washington-3378595/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Customer Enablement Specialist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 86K-119K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Bellevue, Washington
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-engineer-remote-3338535/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 35K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/analytics-engineer-singapore-3375511/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Analytics Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">SGD 120K-170K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Singapore
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-rd-engineering-co-op-united-states-3380156/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI R&amp;D Engineering Co-op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 80K-95K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    United States
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-manchester-united-kingdom-3382493/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">GBP 69K-94K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Manchester, United Kingdom
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/1008-data-engineer-airflowdbtaws-juniorjunior-adv-hibrido-arg-cordoba-cordoba-province-argentina-3390241/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    1008 - Data Engineer (Airflow/DBT/AWS)  · Junior/Junior Adv · Híbrido · ARG
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 35K-40K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Córdoba, Córdoba Province, Argentina
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/llmops-engineer-remote-3338533/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    LLMOps Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 100K-140K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-qa-engineer-enterprise-data-mexico-mexico-city-3367116/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data QA Engineer – Enterprise Data | Mexico
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 300K-300K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Mexico City
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-kosice-sk-3388199/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 42K-57K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Košice, SK
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+</ul>
+<ul class="list-group list-group-flush text-break">
+<li class="border-bottom border-top px-1">
+    <h4>Jobs by clicks (apply)</h4>
+</li>
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3382423/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-240K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ingeniero-de-datos-junior-ciudad-de-mexico-cdmx-mexico-3383029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Ingeniero de Datos Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    1d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 180K-204K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de México, CDMX, México
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-software-engineer-hyderabadremote-india-3333458/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Software Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">INR 480K-800K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Hyderabad/Remote, India
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-analyst-junior-ciudad-de-mexico-3373975/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Analyst Junior
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 216K-216K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Ciudad de méxico
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-analytics-engineer-canada-3375518/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Analytics Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">CAD 50K-65K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Canada
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/customer-enablement-specialist-bellevue-washington-3378595/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Customer Enablement Specialist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">USD 86K-119K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Bellevue, Washington
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-engineer-remote-3338535/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">EUR 35K-46K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-platform-engineer-stoke-on-trent-england-united-kingdom-3372029/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Platform Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 55K-75K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Stoke-on-Trent, England, United Kingdom
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/junior-support-data-engineer-remote-3333132/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Junior Support Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    6d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 60K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-scientist-london-united-kingdom-3375118/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Scientist
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">GBP 70K-80K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    London, United Kingdom
+    <span class="text-success">[WH]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/ai-rd-engineering-co-op-united-states-3380156/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    AI R&amp;D Engineering Co-op
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 80K-95K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    United States
+    <span class="text-success">[R]</span>
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-engineer-manchester-united-kingdom-3382493/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    2d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-success">GBP 69K-94K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Manchester, United Kingdom
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/llmops-engineer-remote-3338533/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    LLMOps Engineer
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    5d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">USD 100K-140K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Remote
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/jobs/data-qa-engineer-enterprise-data-mexico-mexico-city-3367116/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top">
+    
+    Data QA Engineer – Enterprise Data | Mexico
+</a>
+<div class="flex-shrink-0 text-body-secondary"><small>
+    3d ago 
+</small></div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+<small class="text-warning-emphasis">[EN]</small><small class="text-body-secondary">[Full Time]</small>
+
+
+    
+    <small class="text-bg-secondary">MXN 300K-300K</small>
+    
+
+
+</div>
+<div class="text-end">
+<small>
+    Mexico City
+    <span class="text-success">[R]</span>
+    
+</small>
+</div>
+</div>
+</li>
+
+
+</ul>
+<ul class="list-group list-group-flush text-break">
+<li class="border-bottom border-top px-1">
+    <h4>Companies by views</h4>
+</li>
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/companies/booz-allen-hamilton-333/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    B...
+</a>
+<div class="flex-shrink-0">
+    <small class="text-info">[H]</small>
+    <small class="text-body-secondary">11535 jobs (open: 946)</small>
+</div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+    <small class="text-body-secondary">IT Services and IT Consulting</small>
+    
+</div>
+<div class="text-end">
+    <small>HQ: McLean, VA</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/companies/databricks-725/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    D...
+</a>
+<div class="flex-shrink-0">
+    <small class="text-info">[H]</small>
+    <small class="text-body-secondary">2758 jobs (open: 320)</small>
+</div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+    <small class="text-body-secondary">Software Development</small>
+    
+</div>
+<div class="text-end">
+    <small>HQ: San Francisco, CA</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/companies/capgemini-5-27601/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    C...
+</a>
+<div class="flex-shrink-0">
+    <small class="text-info">[H]</small>
+    <small class="text-body-secondary">22110 jobs (open: 2188)</small>
+</div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+    <small class="text-body-secondary">IT Services and IT Consulting</small>
+    
+</div>
+<div class="text-end">
+    <small>HQ: Paris, France</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/companies/atos-46/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    A...
+</a>
+<div class="flex-shrink-0">
+    <small class="text-info">[H]</small>
+    <small class="text-body-secondary">3205 jobs (open: 205)</small>
+</div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+    <small class="text-body-secondary">IT Services and IT Consulting</small>
+    <small class="text-success">[RF]</small>
+</div>
+<div class="text-end">
+    <small>HQ: 95877 Bezons</small>
+</div>
+</div>
+</li>
+
+
+<li class="list-group-item">
+<div class="hstack justify-content-between">
+<a class="stretched-link" href="" data-bs-dismiss="offcanvas" data-bs-target="#oc_1" hx-get="/hiring/companies/bet365-30118/" hx-replace-url="true" hx-target="#mc_2" hx-swap="scroll:top" hx-on::before-request="event.detail.target.innerHTML = '...'">
+    b...
+</a>
+<div class="flex-shrink-0">
+    <small class="text-info">[H]</small>
+    <small class="text-body-secondary">799 jobs (open: 72)</small>
+</div>
+</div>
+<div class="hstack justify-content-between">
+<div>
+    <small class="text-body-secondary">Gambling Facilities and Casinos</small>
+    
+</div>
+<div class="text-end">
+    <small>HQ: Stoke-on-Trent, Staffordshire</small>
+</div>
+</div>
+</li>
+
+
+
+
+</ul>
+</div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+const themeSwitch = document.querySelector(".theme-toggle");
+if (currentTheme && currentTheme === 'dark') {
+    themeSwitch.checked = true;
+}
+themeSwitch.addEventListener('change', function(event) {
+    if (event.target.checked) {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-bs-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+});
+</script>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="oc_0" style="width: 320px;">
+    ...
+</div>
+<div class="offcanvas-md offcanvas-end" tabindex="-1" id="oc_1" style="width: 460px;">
+    ...
+</div>
+<div class="modal modal-blur" tabindex="-1" id="mo_0" style="display: none;" _="on closeModal from body call bootstrap.Modal.getInstance(#mo_0).hide()">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">...</div>
+    </div>
+</div>
+<div id="toast-container" class="toast-container position-fixed bottom-0 start-0 p-2 mb-2" style="z-index: 1111">
+</div>
+<script src="/s/js/bootstrap.bundle.min.js?v=1.6.9"></script>
+<script src="/s/js/app.js?v=1.6.9"></script>
+
+
+
+
+</body></html>

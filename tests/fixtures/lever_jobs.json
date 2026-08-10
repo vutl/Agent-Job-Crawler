@@ -1,0 +1,18 @@
+[
+  {
+    "id": "lever-job-001",
+    "text": "Lead Machine Learning Engineer",
+    "hostedUrl": "https://jobs.lever.co/techcorp/lever-job-001",
+    "categories": {
+      "location": "New York, NY",
+      "team": "AI & ML"
+    },
+    "description": "<div>We are looking for a Lead Machine Learning Engineer.</div>",
+    "lists": [
+      {
+        "text": "Key Responsibilities & Skills",
+        "content": "<ul><li>Architect distributed ML training with PyTorch and Ray.</li><li>Deploy microservices using Docker, Kubernetes, and FastAPI.</li><li>Deep understanding of Cloud infrastructure on GCP and AWS.</li></ul>"
+      }
+    ]
+  }
+]
