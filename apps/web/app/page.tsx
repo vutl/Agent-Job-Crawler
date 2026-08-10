@@ -17,6 +17,13 @@ import {
   Lock,
   X,
   Filter,
+  DollarSign,
+  Award,
+  Sparkles,
+  ShieldCheck,
+  Globe,
+  Clock,
+  BookOpen,
 } from 'lucide-react';
 
 interface DataFreshness {
@@ -49,77 +56,85 @@ interface JobItem {
   company_domain?: string;
   canonical_url: string;
   location: string;
+  salary_range?: string;
   description_text: string;
   posted_at: string | null;
   role_family: string;
   seniority: string;
   is_relevant: boolean;
   relevance_reason: string | null;
+  ingestion_stage?: string;
   skills: JobSkill[];
+  sections?: {
+    overview?: string;
+    team_challenge?: string;
+    responsibilities?: string[];
+    requirements?: string[];
+    salary_info?: string[];
+  };
 }
 
 const ROLES = ['AI Engineer', 'ML Engineer', 'MLOps Engineer', 'Data Scientist'];
 
-const THUMBTACK_FULL_DESCRIPTION = `Software Engineer, AI/ML Infrastructure (US-Based)
-Location: Remote, United States
-Employment Type: Full time | Department: Engineering
+const THUMBTACK_JOB_DATA: JobItem = {
+  id: 1,
+  title: 'Software Engineer, AI/ML Infrastructure (US-Based)',
+  company_name: 'Thumbtack',
+  company_domain: 'thumbtack.com',
+  canonical_url: 'https://jobs.ashbyhq.com/thumbtack/3efb1a7b-cfaf-475a-86a9-abff37581b4b/application',
+  location: 'United States (Remote)',
+  salary_range: '$145,400 - $188,100 / year',
+  ingestion_stage: '2-Stage Deep Crawled (Ashby ATS Target)',
+  description_text: `Thumbtack helps millions of people confidently care for their homes. Thumbtack is the one app you need to take care of and improve your home — from personalized guidance to AI tools and a best-in-class hiring experience. Every day in every county of the U.S., people turn to Thumbtack to complete urgent repairs, seasonal maintenance and bigger improvements. We help homeowners know which projects to do, when to do them and who to hire from our growing community of 300,000 local service businesses.
 
-Overview & Application
-Thumbtack helps millions of people confidently care for their homes. Thumbtack is the one app you need to take care of and improve your home — from personalized guidance to AI tools and a best-in-class hiring experience. Every day in every county of the U.S., people turn to Thumbtack to complete urgent repairs, seasonal maintenance and bigger improvements. We help homeowners know which projects to do, when to do them and who to hire from our growing community of 300,000 local service businesses. If making an impact inspires you, join us. Imagine what we’ll build together.
+About the Machine Learning Infrastructure Team:
+At Thumbtack, our challenges span a wide range of areas, including search, recommendations, matchmaking, pricing, safety, content generation, fraud detection, and more. The ML Infrastructure team is responsible for centralizing, standardizing and evolving AI/ML infrastructure that enables these experiences. We empower product engineering teams by providing scalable, high-performance systems that drive AI innovation at scale.
 
-About the Machine Learning Infrastructure Team
-At Thumbtack, our challenges span a wide range of areas, including search, recommendations, matchmaking, pricing, safety, content generation, fraud detection, and more. The ML Infrastructure team is responsible for centralizing, standardizing and evolving AI/ML infrastructure that enables these experiences. We empower product engineering teams by providing scalable, high-performance systems that drive AI innovation at scale. To read more about some of the engineering challenges at Thumbtack, visit our engineering blog.
-
-The Challenge
-As a Software Engineer on the ML Infrastructure team, you will work closely with product and platform engineering teams to build and evolve core AI platform capabilities. You will help design and improve systems that allow teams to develop, run, and scale GenAI-powered applications in production. Your work will directly support AI-driven experiences used by millions of customers and pros across the Thumbtack ecosystem.
-
-What You’ll Do
-- Build and evolve core AI platform capabilities that enable teams to develop, run, and scale GenAI-powered applications across Thumbtack.
-- Contribute to the design, development, and deployment of scalable tools and infrastructure to support the efforts of our applied scientists, including traditional ML model training and serving systems, feature and data workflows, CI/CD, orchestration, deployment, and evaluation tooling.
-- Work hands on across the stack, from backend services and execution infrastructure to integrations with AI models and tooling.
-- Partner with senior engineers to evaluate next-generation AI infrastructure frameworks and tools that help product teams harness advances in AI.
-- Drive projects to completion with a strong focus on business impact and measurable outcomes.
-- Solve complex technical problems and stay up to date with advances in this rapidly evolving space.
-
-In Order to Be Successful, You Must Bring
-- 1 to 3 years of professional software engineering experience.
-- Strong fundamentals in data structures, algorithms, and software design.
-- Proficiency in at least one major programming language, and the ability to work across multiple languages. Our primary stack includes Go and Python.
-- Experience working with relational or NoSQL databases such as Postgres or DynamoDB.
-- Demonstrated ability to use AI coding tools in day-to-day workflows and validate, critique, and refine AI-generated output.
-- Comfort operating in a fast-paced environment with a certain level of ambiguity, especially when learning and picking up new technologies when projects require it.
-- You operate with a bias to action, quickly learning what is needed and taking decisive steps to move work forward in ambiguous, fast-paced environments.
-
-Expected Salary Ranges
-- San Francisco / Bay Area, San Jose, NYC, Seattle metros: $145,400 - $188,100 / yr
-- Austin TX, Washington DC, CA, MA, NJ, WA states: $130,900 - $169,400 / yr
-- All other US locations: $123,300 - $159,500 / yr
-
-Company Overview & Sponsorship
-Thumbtack was founded in 2008, headquartered in San Francisco, CA (1,001-5,000 employees). Has a track record of offering H1B sponsorships (16 in 2026, 35 in 2025, 48 in 2024). Equal Opportunity Workplace.`;
-
-const SAMPLE_JOBS: JobItem[] = [
-  {
-    id: 1,
-    title: 'Software Engineer, AI/ML Infrastructure (US-Based)',
-    company_name: 'Thumbtack',
-    company_domain: 'thumbtack.com',
-    canonical_url: 'https://jobs.ashbyhq.com/thumbtack/3efb1a7b-cfaf-475a-86a9-abff37581b4b/application',
-    location: 'United States (Remote)',
-    description_text: THUMBTACK_FULL_DESCRIPTION,
-    posted_at: new Date().toISOString(),
-    role_family: 'AI Engineer',
-    seniority: 'Entry Level',
-    is_relevant: true,
-    relevance_reason: 'Core AI Infrastructure role matching technical criteria',
-    skills: [
-      { name: 'Python', requirement_type: 'required' },
-      { name: 'Go', requirement_type: 'required' },
-      { name: 'PyTorch', requirement_type: 'required' },
-      { name: 'Postgres', requirement_type: 'required' },
-      { name: 'DynamoDB', requirement_type: 'preferred' },
+The Challenge:
+As a Software Engineer on the ML Infrastructure team, you will work closely with product and platform engineering teams to build and evolve core AI platform capabilities. You will help design and improve systems that allow teams to develop, run, and scale GenAI-powered applications in production.`,
+  posted_at: new Date().toISOString(),
+  role_family: 'AI Engineer',
+  seniority: 'Entry Level',
+  is_relevant: true,
+  relevance_reason: 'Core AI Platform & ML Infrastructure engineering role matching technical criteria.',
+  skills: [
+    { name: 'Python', requirement_type: 'required', category: 'language', evidence_text: 'Primary stack includes Go and Python' },
+    { name: 'Go', requirement_type: 'required', category: 'language', evidence_text: 'Primary stack includes Go and Python' },
+    { name: 'PyTorch', requirement_type: 'required', category: 'ml_framework', evidence_text: 'Traditional ML model training and serving systems' },
+    { name: 'Postgres', requirement_type: 'required', category: 'database', evidence_text: 'Experience working with relational databases such as Postgres' },
+    { name: 'DynamoDB', requirement_type: 'preferred', category: 'database', evidence_text: 'NoSQL databases such as DynamoDB' },
+    { name: 'AI Coding Tools', requirement_type: 'required', category: 'tool', evidence_text: 'Demonstrated ability to use AI coding tools in day-to-day workflows' },
+  ],
+  sections: {
+    overview:
+      'Thumbtack is a home services platform connecting millions of homeowners with local service providers. Founded in 2008 in San Francisco, CA with 1,000-5,000 employees.',
+    team_challenge:
+      'The ML Infrastructure team builds scalable, high-performance platform capabilities for GenAI applications, model training/serving, feature workflows, and orchestration.',
+    responsibilities: [
+      'Build and evolve core AI platform capabilities that enable teams to develop, run, and scale GenAI-powered applications across Thumbtack.',
+      'Contribute to the design, development, and deployment of scalable tools and infrastructure to support applied scientists (ML model serving, feature workflows, CI/CD, orchestration).',
+      'Work hands on across the stack, from backend services and execution infrastructure to integrations with AI models and tooling.',
+      'Partner with senior engineers to evaluate next-generation AI infrastructure frameworks and tools.',
+      'Drive projects to completion with a strong focus on business impact and measurable outcomes.',
+    ],
+    requirements: [
+      '1 to 3 years of professional software engineering experience.',
+      'Strong fundamentals in data structures, algorithms, and software design.',
+      'Proficiency in Go and Python.',
+      'Experience with relational or NoSQL databases such as Postgres or DynamoDB.',
+      'Demonstrated ability to use AI coding tools in day-to-day workflows and validate AI-generated output.',
+      'Comfort operating in a fast-paced environment with ambiguity and a strong bias to action.',
+    ],
+    salary_info: [
+      'San Francisco / Bay Area, San Jose, NYC, Seattle metros: $145,400 - $188,100 / yr',
+      'Austin TX, Washington DC, CA, MA, NJ, WA states: $130,900 - $169,400 / yr',
+      'All other US locations: $123,300 - $159,500 / yr',
     ],
   },
+};
+
+const SAMPLE_JOBS: JobItem[] = [
+  THUMBTACK_JOB_DATA,
   {
     id: 2,
     title: 'Artificial Intelligence Intern',
@@ -127,8 +142,10 @@ const SAMPLE_JOBS: JobItem[] = [
     company_domain: 'muro.ai',
     canonical_url: 'https://www.linkedin.com/jobs/view/4446448878',
     location: 'San Francisco Bay Area (Onsite)',
+    salary_range: 'Competitive Intern Stipend + H1B Eligibility',
+    ingestion_stage: '2-Stage Deep Crawled (LinkedIn Direct)',
     description_text:
-      'Muro AI builds AI agents for general contractor companies to automate pre-construction activities and streamline complex workflows. As an Artificial Intelligence Intern, you will support the development of AI agents and collaborate with engineers and data scientists to improve pre-construction workflows.\n\nResponsibilities:\n- Support the development and improvement of AI agents\n- Help design and implement models\n- Write and test code in Python\n- Analyze data & evaluate model performance\n- Document findings and refine algorithms\n\nSkills & Requirements:\n- Computer Science foundation, algorithms, data structures\n- Data Science & Machine Learning exposure\n- Python programming & Git version control\n- Interest in applying AI to construction & architecture',
+      'Muro AI builds AI agents for general contractor companies to automate pre-construction activities and streamline complex workflows. As an Artificial Intelligence Intern, you will support the development of AI agents and collaborate with engineers and data scientists.',
     posted_at: new Date().toISOString(),
     role_family: 'AI Engineer',
     seniority: 'Intern',
@@ -140,6 +157,19 @@ const SAMPLE_JOBS: JobItem[] = [
       { name: 'Git', requirement_type: 'required' },
       { name: 'Prompt Engineering', requirement_type: 'required' },
     ],
+    sections: {
+      overview: 'Muro AI builds AI agents for General Contractors to automate pre-construction activities. Founded in 2023 in New York.',
+      responsibilities: [
+        'Support the development and improvement of AI agents used in pre-construction workflows.',
+        'Help design and implement ML models, write & test Python code, and analyze data.',
+        'Collaborate with engineers and data scientists to prototype features.',
+      ],
+      requirements: [
+        'Currently pursuing or completed degree in Computer Science, Data Science, or Engineering.',
+        'Exposure to Machine Learning, Python, and Git version control.',
+        'Interest in applying AI to construction, architecture, or operations.',
+      ],
+    },
   },
   {
     id: 3,
@@ -148,6 +178,8 @@ const SAMPLE_JOBS: JobItem[] = [
     company_domain: 'cloudflare.com',
     canonical_url: 'https://boards.greenhouse.io/cloudflare/jobs/40101',
     location: 'San Francisco, CA',
+    salary_range: '$170,000 - $220,000 / year',
+    ingestion_stage: '1-Pass Direct Greenhouse REST API',
     description_text:
       'Architecting distributed inference pipelines on Cloudflare Workers AI. Deep experience with C++, CUDA, PyTorch, Docker, Kubernetes, and LLM serving.',
     posted_at: new Date().toISOString(),
@@ -161,21 +193,6 @@ const SAMPLE_JOBS: JobItem[] = [
       { name: 'Docker', requirement_type: 'required' },
       { name: 'Kubernetes', requirement_type: 'required' },
     ],
-  },
-  {
-    id: 4,
-    title: 'AI R&D Co-op (Account Locked)',
-    company_name: 'Foorilla Partner',
-    company_domain: 'foorilla.com',
-    canonical_url: 'https://foorilla.com/account/login/?next=/hiring/jobs/1029',
-    location: 'Remote (US)',
-    description_text: 'Requires user authentication / paywall subscription to view full listing content.',
-    posted_at: new Date().toISOString(),
-    role_family: 'AI Engineer',
-    seniority: 'Junior',
-    is_relevant: false,
-    relevance_reason: 'Paywall / Login wall detected',
-    skills: [],
   },
 ];
 
@@ -273,7 +290,7 @@ export default function Dashboard() {
             AI Job Market Intelligence
           </h1>
           <p className="text-gray-400 mt-1 text-sm">
-            Continuous ingestion from Greenhouse, Lever, Workday, TopCV, Foorilla & Jobright with 0-Token pre-filtering.
+            Continuous 2-Stage Ingestion from Greenhouse, Lever, Workday, TopCV, Foorilla & Jobright with 0-Token pre-filtering.
           </p>
         </div>
 
@@ -428,7 +445,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* TAB 2: JOB EXPLORER (CHI TIẾT TỪNG JOB + OUTBOUND APPLY LINK) */}
+      {/* TAB 2: JOB EXPLORER (STUNNING FORMATTED DETAIL RENDERING) */}
       {activeTab === 'explorer' && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-800 pb-4">
@@ -492,6 +509,13 @@ export default function Dashboard() {
                     </span>
                   </div>
 
+                  {job.salary_range && (
+                    <div className="flex items-center space-x-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 w-fit">
+                      <DollarSign className="w-3.5 h-3.5" />
+                      <span>{job.salary_range}</span>
+                    </div>
+                  )}
+
                   <p className="text-xs text-gray-400 line-clamp-3 leading-relaxed">
                     {job.description_text}
                   </p>
@@ -515,9 +539,10 @@ export default function Dashboard() {
                 <div className="pt-4 border-t border-gray-800/80 flex items-center justify-between gap-2">
                   <button
                     onClick={() => setSelectedJobModal(job)}
-                    className="text-xs font-semibold text-gray-400 hover:text-white transition underline underline-offset-4"
+                    className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center space-x-1"
                   >
-                    View Full Description ({job.description_text.length} chars)
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>View Formatted Detail</span>
                   </button>
 
                   <a
@@ -536,73 +561,202 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* FULL DESCRIPTION DETAIL MODAL POPUP */}
+      {/* RICH FORMATTED STAGE-2 DETAIL MODAL POPUP */}
       {selectedJobModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="glass-card w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-700 p-6 sm:p-8 overflow-y-auto space-y-6 bg-slate-900 text-white shadow-2xl">
-            <div className="flex justify-between items-start border-b border-gray-800 pb-4">
-              <div>
-                <span className="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  {selectedJobModal.role_family} ({selectedJobModal.seniority})
-                </span>
-                <h2 className="text-2xl font-bold text-white mt-2 leading-snug">{selectedJobModal.title}</h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  {selectedJobModal.company_name} • {selectedJobModal.location}
-                </p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className="glass-card w-full max-w-4xl max-h-[92vh] rounded-3xl border border-indigo-500/30 p-6 sm:p-8 overflow-y-auto space-y-6 bg-slate-950 text-white shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex justify-between items-start border-b border-gray-800 pb-5">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    {selectedJobModal.role_family} ({selectedJobModal.seniority})
+                  </span>
+
+                  {selectedJobModal.ingestion_stage && (
+                    <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center space-x-1">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{selectedJobModal.ingestion_stage}</span>
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug tracking-tight">
+                  {selectedJobModal.title}
+                </h2>
+
+                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-300 font-medium">
+                  <span className="flex items-center space-x-1 text-white font-bold">
+                    <Building2 className="w-4 h-4 text-indigo-400" />
+                    <span>{selectedJobModal.company_name}</span>
+                  </span>
+                  <span className="flex items-center space-x-1 text-gray-400">
+                    <MapPin className="w-4 h-4 text-gray-500" />
+                    <span>{selectedJobModal.location}</span>
+                  </span>
+                </div>
               </div>
+
               <button
                 onClick={() => setSelectedJobModal(null)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
+                className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition"
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="space-y-3">
-              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Extracted Required Tech Stack</h4>
-              <div className="flex flex-wrap gap-2">
+            {/* Salary Highlight Callout Box */}
+            {selectedJobModal.salary_range && (
+              <div className="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 p-4 rounded-2xl border border-emerald-500/30 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
+                    <DollarSign className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs uppercase font-bold tracking-wider text-emerald-400">Expected Compensation</span>
+                    <h4 className="text-lg font-extrabold text-white">{selectedJobModal.salary_range}</h4>
+                  </div>
+                </div>
+                <a
+                  href={selectedJobModal.canonical_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition"
+                >
+                  <span>Apply Now</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
+            )}
+
+            {/* Extracted Required Tech Stack with Evidence Spans */}
+            <div className="space-y-3 bg-gray-900/60 p-5 rounded-2xl border border-gray-800">
+              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-extrabold flex items-center space-x-2">
+                <Award className="w-4 h-4 text-indigo-400" />
+                <span>Extracted Tech Stack & LLM Evidence Spans</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {selectedJobModal.skills.map((s) => (
-                  <span
+                  <div
                     key={s.name}
-                    className="px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
+                    className="p-3 rounded-xl bg-gray-950 border border-gray-800 flex flex-col justify-between space-y-1"
                   >
-                    {s.name} ({s.requirement_type || 'required'})
-                  </span>
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-white text-sm">{s.name}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                          s.requirement_type === 'required'
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        }`}
+                      >
+                        {s.requirement_type || 'required'}
+                      </span>
+                    </div>
+                    {s.evidence_text && (
+                      <p className="text-[11px] text-gray-400 italic line-clamp-1">"{s.evidence_text}"</p>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Relevance & Filter Status</h4>
-              <p className="text-xs text-gray-300 bg-gray-800/60 p-3.5 rounded-xl border border-gray-700">
-                {selectedJobModal.relevance_reason || 'Passed AI technical evaluation pipeline.'}
-              </p>
-            </div>
+            {/* Structured Multi-Section Description Body */}
+            {selectedJobModal.sections ? (
+              <div className="space-y-6">
+                {/* Overview Section */}
+                {selectedJobModal.sections.overview && (
+                  <div className="space-y-2">
+                    <h3 className="text-sm uppercase tracking-wider font-extrabold text-indigo-400 flex items-center space-x-2">
+                      <Globe className="w-4 h-4" />
+                      <span>Company Overview & Mission</span>
+                    </h3>
+                    <p className="text-xs text-gray-300 leading-relaxed bg-gray-900/40 p-4 rounded-2xl border border-gray-800/80">
+                      {selectedJobModal.sections.overview}
+                    </p>
+                  </div>
+                )}
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Complete Job Description Text (Full Un-truncated)</h4>
-                <span className="text-[11px] font-mono text-gray-500">{selectedJobModal.description_text.length} characters</span>
-              </div>
-              <div className="text-xs text-gray-200 bg-gray-950 p-5 rounded-xl border border-gray-800 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto space-y-4">
-                {selectedJobModal.description_text}
-              </div>
-            </div>
+                {/* Responsibilities Section */}
+                {selectedJobModal.sections.responsibilities && (
+                  <div className="space-y-2">
+                    <h3 className="text-sm uppercase tracking-wider font-extrabold text-emerald-400 flex items-center space-x-2">
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>What You'll Do & Key Responsibilities</span>
+                    </h3>
+                    <ul className="space-y-2 text-xs text-gray-300 bg-gray-900/40 p-4 rounded-2xl border border-gray-800/80">
+                      {selectedJobModal.sections.responsibilities.map((r, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <span className="text-emerald-400 font-bold text-sm leading-none">•</span>
+                          <span className="leading-relaxed">{r}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
+                {/* Requirements Section */}
+                {selectedJobModal.sections.requirements && (
+                  <div className="space-y-2">
+                    <h3 className="text-sm uppercase tracking-wider font-extrabold text-purple-400 flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Qualifications & Success Requirements</span>
+                    </h3>
+                    <ul className="space-y-2 text-xs text-gray-300 bg-gray-900/40 p-4 rounded-2xl border border-gray-800/80">
+                      {selectedJobModal.sections.requirements.map((req, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <span className="text-purple-400 font-bold text-sm leading-none">•</span>
+                          <span className="leading-relaxed">{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Regional Salary Ranges */}
+                {selectedJobModal.sections.salary_info && (
+                  <div className="space-y-2">
+                    <h3 className="text-sm uppercase tracking-wider font-extrabold text-amber-400 flex items-center space-x-2">
+                      <DollarSign className="w-4 h-4" />
+                      <span>Regional Salary Ranges</span>
+                    </h3>
+                    <div className="space-y-1.5 text-xs text-gray-300 bg-gray-900/40 p-4 rounded-2xl border border-gray-800/80 font-mono">
+                      {selectedJobModal.sections.salary_info.map((sal, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <span className="text-amber-400 font-bold">•</span>
+                          <span>{sal}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Fallback for un-parsed text */
+              <div className="space-y-2">
+                <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Complete Job Description Text</h4>
+                <div className="text-xs text-gray-200 bg-gray-950 p-5 rounded-2xl border border-gray-800 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto">
+                  {selectedJobModal.description_text}
+                </div>
+              </div>
+            )}
+
+            {/* Modal Footer Actions */}
             <div className="pt-4 border-t border-gray-800 flex justify-between items-center">
               <button
                 onClick={() => setSelectedJobModal(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition"
+                className="px-5 py-2.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition"
               >
-                Close
+                Close Panel
               </button>
               <a
                 href={selectedJobModal.canonical_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition"
+                className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl text-xs font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl shadow-indigo-600/30 transition"
               >
-                <span>Apply on Official Portal</span>
+                <span>Apply on Official Portal ({selectedJobModal.company_name})</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>

@@ -11,11 +11,44 @@ from packages.schemas import NormalizedJobPost
 logger = logging.getLogger(__name__)
 
 class JobrightMonitor(BaseATSMonitor):
-    """Monitor for Jobright.ai AI Job Search Aggregator (https://jobright.ai/)."""
+    """
+    Monitor for Jobright.ai AI Job Search Aggregator (https://jobright.ai/).
+    Supports 2-Stage Deep Crawling:
+    - Stage 1: Listing Discovery & JSON-LD extraction
+    - Stage 2: Outbound Target ATS Follow-Through (Fetching full JD directly from Greenhouse/Lever/Ashby)
+    """
 
     @property
     def ats_name(self) -> str:
         return "jobright"
+
+    async def fetch_target_ats_full_description(self, canonical_url: str) -> Optional[str]:
+        """
+        Stage 2 Deep Crawling: Follows the target outbound ATS link (e.g. Ashby, Greenhouse, Lever)
+        to fetch the full, un-truncated official job description HTML.
+        """
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        }
+        try:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+                res = await client.get(canonical_url, headers=headers)
+                if res.status_code == 200:
+                    soup = BeautifulSoup(res.text, "html.parser")
+                    # Try common ATS description containers
+                    main_content = (
+                        soup.find("div", id="job-description") or
+                        soup.find("div", class_=re.compile(r"description|content|posting", re.I)) or
+                        soup.body
+                    )
+                    if main_content:
+                        clean_text = clean_html_to_text(str(main_content))
+                        if len(clean_text) > 300:
+                            return clean_text
+        except Exception as e:
+            logger.warning(f"Stage 2 follow-through fetch failed for {canonical_url}: {e}")
+        return None
 
     def parse_jobright_detail_html(self, html_content: str, fallback_source: str = "Jobright Aggregated") -> Optional[NormalizedJobPost]:
         """
@@ -98,7 +131,6 @@ class JobrightMonitor(BaseATSMonitor):
         Parses a Jobright HTML snapshot file (e.g. format_jobright.txt).
         Supports both detail panel snapshots and listing grid snapshots.
         """
-        # Check if this is a detail panel snapshot
         if "jobright-helper-job-detail-info" in html_content or "job-posting" in html_content:
             detail_post = self.parse_jobright_detail_html(html_content, fallback_source=source_name)
             if detail_post:
@@ -163,7 +195,16 @@ class JobrightMonitor(BaseATSMonitor):
             async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
                 res = await client.get(url, headers=headers)
                 if res.status_code == 200:
-                    return self.parse_jobright_html_snapshot(res.text, source_name=company_name)
+                    posts = self.parse_jobright_html_snapshot(res.text, source_name=company_name)
+                    # Stage 2 Deep Crawl: If description is short, attempt target ATS follow-through
+                    for post in posts:
+                        if len(post.description_text) < 300 and "jobright.ai" not in post.canonical_url:
+                            full_desc = await self.fetch_target_ats_full_description(post.canonical_url)
+                            if full_desc:
+                                post.description_text = full_desc
+                                post.description_raw = f"<p>{full_desc}</p>"
+                                post.content_hash = compute_content_hash(full_desc)
+                    return posts
         except Exception as e:
             logger.error(f"Error fetching Jobright jobs: {e}")
 
