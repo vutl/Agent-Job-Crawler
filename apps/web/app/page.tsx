@@ -60,6 +60,44 @@ interface JobItem {
 
 const ROLES = ['AI Engineer', 'ML Engineer', 'MLOps Engineer', 'Data Scientist'];
 
+const THUMBTACK_FULL_DESCRIPTION = `Software Engineer, AI/ML Infrastructure (US-Based)
+Location: Remote, United States
+Employment Type: Full time | Department: Engineering
+
+Overview & Application
+Thumbtack helps millions of people confidently care for their homes. Thumbtack is the one app you need to take care of and improve your home — from personalized guidance to AI tools and a best-in-class hiring experience. Every day in every county of the U.S., people turn to Thumbtack to complete urgent repairs, seasonal maintenance and bigger improvements. We help homeowners know which projects to do, when to do them and who to hire from our growing community of 300,000 local service businesses. If making an impact inspires you, join us. Imagine what we’ll build together.
+
+About the Machine Learning Infrastructure Team
+At Thumbtack, our challenges span a wide range of areas, including search, recommendations, matchmaking, pricing, safety, content generation, fraud detection, and more. The ML Infrastructure team is responsible for centralizing, standardizing and evolving AI/ML infrastructure that enables these experiences. We empower product engineering teams by providing scalable, high-performance systems that drive AI innovation at scale. To read more about some of the engineering challenges at Thumbtack, visit our engineering blog.
+
+The Challenge
+As a Software Engineer on the ML Infrastructure team, you will work closely with product and platform engineering teams to build and evolve core AI platform capabilities. You will help design and improve systems that allow teams to develop, run, and scale GenAI-powered applications in production. Your work will directly support AI-driven experiences used by millions of customers and pros across the Thumbtack ecosystem.
+
+What You’ll Do
+- Build and evolve core AI platform capabilities that enable teams to develop, run, and scale GenAI-powered applications across Thumbtack.
+- Contribute to the design, development, and deployment of scalable tools and infrastructure to support the efforts of our applied scientists, including traditional ML model training and serving systems, feature and data workflows, CI/CD, orchestration, deployment, and evaluation tooling.
+- Work hands on across the stack, from backend services and execution infrastructure to integrations with AI models and tooling.
+- Partner with senior engineers to evaluate next-generation AI infrastructure frameworks and tools that help product teams harness advances in AI.
+- Drive projects to completion with a strong focus on business impact and measurable outcomes.
+- Solve complex technical problems and stay up to date with advances in this rapidly evolving space.
+
+In Order to Be Successful, You Must Bring
+- 1 to 3 years of professional software engineering experience.
+- Strong fundamentals in data structures, algorithms, and software design.
+- Proficiency in at least one major programming language, and the ability to work across multiple languages. Our primary stack includes Go and Python.
+- Experience working with relational or NoSQL databases such as Postgres or DynamoDB.
+- Demonstrated ability to use AI coding tools in day-to-day workflows and validate, critique, and refine AI-generated output.
+- Comfort operating in a fast-paced environment with a certain level of ambiguity, especially when learning and picking up new technologies when projects require it.
+- You operate with a bias to action, quickly learning what is needed and taking decisive steps to move work forward in ambiguous, fast-paced environments.
+
+Expected Salary Ranges
+- San Francisco / Bay Area, San Jose, NYC, Seattle metros: $145,400 - $188,100 / yr
+- Austin TX, Washington DC, CA, MA, NJ, WA states: $130,900 - $169,400 / yr
+- All other US locations: $123,300 - $159,500 / yr
+
+Company Overview & Sponsorship
+Thumbtack was founded in 2008, headquartered in San Francisco, CA (1,001-5,000 employees). Has a track record of offering H1B sponsorships (16 in 2026, 35 in 2025, 48 in 2024). Equal Opportunity Workplace.`;
+
 const SAMPLE_JOBS: JobItem[] = [
   {
     id: 1,
@@ -68,8 +106,7 @@ const SAMPLE_JOBS: JobItem[] = [
     company_domain: 'thumbtack.com',
     canonical_url: 'https://jobs.ashbyhq.com/thumbtack/3efb1a7b-cfaf-475a-86a9-abff37581b4b/application',
     location: 'United States (Remote)',
-    description_text:
-      'Build and evolve core AI platform capabilities that enable teams to develop, run, and scale GenAI-powered applications across Thumbtack. Experience with Go, Python, Postgres, DynamoDB, PyTorch.',
+    description_text: THUMBTACK_FULL_DESCRIPTION,
     posted_at: new Date().toISOString(),
     role_family: 'AI Engineer',
     seniority: 'Entry Level',
@@ -91,7 +128,7 @@ const SAMPLE_JOBS: JobItem[] = [
     canonical_url: 'https://www.linkedin.com/jobs/view/4446448878',
     location: 'San Francisco Bay Area (Onsite)',
     description_text:
-      'Support the development of AI agents used in pre-construction workflows. Help design models, write code, analyze data, prompt engineering, version control with Git.',
+      'Muro AI builds AI agents for general contractor companies to automate pre-construction activities and streamline complex workflows. As an Artificial Intelligence Intern, you will support the development of AI agents and collaborate with engineers and data scientists to improve pre-construction workflows.\n\nResponsibilities:\n- Support the development and improvement of AI agents\n- Help design and implement models\n- Write and test code in Python\n- Analyze data & evaluate model performance\n- Document findings and refine algorithms\n\nSkills & Requirements:\n- Computer Science foundation, algorithms, data structures\n- Data Science & Machine Learning exposure\n- Python programming & Git version control\n- Interest in applying AI to construction & architecture',
     posted_at: new Date().toISOString(),
     role_family: 'AI Engineer',
     seniority: 'Intern',
@@ -398,7 +435,7 @@ export default function Dashboard() {
             <div>
               <h2 className="text-xl font-bold text-white">Job Explorer & Ingestion Feed</h2>
               <p className="text-xs text-gray-400 mt-1">
-                Explore normalized job postings, extracted skill requirements, and direct apply links to official career portals.
+                Explore normalized job postings, full multi-section JD descriptions, extracted skills, and official apply links.
               </p>
             </div>
 
@@ -478,9 +515,9 @@ export default function Dashboard() {
                 <div className="pt-4 border-t border-gray-800/80 flex items-center justify-between gap-2">
                   <button
                     onClick={() => setSelectedJobModal(job)}
-                    className="text-xs font-semibold text-gray-400 hover:text-white transition"
+                    className="text-xs font-semibold text-gray-400 hover:text-white transition underline underline-offset-4"
                   >
-                    View Description
+                    View Full Description ({job.description_text.length} chars)
                   </button>
 
                   <a
@@ -499,30 +536,30 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* DETAIL MODAL POPUP */}
+      {/* FULL DESCRIPTION DETAIL MODAL POPUP */}
       {selectedJobModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-2xl max-h-[85vh] rounded-2xl border border-gray-700 p-6 overflow-y-auto space-y-6 bg-slate-900 text-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="glass-card w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-700 p-6 sm:p-8 overflow-y-auto space-y-6 bg-slate-900 text-white shadow-2xl">
             <div className="flex justify-between items-start border-b border-gray-800 pb-4">
               <div>
                 <span className="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   {selectedJobModal.role_family} ({selectedJobModal.seniority})
                 </span>
-                <h2 className="text-xl font-bold text-white mt-2">{selectedJobModal.title}</h2>
+                <h2 className="text-2xl font-bold text-white mt-2 leading-snug">{selectedJobModal.title}</h2>
                 <p className="text-xs text-gray-400 mt-1">
                   {selectedJobModal.company_name} • {selectedJobModal.location}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedJobModal(null)}
-                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="space-y-3">
-              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Extracted Tech Stack</h4>
+              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Extracted Required Tech Stack</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedJobModal.skills.map((s) => (
                   <span
@@ -537,22 +574,25 @@ export default function Dashboard() {
 
             <div className="space-y-2">
               <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Relevance & Filter Status</h4>
-              <p className="text-xs text-gray-300 bg-gray-800/60 p-3 rounded-xl border border-gray-700">
+              <p className="text-xs text-gray-300 bg-gray-800/60 p-3.5 rounded-xl border border-gray-700">
                 {selectedJobModal.relevance_reason || 'Passed AI technical evaluation pipeline.'}
               </p>
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Full Job Description Text</h4>
-              <div className="text-xs text-gray-300 bg-gray-950 p-4 rounded-xl border border-gray-800 leading-relaxed font-mono whitespace-pre-wrap max-h-60 overflow-y-auto">
+              <div className="flex justify-between items-center">
+                <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">Complete Job Description Text (Full Un-truncated)</h4>
+                <span className="text-[11px] font-mono text-gray-500">{selectedJobModal.description_text.length} characters</span>
+              </div>
+              <div className="text-xs text-gray-200 bg-gray-950 p-5 rounded-xl border border-gray-800 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto space-y-4">
                 {selectedJobModal.description_text}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-800 flex justify-end space-x-3">
+            <div className="pt-4 border-t border-gray-800 flex justify-between items-center">
               <button
                 onClick={() => setSelectedJobModal(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition"
               >
                 Close
               </button>
@@ -560,7 +600,7 @@ export default function Dashboard() {
                 href={selectedJobModal.canonical_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition"
+                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition"
               >
                 <span>Apply on Official Portal</span>
                 <ArrowUpRight className="w-4 h-4" />
