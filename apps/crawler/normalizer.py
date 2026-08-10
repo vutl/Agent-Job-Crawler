@@ -1,22 +1,34 @@
 import hashlib
+import html
 import re
 from bs4 import BeautifulSoup
 
 def clean_html_to_text(html_content: str) -> str:
-    """Converts raw HTML into clean plain text for hash computation and AI extraction."""
+    """Converts raw HTML (including entity-encoded HTML) into clean plain text for hash computation and UI display."""
     if not html_content:
         return ""
-    soup = BeautifulSoup(html_content, "html.parser")
+
+    # 1. Unescape HTML entities first (&lt;div&gt; -> <div>)
+    unescaped = html.unescape(html_content)
+
+    # 2. Parse with BeautifulSoup
+    soup = BeautifulSoup(unescaped, "html.parser")
 
     # Remove script and style elements
-    for script in soup(["script", "style"]):
-        script.decompose()
+    for element in soup(["script", "style", "noscript", "svg"]):
+        element.decompose()
 
-    text = soup.get_text(separator="\n")
-    # Clean up whitespace
-    lines = (line.strip() for line in text.splitlines())
-    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-    cleaned_text = "\n".join(chunk for chunk in chunks if chunk)
+    text = soup.get_text(separator=" ")
+
+    # 3. Strip any residual unparsed HTML tag artifacts (e.g. <div class="...">)
+    text = re.sub(r"<[^>]+>", " ", text)
+
+    # 4. Remove boilerplate ingestion prefixes
+    text = re.sub(r"^Job Posting:\s*.*?\.\s*", "", text, flags=re.I)
+    text = re.sub(r"^Tasks:\s*", "", text, flags=re.I)
+
+    # 5. Clean up multiple spaces and empty lines
+    cleaned_text = re.sub(r"\s+", " ", text).strip()
     return cleaned_text
 
 def compute_content_hash(text: str) -> str:

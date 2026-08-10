@@ -78,6 +78,26 @@ interface JobItem {
 
 const ROLES = ['AI Engineer', 'ML Engineer', 'MLOps Engineer', 'Data Scientist'];
 
+function stripRawHtml(text: string): string {
+  if (!text) return '';
+  // Unescape HTML entities first
+  let clean = text
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
+  // Remove residual HTML tags
+  clean = clean.replace(/<[^>]+>/g, ' ');
+
+  // Clean boilerplate ingestion headers
+  clean = clean.replace(/^Job Posting:\s*.*?\.\s*/i, '');
+  clean = clean.replace(/^Tasks:\s*/i, '');
+
+  return clean.replace(/\s+/g, ' ').trim();
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'analytics' | 'explorer' | 'locked'>('explorer');
   const [selectedRole, setSelectedRole] = useState('AI Engineer');
@@ -119,6 +139,7 @@ export default function Dashboard() {
           if (jobsData.items) {
             const mapped = jobsData.items.map((it: any, idx: number) => ({
               ...it,
+              description_text: stripRawHtml(it.description_text),
               posted_time_ago: it.posted_at ? 'Recently posted' : `${(idx % 5) + 1} days ago`,
               ingestion_stage: 'Live Direct ATS',
             }));
@@ -133,6 +154,7 @@ export default function Dashboard() {
           if (lockedData.items) {
             const mapped = lockedData.items.map((it: any, idx: number) => ({
               ...it,
+              description_text: stripRawHtml(it.description_text),
               posted_time_ago: 'Audit Flagged',
               ingestion_stage: 'Paywall / Auth Audit Vault',
             }));
@@ -341,7 +363,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* TAB 2: PUBLIC JOB EXPLORER (ONLY PUBLICLY ACCESSIBLE JOBS) */}
+      {/* TAB 2: PUBLIC JOB EXPLORER (CLEAN TEXT NO HTML TAGS) */}
       {activeTab === 'explorer' && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
@@ -400,7 +422,7 @@ export default function Dashboard() {
                   </div>
 
                   <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-sans">
-                    {job.description_text}
+                    {stripRawHtml(job.description_text)}
                   </p>
 
                   {/* Skills Badges */}
@@ -425,7 +447,7 @@ export default function Dashboard() {
                     className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center space-x-1"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>View Formatted Detail</span>
+                    <span>Xem chi tiết JD</span>
                   </button>
 
                   <a
@@ -444,7 +466,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* TAB 3: LOCKED & PAYWALLED AUDIT VAULT (SEPARATE DEDICATED SECTION) */}
+      {/* TAB 3: LOCKED & PAYWALLED AUDIT VAULT */}
       {activeTab === 'locked' && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-amber-200 pb-4">
@@ -506,7 +528,7 @@ export default function Dashboard() {
                   {/* Brief description if available */}
                   <div className="text-xs text-slate-700 bg-white/80 p-3.5 rounded-xl border border-amber-200/60 leading-relaxed font-sans">
                     <span className="font-bold text-amber-800 block mb-1">Brief Description / Audit Note:</span>
-                    {job.description_text}
+                    {stripRawHtml(job.description_text)}
                   </div>
                 </div>
 
@@ -639,7 +661,7 @@ export default function Dashboard() {
             <div className="space-y-2">
               <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">Complete Job Description Text</h4>
               <div className="text-xs text-slate-800 bg-slate-50 p-5 rounded-2xl border border-slate-200 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto">
-                {selectedJobModal.description_text}
+                {stripRawHtml(selectedJobModal.description_text)}
               </div>
             </div>
 
