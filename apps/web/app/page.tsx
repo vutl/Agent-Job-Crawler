@@ -86,7 +86,9 @@ function stripRawHtml(text: string): string {
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&nbsp/g, ' ');
 
   // Remove residual HTML tags
   clean = clean.replace(/<[^>]+>/g, ' ');
@@ -565,7 +567,7 @@ export default function Dashboard() {
 
                   <span className="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 flex items-center space-x-1">
                     <Clock className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Posted {selectedJobModal.posted_time_ago || 'Recently'}</span>
+                    <span>{selectedJobModal.posted_time_ago || 'Recently posted'}</span>
                   </span>
 
                   {selectedJobModal.ingestion_stage && (

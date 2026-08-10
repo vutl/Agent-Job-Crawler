@@ -8,8 +8,9 @@ def clean_html_to_text(html_content: str) -> str:
     if not html_content:
         return ""
 
-    # 1. Unescape HTML entities first (&lt;div&gt; -> <div>)
+    # 1. Unescape HTML entities first (&lt;div&gt; -> <div>, &nbsp; -> space)
     unescaped = html.unescape(html_content)
+    unescaped = unescaped.replace("&nbsp;", " ").replace("&nbsp", " ")
 
     # 2. Parse with BeautifulSoup
     soup = BeautifulSoup(unescaped, "html.parser")
@@ -26,6 +27,7 @@ def clean_html_to_text(html_content: str) -> str:
     # 4. Remove boilerplate ingestion prefixes
     text = re.sub(r"^Job Posting:\s*.*?\.\s*", "", text, flags=re.I)
     text = re.sub(r"^Tasks:\s*", "", text, flags=re.I)
+    text = re.sub(r"&nbsp;?", " ", text)
 
     # 5. Clean up multiple spaces and empty lines
     cleaned_text = re.sub(r"\s+", " ", text).strip()
