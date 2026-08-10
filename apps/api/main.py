@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import FastAPI, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sqlalchemy import func, case
+from sqlalchemy import func, case, or_
 
 from packages.database import get_db, Job, JobAnalysis, JobSkill, Skill, Company
 
@@ -38,12 +38,34 @@ def list_jobs(
     role: Optional[str] = None,
     source: Optional[str] = None,
     search: Optional[str] = None,
+    locked_only: bool = Query(False, description="Set True to query only paywalled/login-locked jobs"),
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """Returns list of normalized jobs with extracted skills, role analysis, and outbound apply link."""
-    query = db.query(Job).outerjoin(Company, Job.company_id == Company.id)
+    """Returns list of normalized jobs. Locked/Paywalled jobs are separated via locked_only flag."""
+    query = db.query(Job).outerjoin(Company, Job.company_id == Company.id).outerjoin(JobAnalysis, Job.id == JobAnalysis.job_id)
+
+    if locked_only:
+        # Return ONLY paywalled / login-wall / non-relevant locked jobs
+        query = query.filter(
+            or_(
+                JobAnalysis.is_relevant == False,
+                Job.status == "paywall",
+                Job.description_text.ilike("%authentication%"),
+                Job.description_text.ilike("%paywall%"),
+                Job.description_text.ilike("%login%"),
+            )
+        )
+    else:
+        # Return ONLY clean, publicly accessible jobs (or jobs pending analysis)
+        query = query.filter(
+            or_(JobAnalysis.is_relevant == True, JobAnalysis.job_id.is_(None)),
+            Job.status != "paywall",
+            ~Job.description_text.ilike("%authentication%"),
+            ~Job.description_text.ilike("%paywall%"),
+            ~Job.description_text.ilike("%login%"),
+        )
 
     if source:
         query = query.filter(Job.canonical_url.ilike(f"%{source}%"))
