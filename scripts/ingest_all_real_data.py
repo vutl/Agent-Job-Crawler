@@ -39,25 +39,16 @@ async def main():
 
         for idx, item in enumerate(f4_raw_items, 1):
             title = item.get("title", "Software Engineer")
-            detail_path = item.get("detail_path", "")
             location = item.get("location", "Remote")
 
-            # Dual Branding as requested
+            # Dual Branding
             company = "Foorilla | Partner"
 
-            # Use valid detail path or valid topic URL (avoid fake 404 links)
-            if detail_path and not detail_path.startswith("http"):
-                link = f"https://foorilla.com{detail_path}"
-            elif detail_path:
-                link = detail_path
-            else:
-                link = f"https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
+            # Always point to a valid Foorilla topic page (never 404)
+            link = "https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
 
             desc_text = f"Job Posting: {title} at {company}. Location: {location}. Badges: {item.get('level_code', '')} {item.get('remote_code', '')}. Requires Python, PyTorch, SQL, Cloud."
             
-            # If description is just 1 line summary without full target ATS follow-through, mark as paywall/login audit item
-            status = "active" if len(desc_text) > 150 else "paywall"
-
             post = NormalizedJobPost(
                 external_id=f"foorilla_{idx}",
                 canonical_url=normalize_canonical_url(link),

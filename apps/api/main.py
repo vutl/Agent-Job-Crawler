@@ -47,24 +47,25 @@ def list_jobs(
     query = db.query(Job).outerjoin(Company, Job.company_id == Company.id).outerjoin(JobAnalysis, Job.id == JobAnalysis.job_id)
 
     if locked_only:
-        # Return ONLY paywalled / login-wall / non-relevant locked jobs
+        # Return ONLY actual paywalled / login-wall jobs (NOT non-technical jobs)
         query = query.filter(
             or_(
-                JobAnalysis.is_relevant == False,
                 Job.status == "paywall",
-                Job.description_text.ilike("%authentication%"),
+                Job.description_text.ilike("%PAYWALL_DETECTED%"),
+                Job.description_text.ilike("%authentication required%"),
                 Job.description_text.ilike("%paywall%"),
-                Job.description_text.ilike("%login%"),
+                Job.description_text.ilike("%sign in to continue%"),
             )
         )
     else:
-        # Return ONLY clean, publicly accessible jobs (or jobs pending analysis)
+        # Return ONLY clean, relevant, publicly accessible AI/ML engineering jobs
         query = query.filter(
             or_(JobAnalysis.is_relevant == True, JobAnalysis.job_id.is_(None)),
             Job.status != "paywall",
-            ~Job.description_text.ilike("%authentication%"),
+            ~Job.description_text.ilike("%PAYWALL_DETECTED%"),
+            ~Job.description_text.ilike("%authentication required%"),
             ~Job.description_text.ilike("%paywall%"),
-            ~Job.description_text.ilike("%login%"),
+            ~Job.description_text.ilike("%sign in to continue%"),
         )
 
     if source:
