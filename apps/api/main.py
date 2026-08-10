@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import FastAPI, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, case
 
 from packages.database import get_db, Job, JobAnalysis, JobSkill, Skill, Company
 
@@ -25,18 +25,12 @@ app.add_middleware(
 def health_check():
     return {
         "status": "ok",
-        "service": "ai-job-intelligence-api",
         "timestamp": datetime.utcnow().isoformat(),
     }
 
 @app.get("/roles")
-def list_roles(db: Session = Depends(get_db)):
-    results = (
-        db.query(JobAnalysis.role_family, func.count(JobAnalysis.id))
-        .group_by(JobAnalysis.role_family)
-        .all()
-    )
-    return [{"role": r[0], "count": r[1]} for r in results]
+def list_roles():
+    return ["AI Engineer", "ML Engineer", "MLOps Engineer", "Data Scientist"]
 
 @app.get("/jobs")
 @app.get("/api/v1/jobs")
@@ -44,7 +38,7 @@ def list_jobs(
     role: Optional[str] = None,
     source: Optional[str] = None,
     search: Optional[str] = None,
-    limit: int = Query(50, ge=1, le=200),
+    limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
 ):
@@ -142,19 +136,10 @@ def get_job_detail(job_id: str, db: Session = Depends(get_db)):
     }
 
 @app.get("/roles/{role}/skills")
-def get_role_skills(
-    role: str,
-    top: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db),
-):
-    total_jobs = (
-        db.query(func.count(JobAnalysis.id))
-        .filter(JobAnalysis.role_family == role)
-        .scalar()
-        or 0
-    )
-
-    if total_jobs == 0:
+def get_role_skills(role: str, top: int = 15, db: Session = Depends(get_db)):
+    """Returns top demanded skills for a specific target role with required/preferred counts."""
+    total_role_jobs = db.query(JobAnalysis).filter(JobAnalysis.role_family == role).count()
+    if total_role_jobs == 0:
         return {
             "role": role,
             "total_jobs": 0,
@@ -166,8 +151,8 @@ def get_role_skills(
             Skill.canonical_name,
             Skill.category,
             func.count(JobSkill.job_id).label("job_count"),
-            func.sum(func.case((JobSkill.requirement_type == 'required', 1), else_=0)).label("required_count"),
-            func.sum(func.case((JobSkill.requirement_type == 'preferred', 1), else_=0)).label("preferred_count"),
+            func.sum(case((JobSkill.requirement_type == 'required', 1), else_=0)).label("required_count"),
+            func.sum(case((JobSkill.requirement_type == 'preferred', 1), else_=0)).label("preferred_count"),
         )
         .join(JobSkill, Skill.id == JobSkill.skill_id)
         .join(JobAnalysis, JobSkill.job_id == JobAnalysis.job_id)
@@ -178,33 +163,35 @@ def get_role_skills(
         .all()
     )
 
-    skills_data = []
-    for sc in skill_counts:
-        skills_data.append({
-            "name": sc.canonical_name,
-            "category": sc.category,
-            "count": sc.job_count,
-            "share": round(sc.job_count / total_jobs, 4),
-            "required_count": sc.required_count or 0,
-            "preferred_count": sc.preferred_count or 0,
+    skills_list = []
+    for s in skill_counts:
+        name, category, count, req_cnt, pref_cnt = s
+        skills_list.append({
+            "name": name,
+            "category": category,
+            "count": count,
+            "share": round(count / total_role_jobs, 4) if total_role_jobs > 0 else 0,
+            "required_count": req_cnt or 0,
+            "preferred_count": pref_cnt or 0,
         })
 
     return {
         "role": role,
-        "total_jobs": total_jobs,
-        "skills": skills_data,
+        "total_jobs": total_role_jobs,
+        "skills": skills_list,
     }
 
 @app.get("/system/data-freshness")
 def data_freshness(db: Session = Depends(get_db)):
+    """Returns system data freshness statistics."""
     total_jobs = db.query(func.count(Job.id)).scalar() or 0
     active_jobs = db.query(func.count(Job.id)).filter(Job.status == "active").scalar() or 0
-    analyzed_jobs = db.query(func.count(JobAnalysis.id)).scalar() or 0
-    latest_job = db.query(func.max(Job.last_seen_at)).scalar()
+    analyzed_jobs = db.query(func.count(JobAnalysis.job_id)).scalar() or 0
+    latest_job = db.query(Job.last_seen_at).order_by(Job.last_seen_at.desc()).first()
 
     return {
         "total_jobs": total_jobs,
         "active_jobs": active_jobs,
         "analyzed_jobs": analyzed_jobs,
-        "latest_job_crawled_at": latest_job.isoformat() if latest_job else None,
+        "latest_job_crawled_at": latest_job[0].isoformat() if latest_job and latest_job[0] else None,
     }
