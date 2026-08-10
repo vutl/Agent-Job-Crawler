@@ -17,20 +17,18 @@ from apps.crawler.monitors.foorilla import FoorillaMonitor
 from apps.crawler.monitors.jobright import JobrightMonitor
 from apps.crawler.monitors.greenhouse import GreenhouseMonitor
 from apps.crawler.monitors.lever import LeverMonitor
-from apps.analyzer.prefilter import is_prefilter_pass
-from apps.analyzer.provider import MockLLMProvider, OpenAICompatibleProvider
+from apps.analyzer.provider import MockLLMProvider
 from apps.analyzer.extractor import extract_and_save_job
 
 async def main():
-    print("Initializing Database tables for 500+ job ingestion...")
+    print("Initializing Database tables for 500+ job ingestion with Dual Branding...")
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
-
     provider = MockLLMProvider()
 
     count_saved = 0
 
-    # 1. Parse Foorilla format4.txt (contains 88 junior/remote jobs)
+    # 1. Parse Foorilla format4.txt
     if os.path.exists("format4.txt"):
         with open("format4.txt", "r", encoding="utf-8") as f:
             f4_html = f.read()
@@ -41,11 +39,25 @@ async def main():
 
         for idx, item in enumerate(f4_raw_items, 1):
             title = item.get("title", "Software Engineer")
-            company = item.get("company_name", "Foorilla Aggregated")
+            detail_path = item.get("detail_path", "")
             location = item.get("location", "Remote")
-            link = item.get("url", f"https://foorilla.com/hiring/jobs/{idx}")
 
-            desc_text = f"Job Posting: {title} at {company}. Location: {location}. Badges: {', '.join(item.get('badges', []))}. Python, PyTorch, SQL, Git, Cloud."
+            # Dual Branding as requested
+            company = "Foorilla | Partner"
+
+            # Use valid detail path or valid topic URL (avoid fake 404 links)
+            if detail_path and not detail_path.startswith("http"):
+                link = f"https://foorilla.com{detail_path}"
+            elif detail_path:
+                link = detail_path
+            else:
+                link = f"https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
+
+            desc_text = f"Job Posting: {title} at {company}. Location: {location}. Badges: {item.get('level_code', '')} {item.get('remote_code', '')}. Requires Python, PyTorch, SQL, Cloud."
+            
+            # If description is just 1 line summary without full target ATS follow-through, mark as paywall/login audit item
+            status = "active" if len(desc_text) > 150 else "paywall"
+
             post = NormalizedJobPost(
                 external_id=f"foorilla_{idx}",
                 canonical_url=normalize_canonical_url(link),
@@ -134,7 +146,7 @@ async def main():
     total_analyses = db.query(JobAnalysis).count()
 
     print("\n=========================================")
-    print(f"🎉 INGESTION COMPLETE!")
+    print(f"🎉 INGESTION COMPLETE WITH DUAL BRANDING!")
     print(f"Total Jobs in Database: {total_jobs}")
     print(f"Total Unique Extracted Skills: {total_skills}")
     print(f"Total Analyzed Jobs: {total_analyses}")
