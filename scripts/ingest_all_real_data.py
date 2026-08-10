@@ -21,27 +21,38 @@ from apps.analyzer.provider import MockLLMProvider
 from apps.analyzer.extractor import extract_and_save_job
 
 async def main():
-    print("Initializing Database tables for 500+ job ingestion with Dual Branding...")
+    print("Initializing Database tables for 500+ job ingestion across ALL sources & snapshots...")
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     provider = MockLLMProvider()
 
     count_saved = 0
+    foorilla_mon = FoorillaMonitor()
 
-    # 1. Parse Foorilla format4.txt
+    # 1. Parse Detailed Snapshot Files (format.txt, format2.txt, format3.txt)
+    for snap_id, file_name in enumerate(["format.txt", "format2.txt", "format3.txt"], 1):
+        if os.path.exists(file_name):
+            with open(file_name, "r", encoding="utf-8") as f:
+                snap_html = f.read()
+            post = foorilla_mon.parse_foorilla_html_snapshot(snap_html, source_name="Nokia Bell Labs", snapshot_id=str(snap_id))
+            if post:
+                job, is_new = save_normalized_job(db, post)
+                if is_new:
+                    count_saved += 1
+                    await extract_and_save_job(db, job, provider)
+            print(f"Parsed & ingested snapshot file {file_name} (Foorilla | Nokia Bell Labs)...")
+
+    # 2. Parse Foorilla format4.txt (88 raw items)
     if os.path.exists("format4.txt"):
         with open("format4.txt", "r", encoding="utf-8") as f:
             f4_html = f.read()
 
-        foorilla_mon = FoorillaMonitor()
         f4_raw_items = foorilla_mon.parse_job_items_from_html(f4_html)
         print(f"Parsed {len(f4_raw_items)} raw job items from format4.txt...")
 
         for idx, item in enumerate(f4_raw_items, 1):
             title = item.get("title", "Software Engineer")
             location = item.get("location", "Remote")
-
-            # Dual Branding
             company = "Foorilla | Partner"
 
             # Always point to a valid Foorilla topic page (never 404)
@@ -65,7 +76,7 @@ async def main():
                 count_saved += 1
                 await extract_and_save_job(db, job, provider)
 
-    # 2. Parse Jobright format_jobright.txt (7 jobs)
+    # 3. Parse Jobright format_jobright.txt (7 jobs)
     if os.path.exists("format_jobright.txt"):
         with open("format_jobright.txt", "r", encoding="utf-8") as f:
             jr_html = f.read()
@@ -79,7 +90,7 @@ async def main():
                 count_saved += 1
                 await extract_and_save_job(db, job, provider)
 
-    # 3. Parse Greenhouse fixture (299 Cloudflare jobs)
+    # 4. Parse Greenhouse fixture (299 Cloudflare jobs)
     if os.path.exists("tests/fixtures/greenhouse_jobs.json"):
         with open("tests/fixtures/greenhouse_jobs.json") as f:
             gh_data = json.load(f)
@@ -105,7 +116,7 @@ async def main():
                 count_saved += 1
                 await extract_and_save_job(db, job, provider)
 
-    # 4. Parse Lever fixture (103 Spotify jobs)
+    # 5. Parse Lever fixture (103 Spotify jobs)
     if os.path.exists("tests/fixtures/lever_jobs.json"):
         with open("tests/fixtures/lever_jobs.json") as f:
             lever_data = json.load(f)
@@ -137,7 +148,7 @@ async def main():
     total_analyses = db.query(JobAnalysis).count()
 
     print("\n=========================================")
-    print(f"🎉 INGESTION COMPLETE WITH DUAL BRANDING!")
+    print(f"🎉 INGESTION COMPLETE ACROSS ALL SOURCES!")
     print(f"Total Jobs in Database: {total_jobs}")
     print(f"Total Unique Extracted Skills: {total_skills}")
     print(f"Total Analyzed Jobs: {total_analyses}")

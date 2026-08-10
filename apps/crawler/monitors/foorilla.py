@@ -1,4 +1,5 @@
 import re
+import html
 import httpx
 import logging
 from bs4 import BeautifulSoup
@@ -68,7 +69,6 @@ class FoorillaMonitor(BaseATSMonitor):
                         soup.body
                     )
                     
-                    # Try to extract company name from title or og:site_name
                     og_site = soup.find("meta", property="og:site_name")
                     company_name = og_site.get("content") if og_site else ""
                     if not company_name and soup.title:
@@ -132,6 +132,37 @@ class FoorillaMonitor(BaseATSMonitor):
             })
 
         return parsed_jobs
+
+    def parse_foorilla_html_snapshot(self, html_content: str, source_name: str = "Nokia Bell Labs", snapshot_id: str = "1") -> Optional[NormalizedJobPost]:
+        """Parses a local HTMX detail snapshot file (format.txt, format2.txt, format3.txt) of a Foorilla job card with dual branding."""
+        soup = BeautifulSoup(html_content, "html.parser")
+        
+        # Extract title from <title> or <h1>
+        title_el = soup.find("title") or soup.find("h1")
+        title = title_el.get_text(strip=True) if title_el else "Machine Learning Engineer"
+
+        # Find external apply link (e.g. to Nokia or target ATS)
+        apply_btn = soup.find("a", class_=re.compile(r"btn-primary"))
+        apply_href = apply_btn.get("href", "") if apply_btn else f"https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
+        if apply_href.startswith("/"):
+            apply_href = f"https://foorilla.com{apply_href}"
+
+        # Clean full description text
+        desc_container = soup.find("div", class_=re.compile(r"pb-2")) or soup.body
+        raw_html = str(desc_container) if desc_container else html_content
+        clean_text = clean_html_to_text(raw_html)
+
+        return NormalizedJobPost(
+            external_id=f"foorilla_snap_{snapshot_id}",
+            canonical_url=normalize_canonical_url(apply_href),
+            company_name=f"Foorilla | {source_name}",
+            company_domain="foorilla.com",
+            title=html.unescape(title),
+            location="United States / Remote",
+            description_raw=raw_html,
+            description_text=clean_text,
+            content_hash=compute_content_hash(clean_text),
+        )
 
     async def fetch_jobs(
         self,
@@ -231,29 +262,3 @@ class FoorillaMonitor(BaseATSMonitor):
             logger.error(f"Error fetching Foorilla jobs: {e}")
 
         return normalized_posts
-
-    def parse_foorilla_html_snapshot(self, html_content: str, source_name: str = "Nokia Bell Labs") -> Optional[NormalizedJobPost]:
-        """Parses a local HTML snapshot file of a Foorilla job card with dual branding."""
-        soup = BeautifulSoup(html_content, "html.parser")
-        h1 = soup.find("h1")
-        title = h1.get_text(strip=True) if h1 else "Unknown Job"
-
-        apply_btn = soup.find("a", class_=re.compile(r"btn-primary"))
-        apply_href = apply_btn.get("href", "") if apply_btn else "https://foorilla.com/hiring/jobs/redirect-nokia-101"
-
-        desc_container = soup.find("div", class_=re.compile(r"pb-2"))
-        raw_html = str(desc_container) if desc_container else html_content
-        clean_text = clean_html_to_text(raw_html)
-        content_hash = compute_content_hash(clean_text)
-
-        return NormalizedJobPost(
-            external_id="3380156",
-            canonical_url=normalize_canonical_url(apply_href),
-            company_name=f"Foorilla | {source_name}",
-            company_domain="foorilla.com",
-            title=title,
-            location="United States",
-            description_raw=raw_html,
-            description_text=clean_text,
-            content_hash=compute_content_hash(clean_text),
-        )
