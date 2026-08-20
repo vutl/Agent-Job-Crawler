@@ -247,11 +247,9 @@ class FoorillaMonitor(BaseATSMonitor):
                                 target_co = real_co
                             clean_text = target_jd
 
-                    # Fallback to Foorilla formatted detail if outbound follow-through not reached
-                    if not clean_text:
-                        desc_container = detail_soup.find("div", class_=re.compile(r"pb-2|job-description", re.I)) or detail_soup.body
-                        raw_html = str(desc_container) if desc_container else detail_res.text
-                        clean_text = clean_html_to_text(raw_html)
+                    # Strict Quality Gate: Do NOT ingest internal Foorilla summary cards if real employer ATS was not resolved
+                    if not clean_text or "foorilla.com" in canonical_target_url.lower() or target_co in ["Direct Employer", "Partner", "Companies"]:
+                        continue
 
                     # Dual branding
                     brand_company = f"Foorilla | {target_co}" if target_co and not target_co.startswith("Foorilla") else target_co
