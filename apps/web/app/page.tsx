@@ -33,6 +33,16 @@ import {
   Tag,
   Eye,
   RefreshCw,
+  Bot,
+  HeartPulse,
+  CreditCard,
+  Lightbulb,
+  Rocket,
+  Zap,
+  CheckCircle2,
+  Target,
+  Code2,
+  Terminal,
 } from 'lucide-react';
 
 interface DataFreshness {
@@ -56,6 +66,39 @@ interface JobSkill {
   requirement_type?: string;
   category?: string;
   evidence_text?: string;
+}
+
+interface DomainIndustryContext {
+  summary: string;
+  companies_hiring: string[];
+  real_world_tasks: string[];
+}
+
+interface DomainInternExpectations {
+  core_theories: string[];
+  engineering_skills: string[];
+  cost_latency_tradeoffs: string[];
+}
+
+interface DomainCapstoneBlueprint {
+  project_name: string;
+  value_prop: string;
+  core_problem: string;
+  system_architecture: string[];
+  key_metrics_to_show: string[];
+  standout_factor: string;
+}
+
+interface DomainIntelligenceItem {
+  id: string;
+  title: string;
+  tagline: string;
+  icon: string;
+  badge: string;
+  target_roles: string[];
+  industry_context: DomainIndustryContext;
+  intern_junior_expectations: DomainInternExpectations;
+  capstone_blueprint: DomainCapstoneBlueprint;
 }
 
 interface JobItem {
@@ -153,10 +196,12 @@ function getInitials(name: string) {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'explorer' | 'analytics' | 'vault'>('explorer');
+  const [activeTab, setActiveTab] = useState<'explorer' | 'blueprints' | 'analytics' | 'vault'>('explorer');
   const [selectedRole, setSelectedRole] = useState('AI Engineer');
   const [skills, setSkills] = useState<SkillStat[]>([]);
   const [freshness, setFreshness] = useState<DataFreshness | null>(null);
+  const [domainIntelligence, setDomainIntelligence] = useState<DomainIntelligenceItem[]>([]);
+  const [selectedDomainId, setSelectedDomainId] = useState<string>('agentic-ai');
   
   // Public vs Locked jobs
   const [publicJobs, setPublicJobs] = useState<JobItem[]>([]);
@@ -178,10 +223,11 @@ export default function Home() {
     async function loadData() {
       try {
         setLoading(true);
-        const [freshRes, pubRes, lockRes] = await Promise.all([
+        const [freshRes, pubRes, lockRes, domainRes] = await Promise.all([
           fetch('http://localhost:8000/system/data-freshness'),
           fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=false'),
           fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=true'),
+          fetch('http://localhost:8000/api/v1/intelligence/domains'),
         ]);
 
         if (freshRes.ok) setFreshness(await freshRes.json());
@@ -192,6 +238,10 @@ export default function Home() {
         if (lockRes.ok) {
           const data = await lockRes.json();
           setLockedJobs(data.items || []);
+        }
+        if (domainRes.ok) {
+          const dData = await domainRes.json();
+          setDomainIntelligence(dData.domains || []);
         }
       } catch (err) {
         console.error('Failed to load initial data:', err);
@@ -394,6 +444,21 @@ export default function Home() {
               <span>AI Job Market Explorer</span>
               <span className="ml-1.5 px-2 py-0.5 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700">
                 {publicJobs.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('blueprints')}
+              className={`px-5 py-3 text-sm font-bold border-b-2 transition flex items-center space-x-2 ${
+                activeTab === 'blueprints'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
+              <span>Domain & Project Blueprints</span>
+              <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-500 to-rose-500 text-white uppercase tracking-wider">
+                New
               </span>
             </button>
 
@@ -657,6 +722,341 @@ export default function Home() {
                 })}
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB: DOMAIN & CAPSTONE PROJECT BLUEPRINTS */}
+        {activeTab === 'blueprints' && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            {/* Banner Header */}
+            <div className="glass-card p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-900/90 via-slate-900/95 to-indigo-950/90 text-white relative overflow-hidden border border-indigo-500/20 shadow-xl">
+              <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="relative z-10 space-y-3 max-w-3xl">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-bold tracking-wide">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>PRODUCTION-GRADE CAPSTONE BLUEPRINTS & DOMAIN INTELLIGENCE</span>
+                </div>
+                <h2 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+                  Chiến Lược Project & Ma Trận Kỹ Năng Theo Lĩnh Vực (Intern / New Grad / Junior)
+                </h2>
+                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                  Được bóc tách từ 513+ bài tuyển dụng thực tế (Qualcomm, JPMorgan, Mozilla, Spotify, Nokia Bell Labs, DataRobot,...). Khám phá chính xác bài toán các công ty đang giải quyết và bản thiết kế các giải pháp / product đột phá giúp bạn vượt trội 99% ứng viên khi phỏng vấn.
+                </p>
+              </div>
+            </div>
+
+            {/* Domain Selector Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {domainIntelligence.map((domain) => {
+                const isSelected = selectedDomainId === domain.id;
+                return (
+                  <button
+                    key={domain.id}
+                    onClick={() => setSelectedDomainId(domain.id)}
+                    className={`p-4 rounded-2xl text-left transition-all duration-200 flex flex-col justify-between space-y-3 border ${
+                      isSelected
+                        ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-200 scale-[1.02]'
+                        : 'glass-card text-slate-700 hover:border-indigo-300 hover:bg-slate-50/80'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <div
+                        className={`p-2.5 rounded-xl ${
+                          isSelected ? 'bg-white/20 text-white' : 'bg-indigo-50 text-indigo-600'
+                        }`}
+                      >
+                        {domain.id === 'agentic-ai' ? (
+                          <Bot className="w-5 h-5" />
+                        ) : domain.id === 'computer-vision' ? (
+                          <Eye className="w-5 h-5" />
+                        ) : domain.id === 'healthcare-ai' ? (
+                          <HeartPulse className="w-5 h-5" />
+                        ) : domain.id === 'fintech-ai' ? (
+                          <CreditCard className="w-5 h-5" />
+                        ) : domain.id === 'mlops-platform' ? (
+                          <Cpu className="w-5 h-5" />
+                        ) : (
+                          <Search className="w-5 h-5" />
+                        )}
+                      </div>
+                      <span
+                        className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full ${
+                          isSelected ? 'bg-white text-indigo-900' : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {domain.badge}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs sm:text-sm leading-snug line-clamp-2">
+                        {domain.title}
+                      </h4>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Domain Deep Dive */}
+            {(() => {
+              const activeDomain = domainIntelligence.find((d) => d.id === selectedDomainId) || domainIntelligence[0];
+              if (!activeDomain) return null;
+
+              return (
+                <div className="space-y-6 animate-in fade-in duration-200">
+                  {/* Domain Header Card */}
+                  <div className="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-l-4 border-l-indigo-600">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-heading font-black text-xl text-slate-900">
+                          {activeDomain.title}
+                        </h3>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          {activeDomain.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 font-medium">{activeDomain.tagline}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                      <span className="text-xs font-bold text-slate-400 mr-1">Target Roles:</span>
+                      {activeDomain.target_roles.map((r) => (
+                        <span
+                          key={r}
+                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white"
+                        >
+                          {r}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Grid 2 Columns: Real-World Industry Context & Intern/Junior Expectation Matrix */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Column 1: Real-World Industry Context & Tasks */}
+                    <div className="glass-card p-6 rounded-2xl space-y-5 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2 border-b border-slate-100 pb-3">
+                          <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                            <Building2 className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-900 text-sm">
+                              1. Bài Toán & Product Thực Tế Doanh Nghiệp Đang Xây Dựng
+                            </h4>
+                            <p className="text-[11px] text-slate-500">
+                              Những nhiệm vụ sản xuất thực chiến bóc tách từ JD các tập đoàn lớn
+                            </p>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-100 italic">
+                          "{activeDomain.industry_context.summary}"
+                        </p>
+
+                        <div className="space-y-2">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                            Các công ty tiêu biểu đang tuyển dụng:
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {activeDomain.industry_context.companies_hiring.map((co) => (
+                              <span
+                                key={co}
+                                className="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100"
+                              >
+                                {co}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2 pt-2">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                            Nhiệm vụ & bài toán cốt lõi trong JD:
+                          </span>
+                          <ul className="space-y-2">
+                            {activeDomain.industry_context.real_world_tasks.map((task, idx) => (
+                              <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2 bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                                <span>{task}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Column 2: Intern / Junior Practical Must-Haves */}
+                    <div className="glass-card p-6 rounded-2xl space-y-5 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2 border-b border-slate-100 pb-3">
+                          <div className="p-2 rounded-xl bg-purple-50 text-purple-600">
+                            <Award className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-900 text-sm">
+                              2. Yêu Cầu Thực Chiến Cần Hiểu Sâu (Intern / Junior Level)
+                            </h4>
+                            <p className="text-[11px] text-slate-500">
+                              Không chỉ học vẹt syntax, mà cần nắm vững bản chất kiến trúc & trade-offs
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Core Theories */}
+                        <div className="space-y-2">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-purple-700 flex items-center space-x-1">
+                            <Lightbulb className="w-3.5 h-3.5" />
+                            <span>Nền tảng lý thuyết & Bản chất kiến trúc:</span>
+                          </span>
+                          <ul className="space-y-1.5">
+                            {activeDomain.intern_junior_expectations.core_theories.map((theory, idx) => (
+                              <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
+                                <span className="text-purple-600 font-bold">•</span>
+                                <span>{theory}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Engineering Toolkit */}
+                        <div className="space-y-2 pt-2 border-t border-slate-100">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-700 flex items-center space-x-1">
+                            <Code2 className="w-3.5 h-3.5" />
+                            <span>Kỹ năng & Toolkit Kỹ nghệ Sản xuất:</span>
+                          </span>
+                          <ul className="space-y-1.5">
+                            {activeDomain.intern_junior_expectations.engineering_skills.map((skill, idx) => (
+                              <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
+                                <span className="text-indigo-600 font-bold">•</span>
+                                <span>{skill}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Cost / Latency Trade-offs */}
+                        <div className="space-y-2 pt-2 border-t border-slate-100">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-700 flex items-center space-x-1">
+                            <Zap className="w-3.5 h-3.5" />
+                            <span>Cân nhắc Đánh đổi Chi phí / Độ trễ (Trade-offs):</span>
+                          </span>
+                          <ul className="space-y-1.5">
+                            {activeDomain.intern_junior_expectations.cost_latency_tradeoffs.map((t, idx) => (
+                              <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
+                                <span className="text-emerald-600 font-bold">•</span>
+                                <span>{t}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 3: "Hiring Magnet" Capstone Project Blueprint */}
+                  <div className="glass-card p-6 sm:p-8 rounded-3xl space-y-6 border-2 border-indigo-500/30 bg-gradient-to-br from-white via-indigo-50/20 to-white shadow-xl">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-indigo-100 pb-4">
+                      <div className="space-y-1">
+                        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-black tracking-wide shadow-sm">
+                          <Rocket className="w-3.5 h-3.5" />
+                          <span>3. "HIRING MAGNET" CAPSTONE PROJECT BLUEPRINT</span>
+                        </div>
+                        <h3 className="font-heading font-black text-2xl text-slate-900">
+                          {activeDomain.capstone_blueprint.project_name}
+                        </h3>
+                      </div>
+
+                      <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center space-x-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Production Ready Architecture</span>
+                      </span>
+                    </div>
+
+                    {/* Value Prop & Problem */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-1.5">
+                        <span className="text-xs font-extrabold text-indigo-900 uppercase tracking-wider flex items-center space-x-1">
+                          <Target className="w-3.5 h-3.5 text-indigo-600" />
+                          <span>Giá trị Đột phá & Định vị Sản phẩm:</span>
+                        </span>
+                        <p className="text-xs text-slate-800 leading-relaxed font-medium">
+                          {activeDomain.capstone_blueprint.value_prop}
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-rose-50/50 border border-rose-100 space-y-1.5">
+                        <span className="text-xs font-extrabold text-rose-900 uppercase tracking-wider flex items-center space-x-1">
+                          <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                          <span>Nút thắt Sản xuất Đang Giải Quyết (Pain Point):</span>
+                        </span>
+                        <p className="text-xs text-slate-800 leading-relaxed font-medium">
+                          {activeDomain.capstone_blueprint.core_problem}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* System Architecture Flow */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center space-x-1.5">
+                        <Layers className="w-4 h-4 text-indigo-600" />
+                        <span>Bản Vẽ Luồng Kiến Trúc Hệ Thống (End-to-End System Workflow):</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        {activeDomain.capstone_blueprint.system_architecture.map((step, idx) => (
+                          <div
+                            key={idx}
+                            className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between hover:border-indigo-400 transition"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center">
+                                {idx + 1}
+                              </span>
+                              <span className="text-[10px] font-bold text-slate-400 uppercase">Component</span>
+                            </div>
+                            <p className="text-xs text-slate-800 leading-relaxed">
+                              {step}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key SLA & Benchmark Metrics to Show */}
+                    <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-3">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <span className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
+                          <TrendingUp className="w-4 h-4" />
+                          <span>Chỉ Số Đo Lường & SLA Cần Trưng Bày Trên CV / GitHub:</span>
+                        </span>
+                        <span className="text-[11px] text-slate-400">Quantitative Proof of Quality</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                        {activeDomain.capstone_blueprint.key_metrics_to_show.map((m, idx) => (
+                          <div key={idx} className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-xs flex items-center space-x-2">
+                            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <span className="font-semibold text-slate-200">{m}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Standout Factor */}
+                    <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-200/80 flex items-start space-x-3 text-amber-950">
+                      <Flame className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                      <div className="space-y-1 text-xs">
+                        <h5 className="font-extrabold text-amber-900">
+                          🌟 Vì Sao Dự Án Này Giúp Bạn Đánh Bại 99% Ứng Viên Khác (The Standout Factor):
+                        </h5>
+                        <p className="text-slate-800 leading-relaxed font-medium">
+                          {activeDomain.capstone_blueprint.standout_factor}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 

@@ -218,3 +218,14 @@ def data_freshness(db: Session = Depends(get_db)):
         "analyzed_jobs": analyzed_jobs,
         "latest_job_crawled_at": latest_job[0].isoformat() if latest_job and latest_job[0] else None,
     }
+
+@app.get("/api/v1/intelligence/domains")
+@app.get("/intelligence/domains")
+def get_domain_intelligence():
+    """Returns domain-specific engineering requirements and Capstone Project Blueprints."""
+    from packages.domain_intelligence import DOMAIN_INTELLIGENCE_DATA
+    return {
+        "total_domains": len(DOMAIN_INTELLIGENCE_DATA),
+        "domains": DOMAIN_INTELLIGENCE_DATA,
+    }
+
