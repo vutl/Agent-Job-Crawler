@@ -87,13 +87,19 @@ class MockLLMProvider(LLMProvider):
             role = RoleFamily.AI_ENGINEER
 
         # 3. Determine Seniority
-        if "intern" in title_lower or "co-op" in title_lower or "trainee" in title_lower:
+        desc_lower = description_text.lower()
+        if "intern" in title_lower or "co-op" in title_lower or "trainee" in title_lower or "internship" in title_lower:
             seniority = SeniorityLevel.INTERN
-        elif "junior" in title_lower or "entry" in title_lower or "new grad" in title_lower or "[en]" in title_lower:
+        elif (
+            "junior" in title_lower or "entry" in title_lower or "new grad" in title_lower or "[en]" in title_lower or
+            "graduate" in title_lower or "associate" in title_lower or "level 1" in title_lower or "developer i" in title_lower or
+            "engineer i" in title_lower or "entry level" in desc_lower or "new grad" in desc_lower or "0-1 year" in desc_lower or
+            "0-2 years" in desc_lower or "1+ years" in desc_lower or "1+ years exp" in desc_lower
+        ):
             seniority = SeniorityLevel.JUNIOR
         elif "staff" in title_lower or "principal" in title_lower or "lead" in title_lower or "director" in title_lower or "head" in title_lower:
             seniority = SeniorityLevel.LEAD
-        elif "senior" in title_lower or "sr" in title_lower or "[se]" in title_lower:
+        elif "senior" in title_lower or "sr" in title_lower or "[se]" in title_lower or "sr." in title_lower:
             seniority = SeniorityLevel.SENIOR
         else:
             seniority = SeniorityLevel.MID

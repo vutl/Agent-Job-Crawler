@@ -25,7 +25,7 @@ NON_TECH_TITLE_PATTERNS = [
     r"\bpayment\s+operations\b",
     r"\bfinancial\s+systems\b",
     r"\bonline\s+data\s+analyst\b",
-    r"\bdata\s+annotator\b",
+    r"\bdata\s+annotator\b(?!.*(?:ai|llm|trainer|model))",
     r"\bsocial\s+media\b",
     r"\bmarketing\s+specialist\b|\bmarketing\s+manager\b",
     r"\bproduct\s+marketing\b",
@@ -59,9 +59,10 @@ def is_prefilter_pass(title: str, description_text: str) -> Tuple[bool, str]:
     desc_lower = description_text.lower()
 
     # Rule 1: Instant rejection for non-technical / business / corporate titles
-    for pattern in NON_TECH_TITLE_PATTERNS:
-        if re.search(pattern, title_lower):
-            return False, f"Rejected by pre-filter: Title '{title}' matches non-technical pattern '{pattern}'"
+    if not any(k in title_lower for k in ["ai trainer", "llm trainer", "ai evaluation", "model evaluation"]):
+        for pattern in NON_TECH_TITLE_PATTERNS:
+            if re.search(pattern, title_lower):
+                return False, f"Rejected by pre-filter: Title '{title}' matches non-technical pattern '{pattern}'"
 
     # Rule 2: Minimum technical keyword or tech role check
     has_tech_keyword = (
