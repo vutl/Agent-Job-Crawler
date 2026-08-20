@@ -750,15 +750,44 @@ export default function Home() {
                           <span>Xem chi tiết JD</span>
                         </button>
 
-                        <a
-                          href={job.canonical_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-indigo-600 text-white transition shadow-sm"
-                        >
-                          <span>Apply on Portal</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </a>
+                        {isJobright ? (
+                          <div className="flex items-center space-x-1.5">
+                            <a
+                              href={
+                                job.external_id && job.external_id.length > 10
+                                  ? `https://jobright.ai/jobs/info/${job.external_id}#overview`
+                                  : job.canonical_url
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition shadow-sm"
+                              title="Mở trực tiếp trên Jobright"
+                            >
+                              <span>Jobright ↗</span>
+                            </a>
+                            {job.canonical_url && !job.canonical_url.includes('jobright.ai') && (
+                              <a
+                                href={job.canonical_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-indigo-600 text-white transition shadow-sm"
+                                title="Ứng tuyển trên cổng gốc"
+                              >
+                                <span>Apply ↗</span>
+                              </a>
+                            )}
+                          </div>
+                        ) : (
+                          <a
+                            href={job.canonical_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-indigo-600 text-white transition shadow-sm"
+                          >
+                            <span>Apply on Portal</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   );
@@ -1312,32 +1341,52 @@ export default function Home() {
                 Close Panel
               </button>
 
-              <div className="flex items-center space-x-2.5">
-                {/* Jobright Direct Overview Link if applicable */}
-                {(selectedJobModal.company_name.toLowerCase().includes('jobright') || selectedJobModal.external_id || selectedJobModal.description_text.includes('jobright.ai')) && (
-                  <a
-                    href={
-                      selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] ||
-                      `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50 shadow-sm transition"
-                  >
-                    <span>Xem trên Jobright (AI Match)</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Jobright Direct Deep-links if applicable */}
+                {(selectedJobModal.company_name.toLowerCase().includes('jobright') || (selectedJobModal.external_id && selectedJobModal.external_id.length > 5) || selectedJobModal.canonical_url.includes('jobright.ai')) && (
+                  <>
+                    <a
+                      href={
+                        selectedJobModal.external_id && selectedJobModal.external_id.length > 10
+                          ? `https://jobright.ai/jobs/info/${selectedJobModal.external_id}#overview`
+                          : (selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] || `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}#overview`)
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 shadow-sm transition"
+                    >
+                      <span>🔍 Jobright Overview & Match</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+
+                    <a
+                      href={
+                        selectedJobModal.external_id && selectedJobModal.external_id.length > 10
+                          ? `https://jobright.ai/jobs/info/${selectedJobModal.external_id}#company`
+                          : (selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] ? `${selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0]}#company` : `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}#company`)
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                    >
+                      <span>🏢 Jobright Company Info</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  </>
                 )}
 
-                <a
-                  href={selectedJobModal.canonical_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 transition"
-                >
-                  <span>Apply on Official Portal</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                {/* Direct Official Apply Portal if different from Jobright */}
+                {selectedJobModal.canonical_url && !selectedJobModal.canonical_url.includes('jobright.ai') && (
+                  <a
+                    href={selectedJobModal.canonical_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 transition"
+                  >
+                    <span>Apply on Official Portal (Original Post)</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
