@@ -125,12 +125,13 @@ class FoorillaMonitor(BaseATSMonitor):
         if not title_text or title_text == "Nokia":
             title_text = "AI R&D Engineering Co-op" if snapshot_id == "3" else "Machine Learning Engineer"
 
-        # 2. Extract company from og:site_name or company link
+        # 2. Extract company from comp_link or og:site_name
         og_site = soup.find("meta", property="og:site_name")
         comp_link = soup.find("a", href=re.compile(r"/hiring/companies/"))
+        detected_comp = DOMExtractor.extract_company_name_from_foorilla_link(comp_link) if comp_link else ""
         company = (
+            detected_comp if detected_comp and detected_comp != "Direct Employer" else
             (og_site.get("content") if og_site and og_site.get("content") else "") or
-            (comp_link.get_text(strip=True).replace("@", "").strip() if comp_link else "") or
             source_name
         )
         company_brand = f"Foorilla | {company}" if not company.startswith("Foorilla") else company
