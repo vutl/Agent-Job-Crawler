@@ -852,7 +852,7 @@ export default function Home() {
               {/* Formatted Markdown Job Description Body */}
               <div className="space-y-3">
                 <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">
-                  Formatted Job Description
+                  Description
                 </h4>
                 <div className="p-6 rounded-2xl bg-white border border-slate-200">
                   <MarkdownJDViewer content={selectedJobModal.description_text} />

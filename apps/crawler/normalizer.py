@@ -1,7 +1,7 @@
 import hashlib
 import html
 import re
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup
 
 def clean_html_to_text(html_content: str) -> str:
     """
@@ -49,14 +49,34 @@ def clean_html_to_text(html_content: str) -> str:
     # 3. Strip any residual unparsed HTML tag artifacts (e.g. <div class="...">)
     clean = re.sub(r"<[^>]+>", " ", raw_text)
 
-    # 4. Remove boilerplate ingestion prefixes
+    # 4. Clean Foorilla / Aggregator shorthand section patterns into rich Markdown
+    clean = re.sub(r"Tasks:\s*\*", "\n\n### Tasks\n\n- ", clean, flags=re.I)
+    clean = re.sub(r"Tasks:\s*", "\n\n### Tasks\n\n- ", clean, flags=re.I)
+    clean = re.sub(r"Perks/Benefits:\s*\+?", "\n\n### Perks & Benefits\n\n- ", clean, flags=re.I)
+    clean = re.sub(r"Skills/Tech stack required:\s*", "\n\n### Skills & Tech Stack Required\n\n", clean, flags=re.I)
+    clean = re.sub(r"Educational requirements:\s*", "\n\n### Educational Requirements\n\n", clean, flags=re.I)
+    clean = re.sub(r"Role\(s\):\s*", "\n\n### Role(s)\n\n", clean, flags=re.I)
+    clean = re.sub(r"Where you will work", "\n\n### Where You Will Work\n\n", clean, flags=re.I)
+    clean = re.sub(r"What you will do", "\n\n### What You Will Do\n\n", clean, flags=re.I)
+    clean = re.sub(r"What you bring", "\n\n### What You Bring\n\n", clean, flags=re.I)
+    clean = re.sub(r"What we offer", "\n\n### What We Offer\n\n", clean, flags=re.I)
+    clean = re.sub(r"What we value", "\n\n### What We Value\n\n", clean, flags=re.I)
+
+    # Clean double bullet markers (e.g. '• *', '• +', '- *')
+    clean = re.sub(r"[\u2022\u25cf\u25cb]\s*[\*\+\-]?\s*", "\n- ", clean)
+    clean = re.sub(r"\n\s*[\*\+]\s+", "\n- ", clean)
+
+    # Remove boilerplate ingestion prefixes
     clean = re.sub(r"^Job Posting:\s*.*?\.\s*", "", clean, flags=re.I)
-    clean = re.sub(r"^Tasks:\s*", "", clean, flags=re.I)
 
     # 5. Clean line by line
     lines = []
     for line in clean.splitlines():
         line_clean = re.sub(r"[ \t]+", " ", line).strip()
+        # Clean stray bullet characters on line start
+        line_clean = re.sub(r"^[\u2022\u25cf\u25cb]\s*", "- ", line_clean)
+        line_clean = re.sub(r"^-\s*[\*\+]\s*", "- ", line_clean)
+        
         if line_clean:
             lines.append(line_clean)
         elif lines and lines[-1] != "":
@@ -72,8 +92,12 @@ def compute_content_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 def normalize_canonical_url(url: str) -> str:
-    """Strips tracking params and trailing slashes to form canonical URL."""
+    """
+    Strips tracking params and trailing slashes to form canonical URL.
+    CRITICAL: Preserves exact character casing for case-sensitive ATS/Foorilla tokens!
+    """
     if not url:
         return ""
-    url = url.split("?")[0].split("#")[0].rstrip("/")
-    return url.lower()
+    # Strip tracking query params and fragments
+    clean_url = url.split("?")[0].split("#")[0].rstrip("/")
+    return clean_url
