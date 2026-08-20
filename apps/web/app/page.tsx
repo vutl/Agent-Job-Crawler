@@ -103,6 +103,7 @@ interface DomainIntelligenceItem {
 
 interface JobItem {
   id: number | string;
+  external_id?: string;
   title: string;
   company_name: string;
   company_domain?: string;
@@ -1303,7 +1304,7 @@ export default function Home() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex flex-wrap justify-between items-center gap-3">
               <button
                 onClick={() => setSelectedJobModal(null)}
                 className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition"
@@ -1311,15 +1312,33 @@ export default function Home() {
                 Close Panel
               </button>
 
-              <a
-                href={selectedJobModal.canonical_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 transition"
-              >
-                <span>Apply on Official Portal</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
+              <div className="flex items-center space-x-2.5">
+                {/* Jobright Direct Overview Link if applicable */}
+                {(selectedJobModal.company_name.toLowerCase().includes('jobright') || selectedJobModal.external_id || selectedJobModal.description_text.includes('jobright.ai')) && (
+                  <a
+                    href={
+                      selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] ||
+                      `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50 shadow-sm transition"
+                  >
+                    <span>Xem trên Jobright (AI Match)</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </a>
+                )}
+
+                <a
+                  href={selectedJobModal.canonical_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 transition"
+                >
+                  <span>Apply on Official Portal</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

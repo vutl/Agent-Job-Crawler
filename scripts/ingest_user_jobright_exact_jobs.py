@@ -71,23 +71,40 @@ Mindrift builds cutting-edge AI data training pipelines for frontier AI models a
         "company": "Jobright | GigFinder.ai",
         "domain": "gigfinder.ai",
         "location": "United States (Remote)",
-        "url": "https://gigfinder.ai/jobs/data-scientist-ai-evaluation-remote",
+        "url": "https://gigfinder.ai/members/job-detail?id=2662329&back=/jobs&jr_id=6a872fba25fc4e7ae3dabcd0",
         "seniority": "Entry Level / Junior",
         "job_type": "Contract",
         "salary": "$100/hr - $150/hr",
         "description": """### Overview
-GigFinder.ai is an AI-powered job matching platform. We are seeking a Data Scientist specializing in AI Evaluation and LLM Benchmark Calibration to work remotely in the United States.
+Mercor connects elite creative and technical talent with leading AI research labs. The Data Scientist - AI Evaluation role involves designing grading criteria, evaluating data science work, providing evidence-based feedback, and helping improve AI model performance.
+
+- **Location**: United States (100% Remote)
+- **Employment Type**: Contract ($100/hr - $150/hr)
+- **Experience Level**: Entry Level / 1+ years exp
+- **Jobright URL**: [View on Jobright](https://jobright.ai/jobs/info/6a872fba25fc4e7ae3dabcd0#overview)
+- **Original Portal**: [Apply on GigFinder](https://gigfinder.ai/members/job-detail?id=2662329&back=/jobs&jr_id=6a872fba25fc4e7ae3dabcd0)
 
 ### Responsibilities
-- Benchmark and evaluate frontier AI matching models against human recruiter preference baselines.
-- Build automated evaluation pipelines using DeepEval, RAGAS, and custom LLM-as-a-judge evaluators.
-- Perform statistical hypothesis testing, precision-recall analysis, and semantic similarity scoring using vector embeddings.
-- Collaborate with ML Engineers to fine-tune rerankers and embedding models on real candidate-job interaction data.
+- Design precise, task-specific grading criteria for data science deliverables, including exploratory data analyses, statistical modeling work, machine learning pipelines, and A/B test write-ups.
+- Evaluate AI-generated or human-created work against established criteria to ensure quality and consistency.
+- Provide detailed written justifications for evaluations and scores to maintain transparency and accountability.
+- Apply consistent, evidence-based judgment to ensure assessments are reproducible and defensible.
+- Incorporate structured feedback from senior reviewers and iterate on submitted work for continuous improvement.
+- Work independently and asynchronously to meet deadlines and improve AI model performance.
 
-### Qualifications
-- Degree in Data Science, Statistics, Computer Science, or AI (0-2 years experience).
-- Proficiency in Python, Pandas, Scikit-learn, PyTorch, and SQL.
-- Familiarity with NLP, LLM evaluation metrics, semantic search (HNSW/Qdrant), and prompt engineering."""
+### Qualifications & Required Skills
+- 1+ years of professional data science experience.
+- Experience at a leading technology, research, or quantitative firm.
+- Strong command of Python, SQL, Statistical Modeling, Machine Learning, Experimentation, and Data Science.
+- Exceptional written communication skills and detail-oriented approach to evaluating complex AI workflows.
+- Comfort receiving feedback and calibrating judgment against established evaluation standards.
+
+### Benefits & Work Culture
+- 100% Remote work.
+- Work independently and asynchronously on cutting-edge AI LLM benchmarks.
+
+### Company Profile: GigFinder.ai
+AI job matching platform for jobs and contract work. Founded in 2025, Richmond, Virginia, US (Early Stage)."""
     },
     {
         "title": "Software Engineer – Entry Level",

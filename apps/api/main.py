@@ -92,6 +92,7 @@ def list_jobs(
 
         items.append({
             "id": j.id,
+            "external_id": j.external_id,
             "title": j.title,
             "company_name": company_name,
             "company_domain": company_domain,
