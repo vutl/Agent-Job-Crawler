@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Activity,
   Database,
@@ -25,6 +25,14 @@ import {
   Clock,
   BookOpen,
   ShieldAlert,
+  ChevronRight,
+  Compass,
+  BarChart3,
+  Flame,
+  Check,
+  Tag,
+  Eye,
+  RefreshCw,
 } from 'lucide-react';
 
 interface DataFreshness {
@@ -59,535 +67,739 @@ interface JobItem {
   location: string;
   salary_range?: string;
   description_text: string;
-  posted_time_ago: string;
+  posted_time_ago?: string;
   posted_at?: string | null;
   role_family: string;
   seniority: string;
   is_relevant: boolean;
   relevance_reason: string | null;
-  ingestion_stage?: string;
+  status: string;
   skills: JobSkill[];
-  sections?: {
-    overview?: string;
-    team_challenge?: string;
-    responsibilities?: string[];
-    requirements?: string[];
-    salary_info?: string[];
-  };
 }
 
 const ROLES = ['AI Engineer', 'ML Engineer', 'MLOps Engineer', 'Data Scientist'];
 
-function stripRawHtml(text: string): string {
-  if (!text) return '';
-  // Unescape HTML entities first
-  let clean = text
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&nbsp/g, ' ');
+// Helper to render Markdown Job Description into clean structured HTML
+function MarkdownJDViewer({ content }: { content: string }) {
+  if (!content) return <p className="text-slate-400 italic">No description available.</p>;
 
-  // Remove residual HTML tags
-  clean = clean.replace(/<[^>]+>/g, ' ');
-
-  // Clean boilerplate ingestion headers
-  clean = clean.replace(/^Job Posting:\s*.*?\.\s*/i, '');
-  clean = clean.replace(/^Tasks:\s*/i, '');
-
-  return clean.replace(/\s+/g, ' ').trim();
-}
-
-export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'explorer' | 'locked'>('explorer');
-  const [selectedRole, setSelectedRole] = useState('AI Engineer');
-  const [freshness, setFreshness] = useState<DataFreshness>({
-    total_jobs: 0,
-    active_jobs: 0,
-    analyzed_jobs: 0,
-    latest_job_crawled_at: new Date().toISOString(),
-  });
-  const [skills, setSkills] = useState<SkillStat[]>([]);
-  const [jobs, setJobs] = useState<JobItem[]>([]);
-  const [lockedJobs, setLockedJobs] = useState<JobItem[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedJobModal, setSelectedJobModal] = useState<JobItem | null>(null);
-  const [isLiveApi, setIsLiveApi] = useState(false);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const freshRes = await fetch('http://localhost:8000/system/data-freshness');
-        if (freshRes.ok) {
-          const freshData = await freshRes.json();
-          setFreshness(freshData);
-          setIsLiveApi(true);
-        }
-
-        const skillsRes = await fetch(`http://localhost:8000/roles/${encodeURIComponent(selectedRole)}/skills`);
-        if (skillsRes.ok) {
-          const skillsData = await skillsRes.json();
-          if (skillsData.skills && skillsData.skills.length > 0) {
-            setSkills(skillsData.skills);
-          }
-        }
-
-        // Fetch Public Jobs ONLY
-        const jobsRes = await fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=false');
-        if (jobsRes.ok) {
-          const jobsData = await jobsRes.json();
-          if (jobsData.items) {
-            const mapped = jobsData.items.map((it: any, idx: number) => ({
-              ...it,
-              description_text: stripRawHtml(it.description_text),
-              posted_time_ago: it.posted_at ? 'Recently posted' : `${(idx % 5) + 1} days ago`,
-              ingestion_stage: 'Live Direct ATS',
-            }));
-            setJobs(mapped);
-          }
-        }
-
-        // Fetch Locked / Paywalled Jobs ONLY
-        const lockedRes = await fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=true');
-        if (lockedRes.ok) {
-          const lockedData = await lockedRes.json();
-          if (lockedData.items) {
-            const mapped = lockedData.items.map((it: any, idx: number) => ({
-              ...it,
-              description_text: stripRawHtml(it.description_text),
-              posted_time_ago: 'Audit Flagged',
-              ingestion_stage: 'Paywall / Auth Audit Vault',
-            }));
-            setLockedJobs(mapped);
-          }
-        }
-      } catch (e) {
-        setIsLiveApi(false);
-      }
-    }
-    fetchData();
-  }, [selectedRole]);
-
-  const filteredJobs = jobs.filter(
-    (j) =>
-      j.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      j.company_name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredLockedJobs = lockedJobs.filter(
-    (j) =>
-      j.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      j.company_name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Split by double newlines into blocks
+  const blocks = content.split(/\n\n+/);
 
   return (
-    <div className="space-y-8 bg-slate-50 min-h-screen text-slate-900 font-sans p-2 sm:p-4">
-      {/* Top Banner - Clean Slate Light Style */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
-        <div>
-          <div className="flex items-center space-x-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-              AI Job Intelligence Platform
-            </span>
-            <span className="text-xs text-slate-500 font-medium">PostgreSQL 18 • Redis Worker Queue</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mt-2">
-            Tech Market & Skill Intelligence
-          </h1>
-          <p className="text-slate-600 mt-1.5 text-sm max-w-3xl leading-relaxed">
-            Continuous ingestion from Greenhouse, Lever, Workday, TopCV, Foorilla & Jobright with 0-Token pre-filtering and separate Paywall Vault.
-          </p>
-        </div>
+    <div className="jd-markdown-content space-y-4">
+      {blocks.map((block, idx) => {
+        const trimmed = block.trim();
+        if (!trimmed) return null;
 
-        {/* Tab Navigation Controls */}
-        <div className="flex flex-wrap items-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'analytics'
-                ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Market Analytics
-          </button>
+        // Heading 3: ### Heading
+        if (trimmed.startsWith('### ')) {
+          const headingText = trimmed.replace(/^###\s+/, '');
+          return (
+            <h3 key={idx} className="flex items-center space-x-2">
+              <span className="w-1.5 h-4 rounded-full bg-indigo-600 inline-block"></span>
+              <span>{headingText}</span>
+            </h3>
+          );
+        }
 
-          <button
-            onClick={() => setActiveTab('explorer')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 ${
-              activeTab === 'explorer'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Briefcase className="w-4 h-4" />
-            <span>Public Job Explorer ({jobs.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('locked')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 ${
-              activeTab === 'locked'
-                ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Lock className="w-4 h-4" />
-            <span>Paywall Vault ({lockedJobs.length})</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs uppercase font-bold tracking-wider">Total Jobs Ingested</span>
-            <Database className="w-5 h-5 text-indigo-600" />
-          </div>
-          <div className="text-3xl font-extrabold text-slate-900">{freshness.total_jobs}</div>
-          <div className="text-xs text-emerald-600 font-semibold flex items-center space-x-1">
-            <CheckCircle className="w-3.5 h-3.5" />
-            <span>100% SHA256 Deduplicated</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs uppercase font-bold tracking-wider">Public Active Jobs</span>
-            <Activity className="w-5 h-5 text-emerald-600" />
-          </div>
-          <div className="text-3xl font-extrabold text-slate-900">{jobs.length}</div>
-          <div className="text-xs text-slate-500 font-medium">Publicly Accessible Feed</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs uppercase font-bold tracking-wider">Paywalled / Login Vault</span>
-            <Lock className="w-5 h-5 text-amber-600" />
-          </div>
-          <div className="text-3xl font-extrabold text-amber-600">{lockedJobs.length}</div>
-          <div className="text-xs text-amber-700 font-medium">Separated Audit Section</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs uppercase font-bold tracking-wider">API Status</span>
-            <Layers className="w-5 h-5 text-cyan-600" />
-          </div>
-          <div className="text-3xl font-extrabold text-slate-900">{isLiveApi ? 'Live API' : 'Seeded'}</div>
-          <div className="text-xs text-slate-500 font-medium">
-            {isLiveApi ? 'FastAPI localhost:8000' : 'Backend Ready (port 8000)'}
-          </div>
-        </div>
-      </div>
-
-      {/* TAB 1: MARKET ANALYTICS */}
-      {activeTab === 'analytics' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
-            <h2 className="text-2xl font-black text-slate-900">Skill Demands by Role</h2>
-            <div className="flex flex-wrap gap-2">
-              {ROLES.map((role) => (
-                <button
-                  key={role}
-                  onClick={() => setSelectedRole(role)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    selectedRole === role
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                      : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
-                  }`}
-                >
-                  {role}
-                </button>
+        // Bullet list
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const items = trimmed.split(/\n[-*]\s+/).filter(Boolean);
+          return (
+            <ul key={idx}>
+              {items.map((item, itemIdx) => (
+                <li key={itemIdx} className="flex items-start space-x-2">
+                  <span className="text-indigo-500 mt-1 mr-1">•</span>
+                  <span>{item.replace(/^[-*]\s+/, '')}</span>
+                </li>
               ))}
+            </ul>
+          );
+        }
+
+        // Regular paragraph
+        return <p key={idx}>{trimmed}</p>;
+      })}
+    </div>
+  );
+}
+
+// Generate consistent avatar gradient by company name
+function getCompanyAvatarGradient(name: string) {
+  const gradients = [
+    'from-indigo-600 to-violet-600',
+    'from-emerald-600 to-teal-600',
+    'from-cyan-600 to-blue-600',
+    'from-rose-600 to-pink-600',
+    'from-amber-600 to-orange-600',
+    'from-fuchsia-600 to-purple-600',
+  ];
+  let hash = 0;
+  for (let i = 0; i < (name || '').length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % gradients.length;
+  return gradients[index];
+}
+
+// Get initials
+function getInitials(name: string) {
+  if (!name) return 'AI';
+  const clean = name.replace(/Foorilla\s*\|\s*/i, '').replace(/TopCV\s*\|\s*/i, '');
+  const parts = clean.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+export default function Home() {
+  const [activeTab, setActiveTab] = useState<'explorer' | 'analytics' | 'vault'>('explorer');
+  const [selectedRole, setSelectedRole] = useState('AI Engineer');
+  const [skills, setSkills] = useState<SkillStat[]>([]);
+  const [freshness, setFreshness] = useState<DataFreshness | null>(null);
+  
+  // Public vs Locked jobs
+  const [publicJobs, setPublicJobs] = useState<JobItem[]>([]);
+  const [lockedJobs, setLockedJobs] = useState<JobItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSourceFilter, setSelectedSourceFilter] = useState('ALL');
+  const [selectedRoleFilter, setSelectedRoleFilter] = useState('ALL');
+  const [selectedSeniorityFilter, setSelectedSeniorityFilter] = useState('ALL');
+  const [remoteOnly, setRemoteOnly] = useState(false);
+
+  // Detail Modal
+  const [selectedJobModal, setSelectedJobModal] = useState<JobItem | null>(null);
+
+  // Fetch initial data
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        const [freshRes, pubRes, lockRes] = await Promise.all([
+          fetch('http://localhost:8000/system/data-freshness'),
+          fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=false'),
+          fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=true'),
+        ]);
+
+        if (freshRes.ok) setFreshness(await freshRes.json());
+        if (pubRes.ok) {
+          const data = await pubRes.json();
+          setPublicJobs(data.items || []);
+        }
+        if (lockRes.ok) {
+          const data = await lockRes.json();
+          setLockedJobs(data.items || []);
+        }
+      } catch (err) {
+        console.error('Failed to load initial data:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  // Fetch role skills analytics
+  useEffect(() => {
+    async function loadRoleSkills() {
+      try {
+        const res = await fetch(`http://localhost:8000/roles/${encodeURIComponent(selectedRole)}/skills`);
+        if (res.ok) {
+          const data = await res.json();
+          setSkills(data.skills || []);
+        }
+      } catch (err) {
+        console.error('Failed to load skills:', err);
+      }
+    }
+    loadRoleSkills();
+  }, [selectedRole]);
+
+  // Filtered Public Jobs
+  const filteredPublicJobs = useMemo(() => {
+    return publicJobs.filter((job) => {
+      // Search
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const matchTitle = job.title.toLowerCase().includes(q);
+        const matchCompany = job.company_name.toLowerCase().includes(q);
+        const matchSkill = job.skills.some((s) => s.name.toLowerCase().includes(q));
+        if (!matchTitle && !matchCompany && !matchSkill) return false;
+      }
+
+      // Source Filter
+      if (selectedSourceFilter !== 'ALL') {
+        const url = job.canonical_url.toLowerCase();
+        const cname = job.company_name.toLowerCase();
+        if (selectedSourceFilter === 'DIRECT_ATS') {
+          if (!url.includes('greenhouse') && !url.includes('lever') && !url.includes('workday') && !cname.includes('cloudflare') && !cname.includes('spotify') && !cname.includes('datarobot')) {
+            return false;
+          }
+        } else if (selectedSourceFilter === 'FOORILLA') {
+          if (!cname.includes('foorilla') && !url.includes('foorilla')) return false;
+        } else if (selectedSourceFilter === 'JOBRIGHT') {
+          if (!cname.includes('jobright') && !url.includes('jobright')) return false;
+        } else if (selectedSourceFilter === 'TOPCV') {
+          if (!cname.includes('topcv') && !url.includes('topcv')) return false;
+        }
+      }
+
+      // Role Filter
+      if (selectedRoleFilter !== 'ALL') {
+        if (job.role_family !== selectedRoleFilter) return false;
+      }
+
+      // Seniority Filter
+      if (selectedSeniorityFilter !== 'ALL') {
+        if (job.seniority?.toLowerCase() !== selectedSeniorityFilter.toLowerCase()) return false;
+      }
+
+      // Remote Only
+      if (remoteOnly) {
+        const loc = (job.location || '').toLowerCase();
+        const tit = (job.title || '').toLowerCase();
+        if (!loc.includes('remote') && !loc.includes('[r]') && !tit.includes('remote')) return false;
+      }
+
+      return true;
+    });
+  }, [publicJobs, searchQuery, selectedSourceFilter, selectedRoleFilter, selectedSeniorityFilter, remoteOnly]);
+
+  // Filtered Vault Jobs
+  const filteredVaultJobs = useMemo(() => {
+    if (!searchQuery) return lockedJobs;
+    const q = searchQuery.toLowerCase();
+    return lockedJobs.filter(
+      (job) =>
+        job.title.toLowerCase().includes(q) ||
+        job.company_name.toLowerCase().includes(q) ||
+        job.location.toLowerCase().includes(q)
+    );
+  }, [lockedJobs, searchQuery]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-24">
+      {/* Top Brand & Status Navigation */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-violet-600 flex items-center justify-center text-white font-black text-lg shadow-sm shadow-indigo-200">
+              AI
             </div>
-          </div>
-
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">{selectedRole} — Top Required Technologies</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Aggregated skill frequencies and required vs preferred split from real job descriptions.
-                </p>
-              </div>
-              <span className="text-xs font-mono bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-200 font-bold">
-                {skills.length} Skills Extracted
-              </span>
-            </div>
-
-            <div className="divide-y divide-slate-100">
-              {skills.map((skill, idx) => (
-                <div
-                  key={skill.name}
-                  className="p-5 hover:bg-slate-50 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                >
-                  <div className="flex items-center space-x-4 min-w-[200px]">
-                    <span className="text-xs font-mono text-slate-400 font-bold w-5">#{idx + 1}</span>
-                    <div>
-                      <span className="font-bold text-slate-900 text-base">{skill.name}</span>
-                      <span className="ml-2.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
-                        {skill.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 max-w-md w-full space-y-1">
-                    <div className="flex justify-between text-xs font-semibold text-slate-600">
-                      <span>Market Share</span>
-                      <span className="text-indigo-600 font-extrabold">{Math.round(skill.share * 100)}%</span>
-                    </div>
-                    <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-indigo-500 to-teal-400 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.round(skill.share * 100)}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-3 text-xs font-semibold">
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg">
-                      {skill.required_count} Required
-                    </span>
-                    {skill.preferred_count > 0 && (
-                      <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-lg">
-                        {skill.preferred_count} Preferred
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: PUBLIC JOB EXPLORER (CLEAN TEXT NO HTML TAGS) */}
-      {activeTab === 'explorer' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
-            <div>
-              <h2 className="text-2xl font-black text-slate-900">Public Job Explorer</h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Showing ONLY publicly accessible job postings where full descriptions and official apply links are available.
-              </p>
-            </div>
-
-            {/* Search Filter Box */}
-            <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                placeholder="Search job title or company..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-600 shadow-sm"
-              />
-            </div>
-          </div>
-
-          {/* Job List Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-white p-6 rounded-3xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      {job.role_family} ({job.seniority})
-                    </span>
-
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 flex items-center space-x-1">
-                      <Clock className="w-3 h-3 text-slate-500" />
-                      <span>{job.posted_time_ago || 'Recently posted'}</span>
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-slate-900 leading-snug hover:text-indigo-600 transition">
-                    {job.title}
-                  </h3>
-
-                  <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600 font-medium">
-                    <span className="flex items-center space-x-1.5 text-slate-900 font-bold">
-                      <Building2 className="w-4 h-4 text-indigo-600" />
-                      <span>{job.company_name}</span>
-                    </span>
-                    <span className="flex items-center space-x-1">
-                      <MapPin className="w-4 h-4 text-slate-400" />
-                      <span>{job.location}</span>
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-sans">
-                    {stripRawHtml(job.description_text)}
-                  </p>
-
-                  {/* Skills Badges */}
-                  {job.skills && job.skills.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {job.skills.map((s) => (
-                        <span
-                          key={s.name}
-                          className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200"
-                        >
-                          {s.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer Action Buttons */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => setSelectedJobModal(job)}
-                    className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center space-x-1"
-                  >
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>Xem chi tiết JD</span>
-                  </button>
-
-                  <a
-                    href={job.canonical_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition"
-                  >
-                    <span>Apply on Official Portal</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: LOCKED & PAYWALLED AUDIT VAULT */}
-      {activeTab === 'locked' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-amber-200 pb-4">
             <div>
               <div className="flex items-center space-x-2">
-                <ShieldAlert className="w-5 h-5 text-amber-600" />
-                <h2 className="text-2xl font-black text-slate-900">Paywalled & Login Vault ({lockedJobs.length})</h2>
+                <span className="font-heading font-black text-slate-900 text-lg tracking-tight">AI Job Intelligence</span>
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wider">
+                  Platform
+                </span>
               </div>
-              <p className="text-xs text-slate-500 mt-1">
-                Separated list of job postings that require user login, account registration, or paid subscription.
-              </p>
-            </div>
-
-            {/* Search Filter Box */}
-            <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                placeholder="Search locked jobs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-900 focus:outline-none focus:border-amber-600 shadow-sm"
-              />
+              <p className="text-[11px] text-slate-500 hidden sm:block">Multi-Source ATS & Aggregator Intelligence Engine</p>
             </div>
           </div>
 
-          {/* Locked Jobs List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredLockedJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-amber-50/40 p-6 rounded-3xl border border-amber-200/80 hover:border-amber-300 transition flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200 flex items-center space-x-1">
-                      <Lock className="w-3 h-3" />
-                      <span>Account Login Required</span>
-                    </span>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="hidden sm:inline">System Active & Ingesting</span>
+              <span className="sm:hidden">Active</span>
+            </div>
 
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-white text-amber-800 border border-amber-200">
-                      Audit Vault
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-slate-900 leading-snug">{job.title}</h3>
-
-                  <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600 font-medium">
-                    <span className="flex items-center space-x-1.5 text-slate-900 font-bold">
-                      <Building2 className="w-4 h-4 text-amber-600" />
-                      <span>{job.company_name}</span>
-                    </span>
-                    <span className="flex items-center space-x-1">
-                      <MapPin className="w-4 h-4 text-slate-400" />
-                      <span>{job.location}</span>
-                    </span>
-                  </div>
-
-                  {/* Brief description if available */}
-                  <div className="text-xs text-slate-700 bg-white/80 p-3.5 rounded-xl border border-amber-200/60 leading-relaxed font-sans">
-                    <span className="font-bold text-amber-800 block mb-1">Brief Description / Audit Note:</span>
-                    {stripRawHtml(job.description_text)}
-                  </div>
-                </div>
-
-                {/* Direct link button if available */}
-                <div className="pt-4 border-t border-amber-200/60 flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-amber-700 font-medium">Requires Authentication</span>
-                  <a
-                    href={job.canonical_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm transition"
-                  >
-                    <span>Open External Login Link</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-            ))}
+            <a
+              href="https://github.com/vutl/Agent-Job-Crawler"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition flex items-center space-x-1.5"
+            >
+              <span>GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
-      )}
+      </header>
 
-      {/* RICH FORMATTED STAGE-2 DETAIL PANORAMA MODAL */}
-      {selectedJobModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-4xl max-h-[92vh] rounded-3xl border border-slate-200 p-6 sm:p-8 overflow-y-auto space-y-6 text-slate-900 shadow-2xl">
-            {/* Modal Header */}
-            <div className="flex justify-between items-start border-b border-slate-200 pb-5">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    {selectedJobModal.role_family} ({selectedJobModal.seniority})
-                  </span>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+        {/* Executive Stats Banner */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
+            <div className="flex justify-between items-center text-slate-500 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider">Total Ingested</span>
+              <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+                <Database className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-3xl font-black text-slate-900">{freshness?.total_jobs || publicJobs.length + lockedJobs.length}</div>
+              <p className="text-xs text-slate-500 mt-1 flex items-center space-x-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>100% SHA256 Deduplicated</span>
+              </p>
+            </div>
+          </div>
 
-                  <span className="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 flex items-center space-x-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{selectedJobModal.posted_time_ago || 'Recently posted'}</span>
-                  </span>
+          <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
+            <div className="flex justify-between items-center text-slate-500 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider">Clean Public Jobs</span>
+              <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                <Compass className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-3xl font-black text-emerald-600">{publicJobs.length}</div>
+              <p className="text-xs text-slate-500 mt-1">Verified Technical Roles</p>
+            </div>
+          </div>
 
-                  {selectedJobModal.ingestion_stage && (
-                    <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center space-x-1">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>{selectedJobModal.ingestion_stage}</span>
+          <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
+            <div className="flex justify-between items-center text-slate-500 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider">Paywall Vault</span>
+              <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                <Lock className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-3xl font-black text-amber-600">{lockedJobs.length}</div>
+              <p className="text-xs text-slate-500 mt-1">Gated / Login Wall Section</p>
+            </div>
+          </div>
+
+          <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
+            <div className="flex justify-between items-center text-slate-500 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider">Connected ATS Monitors</span>
+              <div className="p-2 rounded-xl bg-violet-50 text-violet-600">
+                <Cpu className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-3xl font-black text-slate-900">6 Platforms</div>
+              <p className="text-xs text-slate-500 mt-1">Greenhouse, Lever, Workday, Foorilla, Jobright, TopCV</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Navigation Tabs */}
+        <div className="flex items-center justify-between border-b border-slate-200">
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setActiveTab('explorer')}
+              className={`px-5 py-3 text-sm font-bold border-b-2 transition flex items-center space-x-2 ${
+                activeTab === 'explorer'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Compass className="w-4 h-4" />
+              <span>AI Job Market Explorer</span>
+              <span className="ml-1.5 px-2 py-0.5 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700">
+                {publicJobs.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-5 py-3 text-sm font-bold border-b-2 transition flex items-center space-x-2 ${
+                activeTab === 'analytics'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>Tech Stack Analytics</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('vault')}
+              className={`px-5 py-3 text-sm font-bold border-b-2 transition flex items-center space-x-2 ${
+                activeTab === 'vault'
+                  ? 'border-amber-600 text-amber-700'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Lock className="w-4 h-4 text-amber-600" />
+              <span>Paywall Vault</span>
+              <span className="ml-1.5 px-2 py-0.5 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800">
+                {lockedJobs.length}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* TAB 1: AI JOB MARKET EXPLORER */}
+        {activeTab === 'explorer' && (
+          <div className="space-y-6">
+            {/* Search & Multi-Filter Control Box */}
+            <div className="glass-card p-5 rounded-2xl space-y-4">
+              <div className="flex flex-col md:flex-row gap-3 items-center">
+                {/* Search Bar */}
+                <div className="relative flex-1 w-full">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by job title, company name, or tech skill (e.g. PyTorch, Kubernetes, Cloudflare)..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Source Filter Select */}
+                <div className="flex items-center space-x-2 w-full md:w-auto">
+                  <select
+                    value={selectedSourceFilter}
+                    onChange={(e) => setSelectedSourceFilter(e.target.value)}
+                    className="w-full md:w-auto px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  >
+                    <option value="ALL">🌐 All Sources</option>
+                    <option value="DIRECT_ATS">🟢 Direct ATS (Cloudflare, Spotify, DataRobot)</option>
+                    <option value="FOORILLA">🟣 Foorilla | Nokia & Partners</option>
+                    <option value="JOBRIGHT">🔵 Jobright Aggregator</option>
+                    <option value="TOPCV">🔴 TopCV Vietnam AI</option>
+                  </select>
+
+                  <select
+                    value={selectedRoleFilter}
+                    onChange={(e) => setSelectedRoleFilter(e.target.value)}
+                    className="w-full md:w-auto px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  >
+                    <option value="ALL">🎯 All Roles</option>
+                    <option value="AI Engineer">AI Engineer</option>
+                    <option value="ML Engineer">ML Engineer</option>
+                    <option value="MLOps Engineer">MLOps Engineer</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                  </select>
+
+                  <select
+                    value={selectedSeniorityFilter}
+                    onChange={(e) => setSelectedSeniorityFilter(e.target.value)}
+                    className="w-full md:w-auto px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  >
+                    <option value="ALL">⭐ All Seniority</option>
+                    <option value="junior">Junior / New Grad</option>
+                    <option value="mid">Mid-Level</option>
+                    <option value="senior">Senior / Lead</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Quick Filters Pill Bar */}
+              <div className="flex flex-wrap items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                <div className="flex items-center space-x-2">
+                  <span className="text-slate-500 font-semibold">Showing:</span>
+                  <span className="font-bold text-indigo-600">{filteredPublicJobs.length} active positions</span>
+                  {selectedSourceFilter !== 'ALL' && (
+                    <span className="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-medium">
+                      Source: {selectedSourceFilter}
                     </span>
                   )}
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-snug tracking-tight">
+                <label className="flex items-center space-x-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={remoteOnly}
+                    onChange={(e) => setRemoteOnly(e.target.checked)}
+                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-slate-700 font-semibold">🌍 Remote Only</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Jobs Cards Grid */}
+            {filteredPublicJobs.length === 0 ? (
+              <div className="glass-card p-12 text-center rounded-2xl space-y-3">
+                <Briefcase className="w-12 h-12 text-slate-300 mx-auto" />
+                <h3 className="font-heading font-bold text-lg text-slate-800">No jobs match your filter criteria</h3>
+                <p className="text-xs text-slate-500 max-w-md mx-auto">
+                  Try adjusting your search terms or clearing the source/role filters to explore more opportunities.
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedSourceFilter('ALL');
+                    setSelectedRoleFilter('ALL');
+                    setSelectedSeniorityFilter('ALL');
+                    setRemoteOnly(false);
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredPublicJobs.map((job) => {
+                  const isFoorilla = job.company_name.toLowerCase().includes('foorilla');
+                  const isJobright = job.company_name.toLowerCase().includes('jobright');
+                  const isTopCV = job.company_name.toLowerCase().includes('topcv');
+
+                  return (
+                    <div
+                      key={job.id}
+                      className="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between space-y-4"
+                    >
+                      <div className="space-y-3">
+                        {/* Header: Avatar, Company, Source Badges */}
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div
+                              className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${getCompanyAvatarGradient(
+                                job.company_name
+                              )} text-white font-bold text-sm flex items-center justify-center shadow-sm`}
+                            >
+                              {getInitials(job.company_name)}
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-slate-900 text-sm leading-tight flex items-center space-x-1.5">
+                                <span>{job.company_name}</span>
+                              </h4>
+                              <p className="text-xs text-slate-500 flex items-center space-x-1 mt-0.5">
+                                <MapPin className="w-3 h-3 text-slate-400" />
+                                <span className="line-clamp-1">{job.location || 'Distributed'}</span>
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-end space-y-1">
+                            {/* Source Badge */}
+                            {isFoorilla ? (
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200">
+                                Foorilla Direct
+                              </span>
+                            ) : isJobright ? (
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
+                                Jobright
+                              </span>
+                            ) : isTopCV ? (
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                                TopCV.vn
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Live Direct ATS
+                              </span>
+                            )}
+
+                            <span className="text-[10px] text-slate-400 font-medium flex items-center space-x-1">
+                              <Clock className="w-3 h-3" />
+                              <span>{job.posted_time_ago || 'Recently'}</span>
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="font-heading font-bold text-slate-900 text-base leading-snug line-clamp-2 hover:text-indigo-600 transition">
+                          {job.title}
+                        </h3>
+
+                        {/* Tags: Role Family & Seniority */}
+                        <div className="flex flex-wrap gap-1.5 text-xs">
+                          <span className="px-2.5 py-0.5 rounded-lg font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 text-[11px]">
+                            {job.role_family || 'AI Engineer'}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-lg font-semibold bg-slate-100 text-slate-700 text-[11px] capitalize">
+                            {job.seniority || 'Mid'}
+                          </span>
+                        </div>
+
+                        {/* Extracted Skills Chips */}
+                        {job.skills && job.skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {job.skills.slice(0, 4).map((s) => (
+                              <span
+                                key={s.name}
+                                className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-50 border border-slate-200 text-slate-700"
+                              >
+                                {s.name}
+                              </span>
+                            ))}
+                            {job.skills.length > 4 && (
+                              <span className="px-1.5 py-0.5 rounded-md text-[10px] font-semibold text-slate-400 bg-slate-100">
+                                +{job.skills.length - 4} more
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Card Action Buttons */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <button
+                          onClick={() => setSelectedJobModal(job)}
+                          className="inline-flex items-center space-x-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition py-1"
+                        >
+                          <BookOpen className="w-3.5 h-3.5" />
+                          <span>Xem chi tiết JD</span>
+                        </button>
+
+                        <a
+                          href={job.canonical_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-indigo-600 text-white transition shadow-sm"
+                        >
+                          <span>Apply on Portal</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 2: TECH STACK ANALYTICS */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="glass-card p-6 rounded-2xl space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="font-heading font-black text-xl text-slate-900">Tech Stack Demand by Target Role</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Extracted requirements and preferred technology frequencies from analyzed postings.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {ROLES.map((role) => (
+                    <button
+                      key={role}
+                      onClick={() => setSelectedRole(role)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
+                        selectedRole === role
+                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-200'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      }`}
+                    >
+                      {role}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Skills Bar Chart List */}
+              <div className="space-y-4">
+                {skills.length === 0 ? (
+                  <p className="text-center text-slate-400 py-8 text-xs">Loading analytics for {selectedRole}...</p>
+                ) : (
+                  skills.map((s, idx) => (
+                    <div key={s.name} className="space-y-1.5">
+                      <div className="flex justify-between items-center text-xs">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-mono text-[11px] font-bold text-slate-400">#{idx + 1}</span>
+                          <span className="font-bold text-slate-900">{s.name}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600 uppercase">
+                            {s.category}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3 text-slate-600">
+                          <span className="text-[11px]">{s.count} mentions</span>
+                          <span className="font-extrabold text-indigo-600">{Math.round(s.share * 100)}%</span>
+                        </div>
+                      </div>
+
+                      <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden flex">
+                        <div
+                          className="h-full bg-indigo-600 rounded-l-full"
+                          style={{ width: `${Math.round(s.share * 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: PAYWALL & PROTECTED VAULT */}
+        {activeTab === 'vault' && (
+          <div className="space-y-6">
+            <div className="bg-amber-50/70 border border-amber-200 p-5 rounded-2xl flex items-start space-x-3 text-amber-900">
+              <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="text-xs space-y-1">
+                <h4 className="font-bold">Protected / Login Wall Audit Section ({lockedJobs.length} Jobs)</h4>
+                <p className="text-amber-800 leading-relaxed">
+                  These postings were discovered by monitors but require user accounts, subscription logins, or corporate portal authentication. They are archived here with 0 LLM token cost to protect public data cleanliness.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredVaultJobs.map((job) => (
+                <div key={job.id} className="glass-card p-5 rounded-2xl space-y-3 border-amber-200">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 uppercase tracking-wider">
+                        Protected / Login Required
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-sm mt-1">{job.title}</h4>
+                      <p className="text-xs text-slate-500">{job.company_name} • {job.location}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-slate-600 line-clamp-2 bg-slate-50 p-3 rounded-xl border border-slate-100 italic">
+                    {job.description_text || 'Requires login credentials to inspect full job description.'}
+                  </p>
+
+                  <div className="pt-2 flex justify-between items-center border-t border-slate-100">
+                    <span className="text-[10px] text-slate-400">ID: {job.id}</span>
+                    <a
+                      href={job.canonical_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1 text-xs font-bold text-amber-700 hover:text-amber-900"
+                    >
+                      <span>View Login Portal</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* DETAIL MODAL (Xem chi tiết JD) */}
+      {selectedJobModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="glass-card w-full max-w-4xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border-slate-200">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
+              <div className="space-y-2 pr-4">
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <span className="px-3 py-1 rounded-lg font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    {selectedJobModal.role_family} ({selectedJobModal.seniority.toUpperCase()})
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg text-slate-500 bg-white border border-slate-200 font-semibold flex items-center space-x-1">
+                    <Clock className="w-3 h-3 text-slate-400" />
+                    <span>{selectedJobModal.posted_time_ago || 'Recently posted'}</span>
+                  </span>
+                </div>
+
+                <h2 className="font-heading font-black text-2xl text-slate-900 leading-tight">
                   {selectedJobModal.title}
                 </h2>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 font-medium">
-                  <span className="flex items-center space-x-1 text-slate-900 font-bold">
+                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
+                  <span className="flex items-center space-x-1.5 text-slate-900">
                     <Building2 className="w-4 h-4 text-indigo-600" />
                     <span>{selectedJobModal.company_name}</span>
                   </span>
-                  <span className="flex items-center space-x-1 text-slate-500">
+                  <span className="flex items-center space-x-1.5 text-slate-500">
                     <MapPin className="w-4 h-4 text-slate-400" />
                     <span>{selectedJobModal.location}</span>
                   </span>
@@ -602,86 +814,68 @@ export default function Dashboard() {
               </button>
             </div>
 
-            {/* Salary Highlight Callout Box */}
-            {selectedJobModal.salary_range && (
-              <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 p-5 rounded-2xl border border-emerald-200 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-3 rounded-xl bg-white border border-emerald-200 text-emerald-700 shadow-sm">
-                    <DollarSign className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <span className="text-xs uppercase font-extrabold tracking-wider text-emerald-800">Expected Compensation</span>
-                    <h4 className="text-xl font-black text-slate-900">{selectedJobModal.salary_range}</h4>
-                  </div>
-                </div>
-                <a
-                  href={selectedJobModal.canonical_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition"
-                >
-                  <span>Apply Now</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
-              </div>
-            )}
+            {/* Modal Scrollable Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {/* Extracted Skills & Evidence Spans */}
+              <div className="p-5 rounded-2xl bg-indigo-50/40 border border-indigo-100 space-y-3">
+                <h4 className="text-xs uppercase tracking-wider text-indigo-900 font-extrabold flex items-center space-x-2">
+                  <Award className="w-4 h-4 text-indigo-600" />
+                  <span>Extracted Tech Stack & LLM Evidence Spans</span>
+                </h4>
 
-            {/* Extracted Required Tech Stack */}
-            <div className="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-              <h4 className="text-xs uppercase tracking-wider text-slate-500 font-extrabold flex items-center space-x-2">
-                <Award className="w-4 h-4 text-indigo-600" />
-                <span>Extracted Tech Stack & LLM Evidence Spans</span>
-              </h4>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {selectedJobModal.skills.map((s) => (
-                  <div
-                    key={s.name}
-                    className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between space-y-1"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-slate-900 text-sm">{s.name}</span>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                          s.requirement_type === 'required'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-amber-50 text-amber-700 border border-amber-200'
-                        }`}
+                {selectedJobModal.skills && selectedJobModal.skills.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedJobModal.skills.map((s) => (
+                      <div
+                        key={s.name}
+                        className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between space-y-1"
                       >
-                        {s.requirement_type || 'required'}
-                      </span>
-                    </div>
-                    {s.evidence_text && (
-                      <p className="text-[11px] text-slate-500 italic line-clamp-1">"{s.evidence_text}"</p>
-                    )}
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-slate-900 text-sm">{s.name}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
+                            {s.requirement_type || 'REQUIRED'}
+                          </span>
+                        </div>
+                        {s.evidence_text && (
+                          <p className="text-[11px] text-slate-500 italic line-clamp-2">
+                            "{s.evidence_text}"
+                          </p>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <p className="text-xs text-slate-400 italic">No specific framework skills extracted.</p>
+                )}
+              </div>
+
+              {/* Formatted Markdown Job Description Body */}
+              <div className="space-y-3">
+                <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">
+                  Formatted Job Description
+                </h4>
+                <div className="p-6 rounded-2xl bg-white border border-slate-200">
+                  <MarkdownJDViewer content={selectedJobModal.description_text} />
+                </div>
               </div>
             </div>
 
-            {/* Description Body */}
-            <div className="space-y-2">
-              <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">Complete Job Description Text</h4>
-              <div className="text-xs text-slate-800 bg-slate-50 p-5 rounded-2xl border border-slate-200 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto">
-                {stripRawHtml(selectedJobModal.description_text)}
-              </div>
-            </div>
-
-            {/* Modal Footer Actions */}
-            <div className="pt-4 border-t border-slate-200 flex justify-between items-center">
+            {/* Modal Footer */}
+            <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center">
               <button
                 onClick={() => setSelectedJobModal(null)}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition"
               >
                 Close Panel
               </button>
+
               <a
                 href={selectedJobModal.canonical_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 transition"
+                className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 transition"
               >
-                <span>Apply on Official Portal ({selectedJobModal.company_name})</span>
+                <span>Apply on Official Portal</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>

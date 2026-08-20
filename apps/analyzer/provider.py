@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import re
 from abc import ABC, abstractmethod
 from typing import Dict, Any
 from packages.schemas import (
@@ -35,60 +36,111 @@ class LLMProvider(ABC):
         pass
 
 class MockLLMProvider(LLMProvider):
-    """Mock LLM Provider for deterministic testing without external API calls."""
+    """Mock LLM Provider for deterministic testing and offline extraction."""
 
     async def extract_job_info(self, title: str, description_text: str) -> AIJobExtractionResult:
         title_lower = title.lower()
 
-        # Check for non-technical AI roles
-        non_tech_keywords = ["editor", "content creator", "copywriter", "marketing", "video generator", "prompt writer"]
-        if any(kw in title_lower for kw in non_tech_keywords):
-            return AIJobExtractionResult(
-                is_technical_ai_role=False,
-                is_relevant=False,
-                relevance_reason="Job title indicates non-technical content creation/marketing role.",
-                role_family=RoleFamily.NOT_RELEVANT,
-                seniority=SeniorityLevel.UNKNOWN,
-                years_experience_min=0,
-                education_requirement=None,
-                skills=[],
-            )
+        # 1. Non-technical role filters
+        non_tech_patterns = [
+            r"\bstatutory\b", r"\btax\b", r"\bpayroll\b", r"\baccounting\b|\baccountant\b",
+            r"\baudit\b", r"\bfinance\b|\bfinancial\s+systems\b", r"\bscm\b|\bsupply\s+chain\b",
+            r"\bpayment\s+operations\b", r"\boperations\s+(?:lead|manager|director)\b",
+            r"\bstrategic\s+partner\b|\bpartner\s+manager\b", r"\baccount\s+executive\b",
+            r"\bsales\b", r"\brecruiter\b|\bhr\b|\btalent\b", r"\blegal\b|\bcounsel\b",
+            r"\bcustomer\s+(?:success|support|service|engineer)\b",
+            r"\bvideo\s+editor\b|\bcontent\s+creator\b|\bcopywriter\b|\bmarketing\b",
+            r"\bproduct\s+manager\b(?!.*(?:ai|ml|machine\s+learning))",
+        ]
 
-        if "mlops" in title_lower:
+        for pattern in non_tech_patterns:
+            if re.search(pattern, title_lower):
+                return AIJobExtractionResult(
+                    is_technical_ai_role=False,
+                    is_relevant=False,
+                    relevance_reason=f"Role '{title}' matches corporate/non-technical pattern.",
+                    role_family=RoleFamily.NOT_RELEVANT,
+                    seniority=SeniorityLevel.UNKNOWN,
+                    years_experience_min=0,
+                    education_requirement=None,
+                    skills=[],
+                )
+
+        # 2. Determine Role Family
+        if "mlops" in title_lower or "ai platform" in title_lower or "ml infra" in title_lower:
             role = RoleFamily.MLOPS_ENGINEER
-        elif "ml" in title_lower or "machine learning" in title_lower:
+        elif "machine learning" in title_lower or re.search(r"\bml\s+engineer\b", title_lower) or "deep learning" in title_lower:
             role = RoleFamily.ML_ENGINEER
-        elif "data scientist" in title_lower:
+        elif "data scientist" in title_lower or "research scientist" in title_lower or "ai researcher" in title_lower:
             role = RoleFamily.DATA_SCIENTIST
+        elif "ai" in title_lower or "artificial intelligence" in title_lower or "llm" in title_lower:
+            role = RoleFamily.AI_ENGINEER
+        elif "data engineer" in title_lower:
+            role = RoleFamily.DATA_SCIENTIST
+        elif "software engineer" in title_lower or "backend" in title_lower or "infrastructure" in title_lower or "systems" in title_lower:
+            # Check if description relates to data/AI
+            if any(w in description_text.lower() for w in ["ai", "ml", "machine learning", "data", "model", "pipeline", "pytorch"]):
+                role = RoleFamily.AI_ENGINEER
+            else:
+                role = RoleFamily.AI_ENGINEER
         else:
             role = RoleFamily.AI_ENGINEER
 
-        seniority = SeniorityLevel.SENIOR if "senior" in title_lower else SeniorityLevel.MID
+        # 3. Determine Seniority
+        if "intern" in title_lower or "co-op" in title_lower or "trainee" in title_lower:
+            seniority = SeniorityLevel.INTERN
+        elif "junior" in title_lower or "entry" in title_lower or "new grad" in title_lower or "[en]" in title_lower:
+            seniority = SeniorityLevel.JUNIOR
+        elif "staff" in title_lower or "principal" in title_lower or "lead" in title_lower or "director" in title_lower or "head" in title_lower:
+            seniority = SeniorityLevel.LEAD
+        elif "senior" in title_lower or "sr" in title_lower or "[se]" in title_lower:
+            seniority = SeniorityLevel.SENIOR
+        else:
+            seniority = SeniorityLevel.MID
 
+        # 4. Extract Skills using word boundaries
         skills = []
         desc_lower = description_text.lower()
 
         keywords = [
-            ("python", "Python", SkillCategory.LANGUAGE),
-            ("pytorch", "PyTorch", SkillCategory.ML_FRAMEWORK),
-            ("tensorflow", "TensorFlow", SkillCategory.ML_FRAMEWORK),
-            ("kubernetes", "Kubernetes", SkillCategory.DEVOPS),
-            ("docker", "Docker", SkillCategory.DEVOPS),
-            ("aws", "AWS", SkillCategory.CLOUD),
-            ("gcp", "GCP", SkillCategory.CLOUD),
-            ("fastapi", "FastAPI", SkillCategory.FRAMEWORK),
-            ("postgresql", "PostgreSQL", SkillCategory.DATABASE),
-            ("langchain", "LangChain", SkillCategory.ML_FRAMEWORK),
+            (r"\bpython\b", "Python", SkillCategory.LANGUAGE),
+            (r"\bpytorch\b", "PyTorch", SkillCategory.ML_FRAMEWORK),
+            (r"\btensorflow\b", "TensorFlow", SkillCategory.ML_FRAMEWORK),
+            (r"\bkubernetes\b|\bk8s\b", "Kubernetes", SkillCategory.DEVOPS),
+            (r"\bdocker\b", "Docker", SkillCategory.DEVOPS),
+            (r"\baws\b", "AWS", SkillCategory.CLOUD),
+            (r"\bgcp\b|\bgoogle\s+cloud\b", "GCP", SkillCategory.CLOUD),
+            (r"\bazure\b", "Azure", SkillCategory.CLOUD),
+            (r"\bfastapi\b", "FastAPI", SkillCategory.FRAMEWORK),
+            (r"\bpostgresql\b|\bpostgres\b", "PostgreSQL", SkillCategory.DATABASE),
+            (r"\blangchain\b", "LangChain", SkillCategory.ML_FRAMEWORK),
+            (r"\bllamaindex\b", "LlamaIndex", SkillCategory.ML_FRAMEWORK),
+            (r"\btransformers\b|\bhuggingface\b", "Hugging Face", SkillCategory.ML_FRAMEWORK),
+            (r"\bspark\b|\bpyspark\b", "Apache Spark", SkillCategory.FRAMEWORK),
+            (r"\bkafka\b", "Apache Kafka", SkillCategory.FRAMEWORK),
+            (r"\bairflow\b", "Apache Airflow", SkillCategory.DEVOPS),
+            (r"\bsql\b", "SQL", SkillCategory.LANGUAGE),
+            (r"\bc\+\+\b", "C++", SkillCategory.LANGUAGE),
+            (r"\bgolang\b|\bgo\b", "Go", SkillCategory.LANGUAGE),
+            (r"\brust\b", "Rust", SkillCategory.LANGUAGE),
         ]
 
-        for kw, canonical, cat in keywords:
-            if kw in desc_lower:
+        for regex, canonical, cat in keywords:
+            if re.search(regex, desc_lower) or re.search(regex, title_lower):
+                # Search for surrounding sentence as evidence
+                evidence = f"Required experience with {canonical}"
+                match = re.search(rf"([^.\n]*?{regex}[^.\n]*)", desc_lower)
+                if match:
+                    evidence = match.group(0).strip().capitalize()
+                    if len(evidence) > 120:
+                        evidence = evidence[:117] + "..."
+
                 skills.append(
                     ExtractedSkill(
                         name=canonical,
                         category=cat,
                         requirement_type=RequirementType.REQUIRED,
-                        evidence=f"Mentioned {canonical} in description",
+                        evidence=evidence,
                         confidence=0.95,
                     )
                 )
@@ -99,8 +151,8 @@ class MockLLMProvider(LLMProvider):
             relevance_reason="Valid technical engineering role with AI/ML software engineering requirements.",
             role_family=role,
             seniority=seniority,
-            years_experience_min=3,
-            education_requirement="Bachelor's degree in CS or related field",
+            years_experience_min=3 if seniority in [SeniorityLevel.SENIOR, SeniorityLevel.LEAD] else 1,
+            education_requirement="Bachelor's or Master's degree in CS, AI, or related field",
             skills=skills,
         )
 

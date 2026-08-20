@@ -149,7 +149,8 @@ class JobrightMonitor(BaseATSMonitor):
             card = h2.find_parent("div", class_=re.compile(r"index_job-card|card|item")) or h2.parent.parent.parent
 
             comp_el = card.find(class_=re.compile(r"company|employer|brand", re.I)) if card else None
-            company_name = comp_el.get_text(strip=True) if comp_el else source_name
+            company_text = comp_el.get_text(strip=True) if comp_el else ""
+            company_name = company_text if company_text else "Jobright Aggregated"
 
             loc_el = card.find(class_=re.compile(r"location|city|place", re.I)) if card else None
             location = loc_el.get_text(strip=True) if loc_el else "Remote"
