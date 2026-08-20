@@ -42,7 +42,7 @@ def is_paywall_or_login(url: str, html_text: str = "") -> Tuple[bool, str]:
 class FoorillaMonitor(BaseATSMonitor):
     """
     Monitor for Foorilla Job Aggregator (https://foorilla.com/).
-    Supports Dual Branding ('Foorilla | TargetCompany') and Stage 2 Target ATS Follow-Through.
+    Supports Dual Branding ('Foorilla | RealCompanyName') and Stage 2 Target ATS Follow-Through.
     """
 
     @property
@@ -50,7 +50,7 @@ class FoorillaMonitor(BaseATSMonitor):
         return "foorilla"
 
     def parse_job_items_from_html(self, html_content: str, filter_junior_only: bool = False, filter_remote_only: bool = False) -> List[Dict[str, Any]]:
-        """Parses Foorilla job items from HTML."""
+        """Parses Foorilla job items from HTML and cleans title badges."""
         soup = BeautifulSoup(html_content, "html.parser")
         items = soup.find_all("li", class_="list-group-item")
 
@@ -60,7 +60,10 @@ class FoorillaMonitor(BaseATSMonitor):
             if not title_a:
                 continue
 
-            title = title_a.get_text(strip=True)
+            raw_title = title_a.get_text(strip=True)
+            # Clean 'Feat.Featured' badge artifacts from title text
+            title = re.sub(r"^(?:Feat\.\s*|Featured\s*)+", "", raw_title, flags=re.I).strip()
+
             hx_get = title_a.get("hx-get", "")
             href = title_a.get("href", "")
             detail_path = hx_get or href
@@ -117,12 +120,19 @@ class FoorillaMonitor(BaseATSMonitor):
             title_el = soup.find("title") or soup.find("h1")
             title_text = title_el.get_text(strip=True) if title_el else ""
 
+        title_text = re.sub(r"^(?:Feat\.\s*|Featured\s*)+", "", title_text, flags=re.I).strip()
+
         if not title_text or title_text == "Nokia":
             title_text = "AI R&D Engineering Co-op" if snapshot_id == "3" else "Machine Learning Engineer"
 
-        # 2. Extract company from og:site_name if available
+        # 2. Extract company from og:site_name or company link
         og_site = soup.find("meta", property="og:site_name")
-        company = og_site.get("content") if og_site and og_site.get("content") else source_name
+        comp_link = soup.find("a", href=re.compile(r"/hiring/companies/"))
+        company = (
+            (og_site.get("content") if og_site and og_site.get("content") else "") or
+            (comp_link.get_text(strip=True).replace("@", "").strip() if comp_link else "") or
+            source_name
+        )
         company_brand = f"Foorilla | {company}" if not company.startswith("Foorilla") else company
 
         # 3. Find external apply link
@@ -184,7 +194,7 @@ class FoorillaMonitor(BaseATSMonitor):
 
                 parsed_items = self.parse_job_items_from_html(res.text, filter_junior_only=junior_only, filter_remote_only=remote_only)
 
-                for item_meta in parsed_items[:15]:
+                for item_meta in parsed_items[:20]:
                     detail_path = item_meta["detail_path"]
                     if not detail_path:
                         continue
@@ -218,8 +228,12 @@ class FoorillaMonitor(BaseATSMonitor):
                     apply_btn = detail_soup.find("a", class_=re.compile(r"btn-primary|apply", re.I)) or detail_soup.find("a", href=re.compile(r"/apply/?$", re.I))
                     apply_href = apply_btn.get("href", "") if apply_btn else ""
 
+                    # Extract company name from @ Company link on Foorilla
+                    comp_link = detail_soup.find("a", href=re.compile(r"/hiring/companies/"))
+                    detected_company = comp_link.get_text(strip=True).replace("@", "").strip() if comp_link else ""
+                    
                     canonical_target_url = detail_url
-                    target_co = "Partner"
+                    target_co = detected_company or "Partner"
                     clean_text = ""
 
                     # Stage 2 Universal Follow-Through: Try resolving real outbound portal link
@@ -228,7 +242,8 @@ class FoorillaMonitor(BaseATSMonitor):
                         if outbound_tuple:
                             real_url, real_co, target_jd = outbound_tuple
                             canonical_target_url = real_url
-                            target_co = real_co
+                            if real_co and real_co != "Partner":
+                                target_co = real_co
                             clean_text = target_jd
 
                     # Fallback to Foorilla formatted detail if outbound follow-through not reached
@@ -240,13 +255,15 @@ class FoorillaMonitor(BaseATSMonitor):
                     # Dual branding
                     brand_company = f"Foorilla | {target_co}" if target_co and not target_co.startswith("Foorilla") else target_co
 
+                    clean_title = re.sub(r"^(?:Feat\.\s*|Featured\s*)+", "", item_meta["title"], flags=re.I).strip()
+
                     normalized_posts.append(
                         NormalizedJobPost(
                             external_id=detail_path.rstrip("/").split("-")[-1],
                             canonical_url=normalize_canonical_url(canonical_target_url),
                             company_name=brand_company,
                             company_domain="foorilla.com",
-                            title=item_meta["title"],
+                            title=clean_title,
                             location=item_meta["location"],
                             description_raw=f"<p>{clean_text}</p>",
                             description_text=clean_text,

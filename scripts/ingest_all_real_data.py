@@ -182,6 +182,59 @@ We are seeking a skilled and proactive Junior Data Engineer to join our team and
         await extract_and_save_job(db, job, provider)
     print("Parsed & ingested KIS Solutions Junior Support Data Engineer (Foorilla | KIS Solutions)...")
 
+    # 5. Add Mozilla Senior Mobile Engineer, iOS (Direct Greenhouse ATS Forward)
+    mozilla_jd = """### Why Thunderbird?
+Thunderbird is one of the world's most trusted open-source email applications, empowering more than 20 million people globally. At MZLA, the team behind Thunderbird, we build privacy-respecting communication and productivity tools that help people manage their digital lives while staying in control of their data.
+
+### The Opportunity
+The Senior Software Engineer, iOS is an experienced individual contributor who brings deep iOS expertise to the design, development, and evolution of Thunderbird's iOS application. You'll work closely with mobile engineers, product management, UX, and other partners to deliver a high-quality iOS experience that meets high standards for performance, reliability, accessibility, security, and maintainability.
+
+### What You'll Do
+- Build and refine Thunderbird's mobile products and platform architecture.
+- Improve scalability, performance, reliability, and user experience.
+- Develop a deep understanding of the codebase and architecture to confidently make changes across the entire stack.
+- Maintain strong debugging and testing practices across unit, integration, and automated testing.
+- Review code and guide improvements to architecture, testing, and development best practices.
+- Independently resolve complex issues involving performance, security, and cross-platform integration.
+- Monitor application health and address issues before they escalate.
+- Document technical decisions, system architecture, and team processes.
+- Ensure mobile development meets accessibility, security, and privacy standards.
+
+### What You Bring
+- 7+ years of professional software development experience, including 2+ years in a Senior Software Engineer role.
+- 3+ years of professional mobile application development experience.
+- Strong experience with Swift, SwiftUI, and iOS frameworks.
+- Deep knowledge of iOS architecture, design patterns, and performance optimization.
+- Experience delivering and maintaining complex, scalable, and reliable software.
+- Experience addressing technical debt and refactoring large or complex codebases.
+- Strong knowledge of mobile security, including encryption, secure storage, app signing, and vulnerability remediation.
+- Experience with communication and email protocols such as RSS, IMAP, POP, or Matrix.
+- Advanced proficiency with Git and collaborative development workflows.
+
+### Compensation & Benefits
+- US Salary: $123,000 - $144,000 USD (Remote US).
+- Fully remote work & schedule flexibility.
+- Company-provided laptop & monthly remote work stipend.
+- Annual bonus program & 401(k) contributions.
+- 24 days PTO per year + 9 wellbeing days + year-end company shutdown."""
+
+    mozilla_post = NormalizedJobPost(
+        external_id="foorilla_mozilla_3376254",
+        canonical_url="https://job-boards.greenhouse.io/mozilla/jobs/8112211",
+        company_name="Foorilla | Mozilla",
+        company_domain="mozilla.org",
+        title="Senior Mobile Engineer, iOS",
+        location="Remote US",
+        description_raw=f"<p>{mozilla_jd}</p>",
+        description_text=mozilla_jd,
+        content_hash=compute_content_hash(mozilla_jd),
+    )
+    job, is_new = save_normalized_job(db, mozilla_post)
+    if is_new:
+        count_saved += 1
+        await extract_and_save_job(db, job, provider)
+    print("Parsed & ingested Mozilla Senior Mobile Engineer, iOS (Foorilla | Mozilla)...")
+
     # 5. Parse Jobright format_jobright.txt (7 jobs)
     if os.path.exists("format_jobright.txt"):
         with open("format_jobright.txt", "r", encoding="utf-8") as f:
