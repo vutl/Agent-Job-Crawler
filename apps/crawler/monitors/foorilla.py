@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from typing import List, Optional, Dict, Any, Tuple
 from apps.crawler.monitors.base import BaseATSMonitor
 from apps.crawler.normalizer import clean_html_to_text, compute_content_hash, normalize_canonical_url
-from apps.crawler.dom_extractor import DOMExtractor, DEFAULT_HEADERS
+from apps.crawler.dom_extractor import DOMExtractor, DEFAULT_HEADERS, HTMX_HEADERS
 from packages.schemas import NormalizedJobPost
 
 logger = logging.getLogger(__name__)
@@ -188,7 +188,7 @@ class FoorillaMonitor(BaseATSMonitor):
         normalized_posts: List[NormalizedJobPost] = []
 
         try:
-            async with httpx.AsyncClient(timeout=20.0, follow_redirects=True, headers=DEFAULT_HEADERS) as client:
+            async with httpx.AsyncClient(timeout=20.0, follow_redirects=True, headers=HTMX_HEADERS) as client:
                 res = await client.get(list_url)
                 if res.status_code != 200:
                     return []
@@ -239,7 +239,7 @@ class FoorillaMonitor(BaseATSMonitor):
 
                     # Stage 2 Universal Follow-Through: Try resolving real outbound portal link
                     if apply_href:
-                        outbound_tuple = await DOMExtractor.resolve_outbound_apply_url(client, detail_url, apply_href)
+                        outbound_tuple = await DOMExtractor.resolve_outbound_apply_url(detail_url, apply_href)
                         if outbound_tuple:
                             real_url, real_co, target_jd = outbound_tuple
                             canonical_target_url = real_url

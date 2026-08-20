@@ -1,19 +1,30 @@
 import re
+import html
+import httpx
 import logging
 import urllib.parse
 from bs4 import BeautifulSoup
 from typing import Optional, Tuple
-import httpx
-from apps.crawler.normalizer import clean_html_to_text, normalize_canonical_url
+from apps.crawler.normalizer import clean_html_to_text
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+BROWSER_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9",
+    "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Upgrade-Insecure-Requests": "1",
+}
+
+HTMX_HEADERS = {
+    **BROWSER_HEADERS,
     "HX-Request": "true",
 }
+
+DEFAULT_HEADERS = BROWSER_HEADERS
 
 class DOMExtractor:
     """
@@ -42,12 +53,15 @@ class DOMExtractor:
             if clean_slug:
                 return clean_slug.title()
         return "Direct Employer"
+
+    @staticmethod
+    def extract_company_name(soup: BeautifulSoup, target_url: str, fallback: str = "Partner") -> str:
         """Extracts the real employer company name from meta tags, title, or domain."""
         # 1. Try og:site_name
         og_site = soup.find("meta", property="og:site_name")
         if og_site and og_site.get("content"):
             name = og_site.get("content").strip()
-            if name and name.lower() not in ["foorilla", "lever", "greenhouse", "workday", "smartrecruiters", "job"]:
+            if name and name.lower() not in ["foorilla", "lever", "greenhouse", "workday", "smartrecruiters", "job", "careers"]:
                 return name
 
         # 2. Try title patterns: 'Job Title at Company' or 'Company - Job Title' or 'Company | Job Title'
@@ -76,11 +90,21 @@ class DOMExtractor:
                 parts = parsed.path.strip("/").split("/")
                 if parts:
                     return parts[0].capitalize()
-            elif "universiteit" in netloc:
+            elif "universiteit" in netloc or "leiden" in netloc:
                 return "Leiden University"
+            elif "bt.com" in netloc:
+                return "BT Group"
+            elif "vaillant" in netloc:
+                return "Vaillant Group"
+            elif "tryg" in netloc:
+                return "Tryg"
+            elif "bam.com" in netloc:
+                return "BAM Careers"
+            elif "op-careers.fi" in netloc:
+                return "OP Financial Group"
             elif netloc:
                 domain_parts = netloc.replace("careers.", "").replace("jobs.", "").replace("www.", "").split(".")
-                if domain_parts:
+                if domain_parts and len(domain_parts[0]) > 2:
                     return domain_parts[0].capitalize()
         except Exception:
             pass
@@ -112,8 +136,8 @@ class DOMExtractor:
 
         # 3. Locate Main Job Content Container
         main_content = (
-            soup.find("div", class_=re.compile(r"posting-description|job-description|job-detail|description|content-body", re.I)) or
-            soup.find("div", id=re.compile(r"job-description|job-detail|content", re.I)) or
+            soup.find("div", class_=re.compile(r"posting-description|job-description|job-detail|description|content-body|job-info", re.I)) or
+            soup.find("div", id=re.compile(r"job-description|job-detail|content|job-info", re.I)) or
             soup.find("main") or
             soup.find("article") or
             soup.body
@@ -127,33 +151,35 @@ class DOMExtractor:
     @classmethod
     async def resolve_outbound_apply_url(
         cls,
-        client: httpx.AsyncClient,
         foorilla_detail_url: str,
         apply_relative_or_abs_href: str,
     ) -> Optional[Tuple[str, str, str]]:
         """
-        Follows Foorilla apply redirect with session cookies and referer.
+        Follows Foorilla apply redirect using an isolated browser session.
         Returns (final_canonical_url, real_company_name, clean_markdown_jd) or None.
         """
         try:
-            # 1. Establish session on detail page
-            r1 = await client.get(foorilla_detail_url, headers=DEFAULT_HEADERS)
-            if r1.status_code != 200:
-                return None
+            async with httpx.AsyncClient(timeout=20.0, headers=BROWSER_HEADERS) as client:
+                # Step 1: Establish session on detail page to receive csrftoken cookie
+                await client.get(foorilla_detail_url)
 
-            # 2. Click Apply with referer
-            apply_full_url = urllib.parse.urljoin(foorilla_detail_url, apply_relative_or_abs_href)
-            headers = dict(DEFAULT_HEADERS)
-            headers["Referer"] = foorilla_detail_url
+                # Step 2: Click Apply with Referer and navigation headers (without HX-Request)
+                apply_full_url = urllib.parse.urljoin(foorilla_detail_url, apply_relative_or_abs_href)
+                apply_headers = dict(BROWSER_HEADERS)
+                apply_headers["Referer"] = foorilla_detail_url
+                apply_headers["Sec-Fetch-Dest"] = "document"
+                apply_headers["Sec-Fetch-Mode"] = "navigate"
+                apply_headers["Sec-Fetch-Site"] = "same-origin"
+                apply_headers["Sec-Fetch-User"] = "?1"
 
-            r2 = await client.get(apply_full_url, headers=headers, follow_redirects=True)
-            if r2.status_code == 200:
-                final_url = str(r2.url)
-                if "foorilla.com" not in final_url:
-                    # Successfully reached target ATS!
-                    company, clean_jd = cls.extract_clean_job_markdown(r2.text, final_url)
-                    if len(clean_jd) > 200:
-                        return final_url, company, clean_jd
+                r2 = await client.get(apply_full_url, headers=apply_headers, follow_redirects=True)
+                if r2.status_code == 200:
+                    final_url = str(r2.url)
+                    if "foorilla.com" not in final_url:
+                        # Successfully reached real employer ATS!
+                        company, clean_jd = cls.extract_clean_job_markdown(r2.text, final_url)
+                        if len(clean_jd) > 100:
+                            return final_url, company, clean_jd
         except Exception as e:
             logger.warning(f"Error resolving outbound apply redirect for {foorilla_detail_url}: {e}")
 
