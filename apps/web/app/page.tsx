@@ -225,8 +225,8 @@ export default function Home() {
         setLoading(true);
         const [freshRes, pubRes, lockRes, domainRes] = await Promise.all([
           fetch('http://localhost:8000/system/data-freshness'),
-          fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=false'),
-          fetch('http://localhost:8000/api/v1/jobs?limit=500&locked_only=true'),
+          fetch('http://localhost:8000/api/v1/jobs?limit=1500&locked_only=false'),
+          fetch('http://localhost:8000/api/v1/jobs?limit=1500&locked_only=true'),
           fetch('http://localhost:8000/api/v1/intelligence/domains'),
         ]);
 
