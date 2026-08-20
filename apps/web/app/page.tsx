@@ -288,13 +288,15 @@ export default function Home() {
   // Filtered Public Jobs
   const filteredPublicJobs = useMemo(() => {
     return publicJobs.filter((job) => {
-      // Search
+      // Comprehensive Multi-Field Search
       if (searchQuery) {
-        const q = searchQuery.toLowerCase();
+        const q = searchQuery.toLowerCase().trim();
         const matchTitle = job.title.toLowerCase().includes(q);
         const matchCompany = job.company_name.toLowerCase().includes(q);
-        const matchSkill = job.skills.some((s) => s.name.toLowerCase().includes(q));
-        if (!matchTitle && !matchCompany && !matchSkill) return false;
+        const matchLoc = (job.location || '').toLowerCase().includes(q);
+        const matchSkill = job.skills && job.skills.some((s) => s.name.toLowerCase().includes(q));
+        const matchDesc = (job.description_text || '').toLowerCase().includes(q);
+        if (!matchTitle && !matchCompany && !matchLoc && !matchSkill && !matchDesc) return false;
       }
 
       // Source Filter

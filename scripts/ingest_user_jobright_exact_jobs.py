@@ -131,27 +131,49 @@ VivSoft delivers public-sector technology accelerators, cloud-native AI platform
 - Must be eligible to work remotely in the United States."""
     },
 
-    # Canada & UK & Ireland Remote Additions
+    # Canada Remote Intern (Cohere)
     {
-        "title": "Junior Machine Learning Engineer",
-        "company": "Jobright | Cohere Health",
-        "domain": "coherehealth.com",
+        "external_id": "6a57eb4c3330ca6f993c1fb5",
+        "title": "Machine Learning Intern/Co-op (Winter 2027)",
+        "company": "Jobright | Cohere",
+        "domain": "cohere.com",
         "location": "Canada (Remote)",
-        "url": "https://coherehealth.com/careers/junior-ml-engineer-canada-remote",
-        "seniority": "Junior",
-        "job_type": "Full-time",
-        "salary": "CAD $90,000 - $115,000/yr",
+        "url": "https://jobs.ashbyhq.com/cohere/36d1f52f-8270-4652-adf5-5303a0ff341b/application?utm_source=jobright&jr_id=6a57eb4c3330ca6f993c1fb5",
+        "seniority": "Intern",
+        "job_type": "Internship / Full-time Co-op",
+        "salary": "CAD $45 - $60/hr ($75/wk lunch stipend + $500 home office)",
         "description": """### Overview
-Cohere Health is building clinical intelligence platforms. We are hiring a Junior Machine Learning Engineer to work remotely in Canada.
+Cohere is the leading security-first enterprise AI unicorn ($7B valuation). As a Machine Learning Intern/Co-op (Winter 2027), you will design and implement novel research ideas, build distributed training and deployment pipelines, and contribute to shipping state-of-the-art foundation models to production.
+
+- **Location**: Canada (100% Remote)
+- **Employment Type**: Internship / Co-op (Winter 2027)
+- **Experience Level**: Intern / Student
+- **Jobright URL**: [View on Jobright](https://jobright.ai/jobs/info/6a57eb4c3330ca6f993c1fb5#overview)
+- **Official ATS Portal**: [Apply on AshbyHQ](https://jobs.ashbyhq.com/cohere/36d1f52f-8270-4652-adf5-5303a0ff341b/application?utm_source=jobright&jr_id=6a57eb4c3330ca6f993c1fb5)
 
 ### Responsibilities
-- Develop, evaluate, and deploy NLP and Tabular ML models for clinical prior authorization automation.
-- Build feature extraction pipelines using PyTorch, HuggingFace Transformers, and MLflow.
-- Monitor model latency, prediction drift, and calibration in production.
+- Design, train, and improve upon cutting-edge autoregressive foundation models.
+- Develop novel techniques to train and serve models safer, better, and faster.
+- Train extremely large-scale models on massive multi-modal and NLP datasets.
+- Explore continual and active learning strategies for streaming data.
+- Learn from experienced senior machine learning technical staff and collaborate with product engineering.
 
-### Requirements
-- BS/MS in Computer Science, AI, or Bioinformatics.
-- Hands-on experience with Python, PyTorch, Scikit-learn, SQL, and Docker."""
+### Qualifications & Technical Skills
+- Proficiency in Python and modern ML frameworks: TensorFlow, TF-Serving, JAX, and XLA/MLIR.
+- Experience using large-scale distributed training strategies on GPU/TPU clusters.
+- Strong familiarity with autoregressive sequence models and Transformers architecture.
+- Demonstrated passion for applied NLP models and generative AI systems.
+- Must be a student enrolled in a post-secondary program available for a full-time 3-6 month internship/co-op.
+
+### Preferred Experience
+- Writing custom GPU kernels using CUDA.
+- Experience training foundation models on Google Cloud TPUs.
+- Research publications at top-tier AI venues (NeurIPS, ICML, ICLR, ACL, EMNLP, MLSys).
+
+### Benefits & Stipends
+- Weekly lunch stipend of $75 CAD / week.
+- Full health & dental coverage, RRSP matching, and $500 home office setup allowance.
+- 6 weeks paid vacation (30 working days) + annual education & conference travel stipend."""
     },
     {
         "title": "Graduate Backend Software Engineer",
@@ -187,7 +209,7 @@ async def main():
         content_hash = compute_content_hash(clean_text)
 
         norm_post = NormalizedJobPost(
-            external_id=f"jobright-exact-{item['domain']}-{item['title'].lower().replace(' ', '-')}",
+            external_id=item.get("external_id") or f"jobright-exact-{item['domain']}-{item['title'].lower().replace(' ', '-')}",
             canonical_url=normalize_canonical_url(item["url"]),
             company_name=item["company"],
             title=item["title"],
