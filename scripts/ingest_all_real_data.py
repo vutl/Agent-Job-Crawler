@@ -44,7 +44,7 @@ async def main():
 
     # 2. Add Leiden University Junior RSE (Direct Employer Forward)
     leiden_jd = """### Description
-The Institute of Environmental Science CML at Leiden University is looking for a motivated Junior Research Software Engineer (RSE) with experience in full-stack development, data visualization, and modern software engineering practices to turn scientific insights into reliable and user-friendly software. In this role, you will help design, build, and maintain the next generation of industrial ecology research tools that support sustainability, circular economy analysis and decision making, as well as reproducible science across the institute. You will work closely with researchers to help create dashboards, APIs, and visual analytics that communicate scientific results to academic users, policymakers, and the wider public.
+The Institute of Environmental Science CML at Leiden University is looking for a motivated Junior Research Software Engineer (RSE) with experience in full-stack development, data visualization, and modern software engineering practices to turn scientific insights into reliable and user-friendly software. In this role, you will help design, build, and maintain the next generation of industrial ecology research tools that support sustainability, circular economy analysis and decision making, as well as reproducible science across the institute.
 
 ### What You Will Do
 - Building and maintaining scientific software, web applications and dashboards for research dissemination and policy communication (e.g., WISE database, Activity Browser, Panorama web-app, ReLab).
@@ -137,46 +137,52 @@ We are a leading trading platform that is ambitiously expanding to the four corn
         await extract_and_save_job(db, job, provider)
     print("Parsed & ingested Capital.com Junior AI Engineer (Foorilla | Capital.com)...")
 
-    # 3. Parse Foorilla format4.txt (88 raw items)
-    if os.path.exists("format4.txt"):
-        with open("format4.txt", "r", encoding="utf-8") as f:
-            f4_html = f.read()
+    # 4. Add KIS Solutions Junior Support Data Engineer (Direct Zoho Recruit Forward)
+    kis_jd = """### Description
+We are seeking a skilled and proactive Junior Data Engineer to join our team and work with one of our clients, a global leader that develops and distributes brands across more than 150 countries and territories, with products available in thousands of retail distributors worldwide. As a Data Engineer, you will apply your technical expertise and problem-solving mindset to optimize cloud infrastructure and systems. Your responsibilities will include system enhancements, ETL processes, and maintaining cloud-based solutions, contributing to the efficiency and innovation that support the client's global success.
 
-        f4_raw_items = foorilla_mon.parse_job_items_from_html(f4_html)
-        print(f"Parsed {len(f4_raw_items)} raw job items from format4.txt...")
+### Job Activities
+- Maintain and optimize cloud infrastructure to ensure reliability and scalability for data systems.
+- Extract, transform, and load (ETL) data across various systems to support business operations and decision-making.
+- Identify and resolve issues within existing systems to enhance performance, stability, and scalability.
+- Troubleshoot and fix bugs in deployed systems, ensuring minimal downtime and disruption.
+- Optimize systems and streamline existing processes to improve efficiency and reduce latency.
+- Build and optimize system deployment structures to ensure smooth, consistent deployments and system performance.
 
-        for idx, item in enumerate(f4_raw_items, 1):
-            title = item.get("title", "Software Engineer")
-            location = item.get("location", "Remote")
-            level_code = item.get("level_code", "")
-            detail_path = item.get("detail_path", "")
+### Requirements
+- Experience with SQL for data manipulation, querying, and analysis.
+- Experience with Python skills for automation, scripting, and system integration.
+- Deep familiarity with cloud infrastructure and hands-on experience in maintaining and optimizing cloud environments.
+- In-depth knowledge of Git and its best practices for version control and collaboration.
+- A proactive mindset with the ability to anticipate challenges and propose solutions before problems arise.
+- Analytical mindset with a strong focus on problem-solving and system optimizations.
+- Exceptional attention to detail in technical and operational tasks, ensuring high-quality results.
+- Advanced proficiency in English, both written and spoken, for clear communication.
 
-            # Ignore placeholder b...
-            if title == "b..." or len(title) < 4:
-                continue
+### Desirable
+- Experience with Microsoft Azure or similar cloud platforms for building scalable and resilient systems.
+- Knowledge of Kubernetes for container orchestration and managing cloud-native applications.
+- Familiarity with Databricks or similar big data tools for data processing and management.
+- Power BI knowledge."""
 
-            company = "Foorilla | Partner"
-            link = f"https://foorilla.com{detail_path}" if detail_path.startswith("/") else "https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
+    kis_post = NormalizedJobPost(
+        external_id="foorilla_kissolutions_3333132",
+        canonical_url="https://kissolutions.zohorecruit.com/jobs/Careers/703510000008076032",
+        company_name="Foorilla | KIS Solutions",
+        company_domain="kissolutions.com",
+        title="Junior Support Data Engineer",
+        location="Remote (Latin America / Global)",
+        description_raw=f"<p>{kis_jd}</p>",
+        description_text=kis_jd,
+        content_hash=compute_content_hash(kis_jd),
+    )
+    job, is_new = save_normalized_job(db, kis_post)
+    if is_new:
+        count_saved += 1
+        await extract_and_save_job(db, job, provider)
+    print("Parsed & ingested KIS Solutions Junior Support Data Engineer (Foorilla | KIS Solutions)...")
 
-            desc_text = f"### Description\n{title} at {company}.\n\n### Location & Mode\n- Location: {location}\n- Level: {level_code} {item.get('remote_code', '')}\n\n### Requirements\n- Experience with Python, PyTorch, SQL, Cloud infrastructure."
-            
-            post = NormalizedJobPost(
-                external_id=f"foorilla_f4_{idx}",
-                canonical_url=normalize_canonical_url(link),
-                company_name=company,
-                company_domain="foorilla.com",
-                title=title,
-                location=location,
-                description_raw=f"<p>{desc_text}</p>",
-                description_text=desc_text,
-                content_hash=compute_content_hash(desc_text),
-            )
-            job, is_new = save_normalized_job(db, post)
-            if is_new:
-                count_saved += 1
-                await extract_and_save_job(db, job, provider)
-
-    # 4. Parse Jobright format_jobright.txt (7 jobs)
+    # 5. Parse Jobright format_jobright.txt (7 jobs)
     if os.path.exists("format_jobright.txt"):
         with open("format_jobright.txt", "r", encoding="utf-8") as f:
             jr_html = f.read()
@@ -190,7 +196,7 @@ We are a leading trading platform that is ambitiously expanding to the four corn
                 count_saved += 1
                 await extract_and_save_job(db, job, provider)
 
-    # 5. Parse Greenhouse fixture (299 Cloudflare jobs)
+    # 6. Parse Greenhouse fixture (299 Cloudflare jobs)
     if os.path.exists("tests/fixtures/greenhouse_jobs.json"):
         with open("tests/fixtures/greenhouse_jobs.json") as f:
             gh_data = json.load(f)
@@ -216,7 +222,7 @@ We are a leading trading platform that is ambitiously expanding to the four corn
                 count_saved += 1
                 await extract_and_save_job(db, job, provider)
 
-    # 6. Parse Lever fixture (103 Spotify jobs)
+    # 7. Parse Lever fixture (103 Spotify jobs)
     if os.path.exists("tests/fixtures/lever_jobs.json"):
         with open("tests/fixtures/lever_jobs.json") as f:
             lever_data = json.load(f)
