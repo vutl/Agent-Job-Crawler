@@ -123,6 +123,22 @@ interface JobItem {
 
 const ROLES = ['AI Engineer', 'ML Engineer', 'MLOps Engineer', 'Data Scientist'];
 
+// Helper to extract valid Jobright 24-hex deep links
+function getValidJobrightUrl(externalId?: string, canonicalUrl?: string, desc?: string): string | null {
+  if (externalId && /^[a-f0-9]{24}$/i.test(externalId)) {
+    return `https://jobright.ai/jobs/info/${externalId}#overview`;
+  }
+  if (canonicalUrl && canonicalUrl.includes('jobright.ai/jobs/info/')) {
+    const match = canonicalUrl.match(/https:\/\/jobright\.ai\/jobs\/info\/([a-f0-9]{24})/i);
+    if (match) return `https://jobright.ai/jobs/info/${match[1]}#overview`;
+  }
+  if (desc) {
+    const match = desc.match(/https:\/\/jobright\.ai\/jobs\/info\/([a-f0-9]{24})/i);
+    if (match) return `https://jobright.ai/jobs/info/${match[1]}#overview`;
+  }
+  return null;
+}
+
 // Helper to render Markdown Job Description into clean structured HTML
 function MarkdownJDViewer({ content }: { content: string }) {
   if (!content) return <p className="text-slate-400 italic">No description available.</p>;
@@ -1343,14 +1359,10 @@ export default function Home() {
 
               <div className="flex flex-wrap items-center gap-2">
                 {/* Jobright Direct Deep-links if applicable */}
-                {(selectedJobModal.company_name.toLowerCase().includes('jobright') || (selectedJobModal.external_id && selectedJobModal.external_id.length > 5) || selectedJobModal.canonical_url.includes('jobright.ai')) && (
+                {getValidJobrightUrl(selectedJobModal.external_id, selectedJobModal.canonical_url, selectedJobModal.description_text) && (
                   <>
                     <a
-                      href={
-                        selectedJobModal.external_id && selectedJobModal.external_id.length > 10
-                          ? `https://jobright.ai/jobs/info/${selectedJobModal.external_id}#overview`
-                          : (selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] || `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}#overview`)
-                      }
+                      href={getValidJobrightUrl(selectedJobModal.external_id, selectedJobModal.canonical_url, selectedJobModal.description_text)!}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 shadow-sm transition"
@@ -1360,11 +1372,7 @@ export default function Home() {
                     </a>
 
                     <a
-                      href={
-                        selectedJobModal.external_id && selectedJobModal.external_id.length > 10
-                          ? `https://jobright.ai/jobs/info/${selectedJobModal.external_id}#company`
-                          : (selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0] ? `${selectedJobModal.description_text.match(/https:\/\/jobright\.ai\/jobs\/info\/[a-zA-Z0-9_\-]+/)?.[0]}#company` : `https://jobright.ai/jobs/info/${selectedJobModal.external_id || 'recommend'}#company`)
-                      }
+                      href={getValidJobrightUrl(selectedJobModal.external_id, selectedJobModal.canonical_url, selectedJobModal.description_text)!.replace('#overview', '#company')}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
