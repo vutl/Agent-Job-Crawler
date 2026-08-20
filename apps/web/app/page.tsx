@@ -601,24 +601,47 @@ export default function Home() {
 
             {/* Jobs Cards Grid */}
             {filteredPublicJobs.length === 0 ? (
-              <div className="glass-card p-12 text-center rounded-2xl space-y-3">
+              <div className="glass-card p-12 text-center rounded-2xl space-y-4 max-w-xl mx-auto">
                 <Briefcase className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="font-heading font-bold text-lg text-slate-800">No jobs match your filter criteria</h3>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">
-                  Try adjusting your search terms or clearing the source/role filters to explore more opportunities.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedSourceFilter('ALL');
-                    setSelectedRoleFilter('ALL');
-                    setSelectedSeniorityFilter('ALL');
-                    setRemoteOnly(false);
-                  }}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition"
-                >
-                  Reset All Filters
-                </button>
+                <div className="space-y-1">
+                  <h3 className="font-heading font-bold text-lg text-slate-800">Không tìm thấy công việc khớp với bộ lọc</h3>
+                  <p className="text-xs text-slate-500 max-w-md mx-auto">
+                    {remoteOnly && selectedSourceFilter === 'JOBRIGHT'
+                      ? 'Jobright hiện có nhiều vị trí Junior/Intern đặt tại trụ sở Mỹ (Palo Alto, New York, Austin, Chicago, Berkeley...). Bỏ chọn "Remote Only" để xem toàn bộ các vị trí này!'
+                      : 'Hãy thử đổi nguồn tuyển dụng, bỏ chọn Remote Only hoặc xóa bớt từ khóa tìm kiếm.'}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                  {remoteOnly && (
+                    <button
+                      onClick={() => setRemoteOnly(false)}
+                      className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition"
+                    >
+                      🌍 Xem cả On-site / Hybrid (Bỏ Remote Only)
+                    </button>
+                  )}
+                  {selectedSourceFilter !== 'ALL' && (
+                    <button
+                      onClick={() => setSelectedSourceFilter('ALL')}
+                      className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-800 hover:bg-slate-200 transition"
+                    >
+                      🌐 Xem tất cả nền tảng (Foorilla, Direct ATS, TopCV...)
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedSourceFilter('ALL');
+                      setSelectedRoleFilter('ALL');
+                      setSelectedSeniorityFilter('ALL');
+                      setRemoteOnly(false);
+                    }}
+                    className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                  >
+                    Reset toàn bộ bộ lọc
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
