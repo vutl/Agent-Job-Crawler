@@ -243,13 +243,15 @@ class FoorillaMonitor(BaseATSMonitor):
                         if outbound_tuple:
                             real_url, real_co, target_jd = outbound_tuple
                             canonical_target_url = real_url
-                            if real_co and real_co != "Partner":
+                            if real_co and real_co not in ["Partner", "Direct Employer", "Companies"]:
                                 target_co = real_co
                             clean_text = target_jd
 
-                    # Strict Quality Gate: Do NOT ingest internal Foorilla summary cards if real employer ATS was not resolved
-                    if not clean_text or "foorilla.com" in canonical_target_url.lower() or target_co in ["Direct Employer", "Partner", "Companies"]:
-                        continue
+                    # Fallback for gatekept jobs: extract Foorilla formatted detail
+                    if not clean_text:
+                        desc_container = detail_soup.find("div", class_=re.compile(r"pb-2|job-description|description", re.I)) or detail_soup.body
+                        raw_html = str(desc_container) if desc_container else detail_res.text
+                        clean_text = clean_html_to_text(raw_html)
 
                     # Dual branding
                     brand_company = f"Foorilla | {target_co}" if target_co and not target_co.startswith("Foorilla") else target_co
