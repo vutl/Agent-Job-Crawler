@@ -228,9 +228,9 @@ class FoorillaMonitor(BaseATSMonitor):
                     apply_btn = detail_soup.find("a", class_=re.compile(r"btn-primary|apply", re.I)) or detail_soup.find("a", href=re.compile(r"/apply/?$", re.I))
                     apply_href = apply_btn.get("href", "") if apply_btn else ""
 
-                    # Extract company name from @ Company link on Foorilla
+                    # Extract exact company name from @ Company link on Foorilla
                     comp_link = detail_soup.find("a", href=re.compile(r"/hiring/companies/"))
-                    detected_company = comp_link.get_text(strip=True).replace("@", "").strip() if comp_link else ""
+                    detected_company = DOMExtractor.extract_company_name_from_foorilla_link(comp_link)
                     
                     canonical_target_url = detail_url
                     target_co = detected_company or "Partner"

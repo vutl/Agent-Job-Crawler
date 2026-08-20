@@ -23,7 +23,25 @@ class DOMExtractor:
     """
 
     @staticmethod
-    def extract_company_name(soup: BeautifulSoup, target_url: str, fallback: str = "Partner") -> str:
+    def extract_company_name_from_foorilla_link(link_element) -> str:
+        """Extracts clean, un-truncated company name from a Foorilla company link element."""
+        if not link_element:
+            return "Partner"
+        raw_text = link_element.get_text(strip=True).replace("@", "").strip()
+        # If text is not truncated (e.g. Mozilla, Wikimedia Foundation, Nokia Bell Labs), return it
+        if raw_text and not raw_text.endswith("...") and len(raw_text) > 3:
+            return raw_text
+        # If truncated (e.g. B..., N..., T...), extract name from href slug
+        href = link_element.get("href", "")
+        if href:
+            slug = href.strip("/").split("/")[-1]
+            if slug.lower() in ["companies", "company", "hiring", ""]:
+                return "Direct Employer"
+            # Strip trailing ID number (-3125, -999)
+            clean_slug = re.sub(r"-\d+$", "", slug).replace("-", " ")
+            if clean_slug:
+                return clean_slug.title()
+        return "Direct Employer"
         """Extracts the real employer company name from meta tags, title, or domain."""
         # 1. Try og:site_name
         og_site = soup.find("meta", property="og:site_name")
