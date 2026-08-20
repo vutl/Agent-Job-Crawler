@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from typing import List, Optional, Dict, Any, Tuple
 from apps.crawler.monitors.base import BaseATSMonitor
 from apps.crawler.normalizer import clean_html_to_text, compute_content_hash, normalize_canonical_url
+from apps.crawler.dom_extractor import DOMExtractor, DEFAULT_HEADERS
 from packages.schemas import NormalizedJobPost
 
 logger = logging.getLogger(__name__)
@@ -48,44 +49,6 @@ class FoorillaMonitor(BaseATSMonitor):
     def ats_name(self) -> str:
         return "foorilla"
 
-    async def fetch_target_ats_full_description(self, canonical_url: str) -> Optional[Tuple[str, str]]:
-        """
-        Stage 2 Deep Fetching: Follows target ATS outbound URL (e.g. Greenhouse, Lever, Ashby, Nokia)
-        to fetch full un-truncated HTML description and detect target company name.
-        Returns (full_description_text, target_company_name).
-        """
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        }
-        try:
-            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-                res = await client.get(canonical_url, headers=headers)
-                if res.status_code == 200:
-                    soup = BeautifulSoup(res.text, "html.parser")
-                    main_content = (
-                        soup.find("div", id="job-description") or
-                        soup.find("div", class_=re.compile(r"description|content|posting", re.I)) or
-                        soup.body
-                    )
-                    
-                    og_site = soup.find("meta", property="og:site_name")
-                    company_name = og_site.get("content") if og_site else ""
-                    if not company_name and soup.title:
-                        title_str = soup.title.get_text(strip=True)
-                        if " at " in title_str:
-                            company_name = title_str.split(" at ")[-1].split("-")[0].strip()
-                        elif " - " in title_str:
-                            company_name = title_str.split(" - ")[-1].strip()
-
-                    if main_content:
-                        clean_text = clean_html_to_text(str(main_content))
-                        if len(clean_text) > 200:
-                            return clean_text, company_name or "Target Portal"
-        except Exception as e:
-            logger.warning(f"Stage 2 target ATS fetch failed for {canonical_url}: {e}")
-        return None
-
     def parse_job_items_from_html(self, html_content: str, filter_junior_only: bool = False, filter_remote_only: bool = False) -> List[Dict[str, Any]]:
         """Parses Foorilla job items from HTML."""
         soup = BeautifulSoup(html_content, "html.parser")
@@ -114,7 +77,15 @@ class FoorillaMonitor(BaseATSMonitor):
             loc_container = item.find("div", class_="text-end")
             location = loc_container.get_text(strip=True) if loc_container else "Remote"
 
-            is_junior = "[EN]" in level_code or "junior" in title.lower() or "intern" in title.lower() or "co-op" in title.lower()
+            is_junior = (
+                "[EN]" in level_code or
+                "junior" in title.lower() or
+                "intern" in title.lower() or
+                "co-op" in title.lower() or
+                "grad" in title.lower() or
+                "entry" in title.lower() or
+                "trainee" in title.lower()
+            )
             is_remote = "[R]" in remote_code or "[WRA]" in remote_code or "remote" in location.lower() or "remote" in title.lower()
 
             if filter_junior_only and not is_junior:
@@ -129,6 +100,7 @@ class FoorillaMonitor(BaseATSMonitor):
                 "remote_code": remote_code,
                 "salary": salary,
                 "location": location,
+                "is_junior": is_junior,
             })
 
         return parsed_jobs
@@ -159,9 +131,9 @@ class FoorillaMonitor(BaseATSMonitor):
         
         if not apply_href:
             if snapshot_id == "1":
-                apply_href = "https://foorilla.com/hiring/jobs/4kwknkcesm2eh35/apply"
+                apply_href = "https://foorilla.com/hiring/jobs/4kwknkcesm2eh35/apply/"
             elif snapshot_id == "2":
-                apply_href = "https://foorilla.com/hiring/jobs/pwa6g9xzt3otlkx/apply"
+                apply_href = "https://foorilla.com/hiring/jobs/pwa6g9xzt3otlkx/apply/"
             else:
                 apply_href = "https://foorilla.com/hiring/jobs/?topic=data-ai-and-machine-learning"
 
@@ -193,41 +165,36 @@ class FoorillaMonitor(BaseATSMonitor):
         self,
         company_name: str = "Foorilla Aggregated",
         board_token: str = "data-ai-and-machine-learning",
-        junior_only: bool = True,
-        remote_only: bool = True,
+        junior_only: bool = False,
+        remote_only: bool = False,
         track_paywalled_jobs: bool = True
     ) -> List[NormalizedJobPost]:
-        """Fetches jobs from Foorilla and performs Stage 2 target ATS follow-through."""
+        """Fetches jobs from Foorilla and performs Stage 2 universal target ATS follow-through."""
         base_url = "https://foorilla.com"
         topic_slug = FOORILLA_TOPICS.get(board_token, board_token)
         list_url = f"{base_url}/hiring/jobs/?topic={topic_slug}"
 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "HX-Request": "true",
-        }
-
         normalized_posts: List[NormalizedJobPost] = []
 
         try:
-            async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-                res = await client.get(list_url, headers=headers)
+            async with httpx.AsyncClient(timeout=20.0, follow_redirects=True, headers=DEFAULT_HEADERS) as client:
+                res = await client.get(list_url)
                 if res.status_code != 200:
                     return []
 
                 parsed_items = self.parse_job_items_from_html(res.text, filter_junior_only=junior_only, filter_remote_only=remote_only)
 
-                for item_meta in parsed_items[:20]:
+                for item_meta in parsed_items[:15]:
                     detail_path = item_meta["detail_path"]
                     if not detail_path:
                         continue
 
                     detail_url = f"{base_url}{detail_path}" if detail_path.startswith("/") else detail_path
-                    detail_res = await client.get(detail_url, headers=headers)
+                    detail_res = await client.get(detail_url)
                     if detail_res.status_code != 200:
                         continue
 
+                    # Check Paywall
                     is_paywall, paywall_reason = is_paywall_or_login(str(detail_res.url), detail_res.text)
                     if is_paywall:
                         if track_paywalled_jobs:
@@ -248,27 +215,30 @@ class FoorillaMonitor(BaseATSMonitor):
                         continue
 
                     detail_soup = BeautifulSoup(detail_res.text, "html.parser")
-                    apply_btn = detail_soup.find("a", class_=re.compile(r"btn-primary"))
+                    apply_btn = detail_soup.find("a", class_=re.compile(r"btn-primary|apply", re.I)) or detail_soup.find("a", href=re.compile(r"/apply/?$", re.I))
                     apply_href = apply_btn.get("href", "") if apply_btn else ""
 
                     canonical_target_url = detail_url
                     target_co = "Partner"
-                    full_desc = None
+                    clean_text = ""
 
+                    # Stage 2 Universal Follow-Through: Try resolving real outbound portal link
                     if apply_href:
-                        outbound_url = f"{base_url}{apply_href}" if apply_href.startswith("/") else apply_href
-                        canonical_target_url = outbound_url
-                        # Stage 2 Deep Crawl target ATS
-                        res_tuple = await self.fetch_target_ats_full_description(outbound_url)
-                        if res_tuple:
-                            full_desc, target_co = res_tuple
+                        outbound_tuple = await DOMExtractor.resolve_outbound_apply_url(client, detail_url, apply_href)
+                        if outbound_tuple:
+                            real_url, real_co, target_jd = outbound_tuple
+                            canonical_target_url = real_url
+                            target_co = real_co
+                            clean_text = target_jd
 
-                    desc_container = detail_soup.find("div", class_=re.compile(r"pb-2"))
-                    raw_html = str(desc_container) if desc_container else detail_res.text
-                    clean_text = full_desc or clean_html_to_text(raw_html)
+                    # Fallback to Foorilla formatted detail if outbound follow-through not reached
+                    if not clean_text:
+                        desc_container = detail_soup.find("div", class_=re.compile(r"pb-2|job-description", re.I)) or detail_soup.body
+                        raw_html = str(desc_container) if desc_container else detail_res.text
+                        clean_text = clean_html_to_text(raw_html)
 
                     # Dual branding
-                    brand_company = f"Foorilla | {target_co}" if target_co else "Foorilla Aggregated"
+                    brand_company = f"Foorilla | {target_co}" if target_co and not target_co.startswith("Foorilla") else target_co
 
                     normalized_posts.append(
                         NormalizedJobPost(
@@ -278,7 +248,7 @@ class FoorillaMonitor(BaseATSMonitor):
                             company_domain="foorilla.com",
                             title=item_meta["title"],
                             location=item_meta["location"],
-                            description_raw=raw_html,
+                            description_raw=f"<p>{clean_text}</p>",
                             description_text=clean_text,
                             content_hash=compute_content_hash(clean_text),
                         )

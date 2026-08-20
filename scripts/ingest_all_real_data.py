@@ -87,6 +87,56 @@ Leiden University is situated between Amsterdam and The Hague and was founded in
         await extract_and_save_job(db, job, provider)
     print("Parsed & ingested Leiden University Junior RSE (Foorilla | Leiden University)...")
 
+    # 3. Add Capital.com Junior AI Engineer (Direct Lever ATS Forward)
+    capital_jd = """### Description
+We are a leading trading platform that is ambitiously expanding to the four corners of the globe. Our top-rated products have won prestigious industry awards for their cutting-edge technology and seamless client experience. We deliver only the best, so we are always in search of the best people to join our ever-growing talented team.
+
+### Responsibilities
+- Build, maintain, and monitor operational workflows and automations used across the business.
+- Develop and maintain data pipelines and system integrations to reduce manual work and improve operational efficiency.
+- Design and implement automated checks and controls to identify errors and operational issues early.
+- Integrate data from multiple systems into a single, reliable source for reporting and analysis.
+- Monitor the performance, reliability, and health of workflows, automations, and integrations.
+- Document workflows, processes, and technical solutions to ensure knowledge sharing and maintainability.
+- Collaborate with Product and Engineering teams to gather requirements and define technical specifications for automation initiatives.
+- Troubleshoot and resolve issues related to workflows, integrations, and data pipelines.
+- Continuously identify opportunities to improve business processes through automation and technology.
+
+### Requirements
+- Experience with workflow automation and integration tools such as n8n, Zapier, Make, or similar, gained through professional, academic, or personal projects.
+- Good command of English, both written and verbal.
+- Knowledge of JavaScript and/or Python scripting.
+- Working knowledge of REST APIs and integrating third party services.
+- Familiarity with SQL, relational databases, or data warehouses.
+- Comfortable working with spreadsheets and structured data.
+- Strong analytical and problem solving skills with excellent attention to detail.
+- Exposure to data visualization or Business Intelligence (BI) tools, AI or Large Language Model (LLM) integrations.
+
+### What You Will Get in Return
+- Competitive Salary: Your skills and talents will be rewarded with a salary that makes you feel valued.
+- Work-Life Harmony: Join a company that genuinely cares about you.
+- Generous Time Off: Comprehensive annual leave policy.
+- Comprehensive Health & Pension Benefits: Medical insurance and pension plans.
+- Workation Wonderland: 30 extra days to work remotely from anywhere in the world.
+- Volunteer Days: Two additional paid days each year to support causes you care about."""
+
+    capital_post = NormalizedJobPost(
+        external_id="foorilla_capital_3354495",
+        canonical_url="https://jobs.lever.co/capital/371d503f-1eaf-4c83-a2d8-d312e44bca4d",
+        company_name="Foorilla | Capital.com",
+        company_domain="capital.com",
+        title="Junior AI Engineer",
+        location="Limassol, Cyprus / Hybrid",
+        description_raw=f"<p>{capital_jd}</p>",
+        description_text=capital_jd,
+        content_hash=compute_content_hash(capital_jd),
+    )
+    job, is_new = save_normalized_job(db, capital_post)
+    if is_new:
+        count_saved += 1
+        await extract_and_save_job(db, job, provider)
+    print("Parsed & ingested Capital.com Junior AI Engineer (Foorilla | Capital.com)...")
+
     # 3. Parse Foorilla format4.txt (88 raw items)
     if os.path.exists("format4.txt"):
         with open("format4.txt", "r", encoding="utf-8") as f:

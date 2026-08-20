@@ -74,8 +74,8 @@ def clean_html_to_text(html_content: str) -> str:
     for line in clean.splitlines():
         line_clean = re.sub(r"[ \t]+", " ", line).strip()
         # Clean stray bullet characters on line start
-        line_clean = re.sub(r"^[\u2022\u25cf\u25cb]\s*", "- ", line_clean)
-        line_clean = re.sub(r"^-\s*[\*\+]\s*", "- ", line_clean)
+        if re.match(r"^[\u2022\u25cf\u25cb\-\*\+]", line_clean):
+            line_clean = re.sub(r"^[\u2022\u25cf\u25cb\-\*\+\s]+", "- ", line_clean)
         
         if line_clean:
             lines.append(line_clean)
