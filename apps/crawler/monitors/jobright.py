@@ -184,29 +184,120 @@ class JobrightMonitor(BaseATSMonitor):
 
         return normalized_posts
 
+    @staticmethod
+    def _extract_company_from_jobresult(job: dict) -> str:
+        """Extracts clean company name from jobResult dictionary."""
+        if job.get("companyName"):
+            return job["companyName"]
+        comp_res = job.get("companyResult", {})
+        if isinstance(comp_res, dict) and comp_res.get("companyName"):
+            return comp_res["companyName"]
+        logo_url = job.get("jdLogo", "")
+        if logo_url:
+            match = re.search(r'/([^/?#]+)_logo', logo_url, re.I)
+            if match:
+                raw_slug = match.group(1).replace('_', ' ').replace('-', ' ').strip()
+                return ' '.join(w.capitalize() for w in raw_slug.split())
+        summary = job.get("jobSummary", "")
+        if summary:
+            match = re.match(r'^([A-Z0-9][A-Za-z0-9\s,\.\-&]+?)\s+(?:is|provides|offers|seeking|looking|develops)\b', summary)
+            if match:
+                return match.group(1).strip(' ,.')
+        return "Partner Company"
+
     async def fetch_jobs(self, company_name: str = "Jobright", board_token: str = "recommend") -> List[NormalizedJobPost]:
-        """Fetches jobs from Jobright.ai."""
-        url = f"https://jobright.ai/jobs/{board_token}"
+        """
+        Fetches live jobs from Jobright via swan-api recommendation landing and similar jobs endpoints.
+        """
         headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "Accept": "application/json, text/plain, */*",
+            "Origin": "https://jobright.ai",
+            "Referer": "https://jobright.ai/jobs/recommend",
+            "Content-Type": "application/json",
         }
 
+        seen_ids = set()
+        raw_jobs = []
+
         try:
-            async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-                res = await client.get(url, headers=headers)
+            async with httpx.AsyncClient(timeout=15.0, headers=headers) as client:
+                # 1. Fetch Landing Jobs
+                res = await client.get("https://swan-api.jobright.ai/swan/recommend/landing/jobs")
                 if res.status_code == 200:
-                    posts = self.parse_jobright_html_snapshot(res.text, source_name=company_name)
-                    # Stage 2 Deep Crawl: If description is short, attempt target ATS follow-through
-                    for post in posts:
-                        if len(post.description_text) < 300 and "jobright.ai" not in post.canonical_url:
-                            full_desc = await self.fetch_target_ats_full_description(post.canonical_url)
-                            if full_desc:
-                                post.description_text = full_desc
-                                post.description_raw = f"<p>{full_desc}</p>"
-                                post.content_hash = compute_content_hash(full_desc)
-                    return posts
+                    data = res.json()
+                    for item in data.get("result", {}).get("jobList", []):
+                        jr = item.get("jobResult", {})
+                        jid = jr.get("jobId")
+                        if jid and jid not in seen_ids:
+                            seen_ids.add(jid)
+                            raw_jobs.append(jr)
+
+                # 2. Expand via Similar Jobs for seed posts
+                for seed_job in list(raw_jobs)[:10]:
+                    jid = seed_job.get("jobId")
+                    if not jid:
+                        continue
+                    try:
+                        s_res = await client.post("https://swan-api.jobright.ai/swan/recommend/similar/jobs", json={"jobId": jid})
+                        if s_res.status_code == 200:
+                            s_data = s_res.json()
+                            for item in s_data.get("result", {}).get("jobList", []):
+                                jr = item.get("jobResult", {})
+                                s_jid = jr.get("jobId")
+                                if s_jid and s_jid not in seen_ids:
+                                    seen_ids.add(s_jid)
+                                    raw_jobs.append(jr)
+                    except Exception as e:
+                        logger.debug(f"Error fetching similar jobs for {jid}: {e}")
+
+            normalized_posts: List[NormalizedJobPost] = []
+            for jr in raw_jobs:
+                title = jr.get("jobTitle", "Untitled Role")
+                company = self._extract_company_from_jobresult(jr)
+                brand_company = f"Jobright | {company}" if company and not company.startswith("Jobright") else company
+                job_id = jr.get("jobId", "")
+                raw_url = jr.get("applyLink") or jr.get("url") or f"https://jobright.ai/jobs/info/{job_id}"
+                canonical_url = normalize_canonical_url(raw_url)
+                location = jr.get("jobLocation") or ("Remote" if jr.get("isRemote") else "United States")
+
+                summary = jr.get("jobSummary", "")
+                responsibilities = jr.get("coreResponsibilities", [])
+                salary = jr.get("salaryDesc", "")
+                seniority = jr.get("jobSeniority", "")
+
+                desc_parts = []
+                if summary:
+                    desc_parts.append(summary)
+                if salary:
+                    desc_parts.append(f"\n**Estimated Compensation**: {salary}")
+                if seniority:
+                    desc_parts.append(f"**Experience Level**: {seniority}")
+                if responsibilities:
+                    desc_parts.append("\n**Core Responsibilities**:")
+                    for r in responsibilities:
+                        desc_parts.append(f"- {r}")
+
+                full_desc = "\n\n".join(desc_parts) if desc_parts else f"{title} at {company}"
+
+                normalized_posts.append(
+                    NormalizedJobPost(
+                        external_id=str(job_id),
+                        canonical_url=canonical_url,
+                        company_name=brand_company,
+                        company_domain="jobright.ai",
+                        title=title,
+                        location=location,
+                        description_raw=f"<p>{full_desc}</p>",
+                        description_text=full_desc,
+                        content_hash=compute_content_hash(full_desc),
+                    )
+                )
+
+            logger.info(f"Successfully harvested {len(normalized_posts)} live jobs from Jobright API")
+            return normalized_posts
+
         except Exception as e:
-            logger.error(f"Error fetching Jobright jobs: {e}")
+            logger.error(f"Error fetching live Jobright jobs via swan-api: {e}")
 
         return []
