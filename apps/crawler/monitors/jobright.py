@@ -234,7 +234,7 @@ class JobrightMonitor(BaseATSMonitor):
                             raw_jobs.append(jr)
 
                 # 2. Expand via Similar Jobs for seed posts
-                for seed_job in list(raw_jobs)[:10]:
+                for seed_job in list(raw_jobs)[:25]:
                     jid = seed_job.get("jobId")
                     if not jid:
                         continue
@@ -259,7 +259,14 @@ class JobrightMonitor(BaseATSMonitor):
                 job_id = jr.get("jobId", "")
                 raw_url = jr.get("applyLink") or jr.get("url") or f"https://jobright.ai/jobs/info/{job_id}"
                 canonical_url = normalize_canonical_url(raw_url)
-                location = jr.get("jobLocation") or ("Remote" if jr.get("isRemote") else "United States")
+                
+                is_remote = jr.get("isRemote") or "remote" in str(jr.get("workModel", "")).lower() or "remote" in str(jr.get("jobLocation", "")).lower()
+                raw_loc = (jr.get("jobLocation") or "").strip()
+                if is_remote:
+                    location = f"{raw_loc} (Remote)" if raw_loc and "remote" not in raw_loc.lower() else (raw_loc or "Remote - US")
+                else:
+                    location = raw_loc or "United States"
+
 
                 summary = jr.get("jobSummary", "")
                 responsibilities = jr.get("coreResponsibilities", [])

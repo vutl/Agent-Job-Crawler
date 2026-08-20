@@ -38,14 +38,16 @@ TECH_KEYWORDS = [
     "python", "java", "c++", "golang", "rust", "sql", "pytorch", "tensorflow", "keras",
     "scikit-learn", "pandas", "numpy", "docker", "kubernetes", "aws", "gcp", "azure",
     "fastapi", "flask", "django", "spark", "hadoop", "airflow", "dbt", "kafka",
-    "machine learning", "deep learning", "ai software", "ml engineer", "data engineer",
+    "machine learning", "deep learning", "ai", "ml", "ml engineer", "data engineer",
     "data scientist", "platform engineer", "mlops", "llm", "rag", "vector search",
-    "langchain", "llamaindex", "transformers", "huggingface", "cuda"
+    "langchain", "llamaindex", "transformers", "huggingface", "cuda",
+    "software", "developer", "engineer", "backend", "frontend", "fullstack",
+    "react", "typescript", "javascript", "c#", ".net", "systems", "intern", "internship"
 ]
 
 # Tech role indicators
 TECH_ROLE_PATTERNS = [
-    r"\b(?:ai|ml|machine\s+learning|deep\s+learning|nlp|computer\s+vision|data|data\s+science|data\s+engineer|data\s+platform|mlops|software|backend|frontend|fullstack|infrastructure|systems|platform|security|distributed|cloud|devops|site\s+reliability|sre|research\s+scientist|algorithm)\s*(?:engineer|developer|scientist|specialist|architect|lead|manager|researcher)?\b"
+    r"\b(?:ai|ml|machine\s+learning|deep\s+learning|nlp|computer\s+vision|data|data\s+science|data\s+engineer|data\s+platform|mlops|software|backend|frontend|fullstack|infrastructure|systems|platform|security|distributed|cloud|devops|site\s+reliability|sre|research\s+scientist|algorithm)\s*(?:engineer|developer|scientist|specialist|architect|lead|manager|researcher|intern)?\b"
 ]
 
 def is_prefilter_pass(title: str, description_text: str) -> Tuple[bool, str]:
@@ -61,10 +63,14 @@ def is_prefilter_pass(title: str, description_text: str) -> Tuple[bool, str]:
         if re.search(pattern, title_lower):
             return False, f"Rejected by pre-filter: Title '{title}' matches non-technical pattern '{pattern}'"
 
-    # Rule 2: Minimum technical keyword check in description
-    has_tech_keyword = any(kw in desc_lower or kw in title_lower for kw in TECH_KEYWORDS)
+    # Rule 2: Minimum technical keyword or tech role check
+    has_tech_keyword = (
+        any(kw in desc_lower or kw in title_lower for kw in TECH_KEYWORDS) or
+        any(re.search(pat, title_lower) for pat in TECH_ROLE_PATTERNS)
+    )
     if not has_tech_keyword:
         return False, "Rejected by pre-filter: Zero technical keywords found in job description"
 
     # Passed pre-filter -> safe to send to LLM
     return True, "Passed heuristic pre-filter"
+

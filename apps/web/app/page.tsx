@@ -304,14 +304,33 @@ export default function Home() {
 
       // Seniority Filter
       if (selectedSeniorityFilter !== 'ALL') {
-        if (job.seniority?.toLowerCase() !== selectedSeniorityFilter.toLowerCase()) return false;
+        const sen = (job.seniority || '').toLowerCase();
+        if (selectedSeniorityFilter === 'junior') {
+          if (sen !== 'junior' && sen !== 'intern' && sen !== 'entry') return false;
+        } else if (selectedSeniorityFilter === 'senior') {
+          if (sen !== 'senior' && sen !== 'lead' && sen !== 'staff' && sen !== 'principal') return false;
+        } else if (selectedSeniorityFilter === 'mid') {
+          if (sen !== 'mid') return false;
+        } else {
+          if (sen !== selectedSeniorityFilter.toLowerCase()) return false;
+        }
       }
 
       // Remote Only
       if (remoteOnly) {
         const loc = (job.location || '').toLowerCase();
         const tit = (job.title || '').toLowerCase();
-        if (!loc.includes('remote') && !loc.includes('[r]') && !tit.includes('remote')) return false;
+        const desc = (job.description_text || '').toLowerCase();
+        const isRemote = (
+          loc.includes('remote') ||
+          loc.includes('[r]') ||
+          tit.includes('remote') ||
+          desc.includes('remote position') ||
+          desc.includes('fully remote') ||
+          desc.includes('100% remote') ||
+          desc.includes('work from home')
+        );
+        if (!isRemote) return false;
       }
 
       return true;
