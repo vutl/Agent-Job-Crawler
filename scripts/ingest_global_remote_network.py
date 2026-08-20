@@ -12,6 +12,7 @@ from packages.database import SessionLocal, Job, Company
 from packages.schemas import NormalizedJobPost
 from apps.crawler.normalizer import clean_html_to_text, normalize_canonical_url, compute_content_hash
 from apps.crawler.store import save_normalized_job
+from apps.crawler.monitors.ashby import AshbyMonitor
 from apps.analyzer.provider import MockLLMProvider
 from apps.analyzer.extractor import extract_and_save_job
 
@@ -77,11 +78,18 @@ async def main():
     logger.info("Starting Global Remote & Multi-Country Direct ATS Ingestion...")
     db = SessionLocal()
     provider = MockLLMProvider()
+    ashby_mon = AshbyMonitor()
 
     all_posts: List[NormalizedJobPost] = []
+    
+    # 1. Greenhouse
     for comp_name, b_token in GREENHOUSE_BOARDS:
         posts = await fetch_greenhouse_board(comp_name, b_token)
         all_posts.extend(posts)
+
+    # 2. AshbyHQ (Cohere, Perplexity AI, ElevenLabs, Linear, Baseten, Modal, Suno)
+    ashby_posts = await ashby_mon.fetch_all_frontier_boards()
+    all_posts.extend(ashby_posts)
 
     logger.info(f"Total ATS posts retrieved: {len(all_posts)}. Saving and analyzing in DB...")
 
